@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="static/build/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="static/image/purpleLeopard.png">
+  </head>
+  <body>
+    <div class="content-container">
+      <div class="title center">
+        <image class="logo" src="static/image/purpleLeopard.png">
+        紫豹在哪裡
+      </div>
+      <div class="center">
+        <div class="inline-block">年份: <input type="number" id="showYear" value="2016" min="2016" max="2017"></div>
+        <div id="showDay" class="graph-label">日期: </div>
+        <div class="h-scroll">
+          <div id="dayContainer"></div>
+        </div>
+      </div>
+
+      <div class="center map-container">
+        <div id="map"></div>
+        <div id="mapOverlay" class="map-loading">無資料</div>
+        <div>
+          <div class="graph-label">
+            PM2.5空汙動態圖
+            <input type="range" id="opacity" min="0.0" max="1" step="0.1" value="0.4">透明度
+          </div>
+          <hr>
+        </div>
+
+        <div class="graph">
+          <svg id="powerRatio"></svg>
+          <div class="graph-label">各類發電比例 (單位:萬瓩)</div>
+        </div>
+        <div class="graph">
+          <svg id="powerLoad"></svg>
+          <div class="graph-label">區域用電比例 (單位:萬瓩)</div>       
+        </div>
+        <hr>
+        
+        <div class="graph">
+          <image id="pm25Image">
+          <div class="graph-label">
+            亞洲PM2.5動態圖
+            <input type="checkbox" id="pm25ImageAutoPlay">自動播放
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="ref">
+        <div class="sub-title"><strong>資料來源:</strong></div>
+        <ul>
+          <li>空汙資料:
+            <a href="http://airbox.kcg.gov.tw/">空氣盒子</a>
+          </li>
+          <li>風向資料:
+            <a href="http://opendata.cwb.gov.tw/index">氣象資料開放平台</a> 編號:O-A0001-001
+          </li>
+          <li>電力資料:
+            <a href="http://www.taipower.com.tw/content/new_info/new_info_in.aspx?LinkID=11">台灣電力公司</a>
+          </li>
+          <li>PM2.5亞洲動態圖:
+            <a href="http://sprintars.riam.kyushu-u.ac.jp/forecast.html">SPRINTARS</a> (Toshihiko Takemura Kyushu University)
+          </li>
+        </ul>
+      </div>
+      <div class="ref">
+        <div class="sub-title"><strong>參考文件:</strong></div>
+        <ul>
+          <li>
+            <a href="https://lass.hackpad.com/LASS-Data-Platform-tYTI2roiKW2">LASS hackpad</a>
+          </li>
+          <li>
+            <a href="http://beta.hackfoldr.org/g0vairmap/g0v--TexkKFNmqZP">g0v 零時空汙觀測專案</a>
+          </li>
+          <li>
+            <a href="https://www.taiwanstat.com/statistics/pm2.5_map/">用數據看台灣 pm2.5 2014 年各觀測站資料</a>
+          </li>
+          <li>
+            <a href="http://unfccc.saveoursky.org.tw/2015nir/tw_nir.php">2015 年中華民國國家溫室氣體清冊報告</a>
+          </li>
+          <li>
+            <a href="http://epr.epa.gov.tw/upload/approved/102/1028271776/201411101927374311.pdf">中部空品區細懸浮微粒中部空品區細懸浮微粒暴露評估及成因分析</a>
+          </li>
+          <li>
+            <a href="http://epr.epa.gov.tw/upload/openFull/102/1024993883/201412111811390089.pdf">細懸浮微粒管制策略研擬及減量成效分析</a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="paper">
+      <div class="sub-title"><strong>參考論文:</strong></div>
+        <ul>
+          <li>
+            Takemura, T., H. Okamoto, Y. Maruyama, A. Numaguti, A. Higurashi, and T. Nakajima, 2000: Global three-dimensional simulation of aerosol optical thickness distribution of various origins. Journal of Geophysical Research, 105, 17853-17873.
+          </li>
+          <li>
+            Takemura, T., T. Nakajima, O. Dubovik, B. N. Holben, and S. Kinne, 2002: Single-scattering albedo and radiative forcing of various aerosol species with a global three-dimensional model. Journal of Climate, 15, 333-352.
+          </li>
+          <li>
+            Takemura, T., T. Nozawa, S. Emori, T. Y. Nakajima, and T. Nakajima, 2005: Simulation of climate response to aerosol direct and indirect effects with aerosol transport-radiation model. Journal of Geophysical Research, 110, D02202, doi:10.1029/2004JD005029.
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+    <div class="footer-padding">
+      <div class="center">紫豹在哪裡</div>
+    </div>
+
+
+    <div class="fixbar">
+      <div class="center">
+        <input type="date" id="dateLabel">
+        <div id="timeLabel" class="fixbar-label">0:0</div>
+        <div class="fixbar-label">
+          速度 <input id="playSpeed" type="number" min="1" max="10" step="1" value="5"> 格/秒
+        </div>
+      </div>
+      <div class="h-scroll">
+        <div id="showTime"></div>
+      </div>
+      <div class="center">
+        <image id="prevBt" class="bt" src="static/image/prevIcon.png" onclick="Prev();">
+        <image id="playBt" class="bt" src="static/image/playIcon.png" onclick="Play();">
+        <image id="pauseBt" class="bt hide" src="static/image/pauseIcon.png" onclick="Pause();">
+        <image id="nextBt" class="bt" src="static/image/nextIcon.png"  onclick="Next();">
+      </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false&key=AIzaSyBUGDJex2sQeScb1Wxcm7oiPGwdmyoLhHM"></script>
+    <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
+    <script src="static/powerGraph.js"></script>
+    <script src="static/pm25Graph.js"></script>
+    <script src="static/dayGraph.js"></script>
+    <script src="static/mapGraph.js"></script>
+    <script src="static/main.js"></script>
+  </body>
+</html>

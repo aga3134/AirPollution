@@ -1,0 +1,13 @@
+{
+  "name": "AirPollution",
+  "main": "server.js",
+  "dependencies" : {
+    "express" : "~4.0.0",           
+    "swig" : "~1.4.2",   
+  	"mongoose" : "~4.7.4",
+  	"fs-extra":"~0.26.5",
+  	"node-schedule":"~1.1.0",
+  	"xml2js":"~0.4.17",
+    "lz-string":"~1.4.4"
+  }
+}

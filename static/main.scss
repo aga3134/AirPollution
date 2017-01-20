@@ -1,0 +1,259 @@
+$fixbar-bg-color: rgb(50,50,50);
+$fixbar-fg-color: rgb(255,255,255);
+$link-fg-color: rgb(100,100,200);
+$link-hover-color: rgb(200,150,150);
+
+//==============Responsive================
+$pc-media: 800px;
+@mixin pc-width() {
+    @media only screen and (min-width: $pc-media) {
+        @content;
+    }
+}
+//=============================================
+html, body { 
+  height: 100%; margin: 0; padding: 0; 
+}
+
+::-webkit-scrollbar {
+  @include pc-width{
+    width: 10px;
+    height: 10px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  @include pc-width{
+    background-color: rgb(50,50,50);
+  }
+}
+
+::-webkit-scrollbar-track:disabled {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  @include pc-width{
+    background-color: rgb(100,100,100);
+  }
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "微軟正黑體", "Microsoft JhengHei";
+}
+
+.logo{
+  position: relative;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+.content-container {
+    max-width: 75em;
+    margin: auto;
+    padding: 10px 0px;
+    clear: both;
+}
+
+.center{
+    display: block;
+    margin: auto;
+    clear: both;
+    text-align: center;
+}
+
+.inline-block{
+  display: inline-block;
+}
+
+.hide{
+  display: none;
+}
+
+.title{
+  font-size: 2em;
+  padding: 10px;
+}
+
+.sub-title{
+  font-size: 1.5em; 
+}
+
+.ref{
+  margin: 10px;
+  width: calc(100% - 30px);
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+  @include pc-width{
+    width: calc(50% - 30px);
+  }
+  a{
+    color: $link-fg-color;
+    text-decoration: none;
+    &:hover{
+      color: $link-hover-color;
+    }
+  }
+}
+
+.paper{
+  margin: 10px;
+  li{
+    padding: 5px 0px;
+  }
+}
+
+.map-container{
+  position: relative;
+}
+
+#map { 
+  margin: 10px auto;
+  width: 100%;
+  max-width: 1200px;
+  height: 350px; 
+}
+
+.map-loading{
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 350px;
+  color: white;
+  font-size: 2em;
+  vertical-align: middle;
+  padding-top: 150px;
+  background-color: rgba(50,50,50,0.8);
+  z-index: 2;
+}
+
+.fixbar {
+    z-index: 4;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: $fixbar-bg-color;
+    color: $fixbar-fg-color;
+}
+
+svg{
+  margin: 0px;
+  width: 100%;
+  height: 350px;
+  font-size: 0.5em;
+}
+
+.graph{
+  margin: 0px;
+  width: calc(100% - 10px);
+  display: inline-block;
+  @include pc-width{
+    width: calc(50% - 10px);
+  }
+}
+
+img{
+  max-width: 100%;
+}
+
+.graph-label{
+  display: inline-block;
+  text-align: center;
+  margin: 0px 10px 10px 10px;
+}
+
+.fixbar-label{
+  display: inline-block;
+  margin: 20px 5px 0px 5px;
+}
+
+.bt{
+  margin: 0px;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  &:hover{
+    border: 1px solid rgb(100,100,100);
+  }
+}
+
+.h-scroll{
+  margin: 0px 10px;
+  width: calc(100% - 20px);
+  overflow-x: scroll;
+}
+
+#dayContainer{
+  position: relative;
+  width: 1120px;
+  height: 170px;
+  margin: auto;
+}
+
+.day-bt{
+  position: absolute;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: rgb(255,200,255);
+  cursor: pointer;
+  &:hover{
+    border: 2px solid black;
+  }
+  &.select{
+    border: 3px solid blue;
+  }
+}
+
+.time-label{
+  position: absolute;
+}
+
+#showTime{
+  position: relative;
+  width: 100%;
+  height: 30px;
+  margin: 10px 0px 10px 0px;
+  font-size: 0.5em;
+}
+
+.time-bt{
+  position: absolute;
+  display: inline-block;
+  width: 8px;
+  height: 20px;
+  background-color: rgb(200,200,255);
+  cursor: pointer;
+  &:hover{
+    background-color: rgb(150,150,200);
+  }
+  &.select{
+    border: 2px solid rgb(50,50,250);
+  }
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.browser text {
+  text-anchor: end;
+}
+
+.footer-padding{
+  padding: 10px;
+  width: 100%;
+  height: 180px;
+  background-color: $fixbar-bg-color;
+  color: $fixbar-fg-color;
+}
