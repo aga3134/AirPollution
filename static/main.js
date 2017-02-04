@@ -8,6 +8,7 @@ var mapSensorData;
 var siteData;
 var mapWeatherData;
 var weatherSite;
+var mapPowerGen;
 
 function ShowDate(date){
   var hoverBlock = $("#hoverBlock");
@@ -36,6 +37,7 @@ function ChangeTime(time){
 	UpdateMapWeather(mapWeatherData[hour]);
 	SetPowerGraphTime(time);
 	ChangeImageByTime(time);
+	UpdateMapPowerGen(mapPowerGen,time);
 }
 
 function ChangeDate(date){
@@ -147,6 +149,33 @@ function ChangeDate(date){
 			mapWeatherData[h].push(wd);
 		}
 		UpdateMapWeather(mapWeatherData[0]);
+	});
+
+	url = "/powerGen?date="+curYear+"/"+date;
+	$.get(url, function(data){
+		var json = JSON.parse(data);
+		for(var i=0;i<mapPowerGen.length;i++){
+			var name = mapPowerGen[i].name;
+			
+			//今日發電資料，每10分鐘1筆
+			mapPowerGen[i].gen = {};
+			for(var j=0;j<24*numPerHour;j++){
+				var h = Math.floor(j/numPerHour);
+				var m = 10*(j%numPerHour);
+				mapPowerGen[i].gen[h+":"+m] = 0;
+			}
+
+			for(var j=0;j<json.length;j++){
+				var d = json[j];
+				var t = d.time.split(":");
+				var h = t[0];
+				var m = Math.floor(t[1]/10)*10;
+				if(d.stationID.indexOf(name) != -1){
+					mapPowerGen[i].gen[h+":"+m] += Math.round(d.powerGen);
+				}
+			}
+		}
+		UpdateMapPowerGen(mapPowerGen,"0:0");
 	});
 }
 
@@ -315,6 +344,11 @@ window.addEventListener('load', function() {
 		for(var i=0;i<json.length;i++){
 			weatherSite[json[i]._id] = json[i];
 		}
+	});
+
+	$.get("/static/PowerStationLocation.txt", function(data){
+		var json = JSON.parse(data);
+		mapPowerGen = json.station;
 	});
 
 	$("#dateLabel").change(function(){

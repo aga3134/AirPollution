@@ -1,6 +1,9 @@
 var map;
 var pm25Array = [];
 var weatherArray = [];
+var powerStationArray = [];
+var infoWindow = new google.maps.InfoWindow();
+var infoIndex = -1;
 
 function ValueToColor(v){
 	function componentToHex(c) {
@@ -43,7 +46,8 @@ function UpdateMapPM25(data){
 		      fillOpacity: opacity,
 		      map: map,
 		      center: loc,
-		      radius: 2000
+		      radius: 2000,
+		      zIndex: 1
 		    });
 	    	pm25Array[d.siteID] = circle;
 	    }
@@ -66,7 +70,7 @@ function UpdateMapWeather(data){
 
 		var a1 = (wDir+150)*Math.PI/180;
 		var a2 = (wDir+270)*Math.PI/180;
-		var as = 0.005;
+		var as = 0.01;
 
 		arrow[0] = loc;
 		arrow[1] = {lat: loc.lat()-mag*Math.cos(theta), lng: loc.lng()-mag*Math.sin(theta)};
@@ -75,7 +79,9 @@ function UpdateMapWeather(data){
 		arrow[4] = {lat: arrow[1].lat, lng: arrow[1].lng};
 		return arrow;
 	}
-	var arrowScale = 0.01;
+	//台灣的位置經緯度差1度約差111公里，風速1 m/s = 0.6km/10min
+	//1 m/s風速每10分鐘可將空汙吹動0.0054度 => 箭頭長度約為此風速下30分鐘空汙移動距離
+	var arrowScale = 0.0162;
 	for(var i=0;i<data.length;i++){
 		var d = data[i];
 		if(d.wSpeed < 0) continue;
@@ -87,7 +93,8 @@ function UpdateMapWeather(data){
 				geodesic: true,
 				strokeColor: '#0000FF',
 				strokeWeight: 1,
-				map: map
+				map: map,
+				zIndex: 3
 			});
 	    	weatherArray[d.siteID] = arrow;
 	    }
@@ -96,6 +103,60 @@ function UpdateMapWeather(data){
 	    		path: GenArrow(loc, d.wDir, d.wSpeed, arrowScale),
 	    	});
 	    }
+	}
+}
+
+function UpdateMapPowerGen(data, time){
+	function clickFn(data, i, time){ 
+		return function() {
+			var d = data[i];
+			var str = "<p>"+d.name+"發電廠</p><p>發電量 "+d.gen[time]+" MV</p>";
+			var loc = new google.maps.LatLng(d.lat, d.lng);
+			infoWindow.setOptions({content: str, position: loc});
+			infoWindow.open(map);
+			infoIndex = i;
+		};
+	}
+	//info window有打開，更新資訊
+	if(infoWindow.getMap()){
+		var d = data[infoIndex];
+		var str = "<p>"+d.name+"發電廠</p><p>發電量 "+d.gen[time]+" MV</p>";
+		var loc = new google.maps.LatLng(d.lat, d.lng);
+		infoWindow.setOptions({content: str, position: loc});
+	}
+	for(var i=0;i<data.length;i++){
+		var d = data[i];
+		if(!d.gen) continue;
+
+		var loc = new google.maps.LatLng(d.lat, d.lng);
+		//依電廠發電量(MW)改變方框大小
+		var size = 0.01*d.gen[time]/1000;
+		var coord = [
+			{lat: loc.lat()-size, lng: loc.lng()-size},
+			{lat: loc.lat()+size, lng: loc.lng()-size},
+			{lat: loc.lat()+size, lng: loc.lng()+size},
+			{lat: loc.lat()-size, lng: loc.lng()+size}
+		];
+		if(powerStationArray[d.name] == null){
+			var rect = new google.maps.Polygon({
+				paths: coord,
+				strokeColor: '#000000',
+				strokeWeight: 2,
+				fillOpacity: 0,
+				zIndex: 2,
+				map: map
+			});
+			
+			rect.addListener('click', clickFn(data,i,time));
+			powerStationArray[d.name] = rect;
+		}
+		else{
+			powerStationArray[d.name].addListener('click', clickFn(data,i,time));
+			powerStationArray[d.name].setOptions({
+	    		path: coord
+	    	});
+		}
+		
 	}
 }
 
