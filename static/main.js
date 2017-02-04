@@ -6,6 +6,8 @@ var timeInterval = 10;
 
 var mapSensorData;
 var siteData;
+var mapWeatherData;
+var weatherSite;
 
 function ShowDate(date){
   var hoverBlock = $("#hoverBlock");
@@ -29,7 +31,9 @@ function ChangeTime(time){
 
 	curTime = time;
 	$("#timeLabel").text(time);
-	UpdateMap(mapSensorData[time]);
+	UpdateMapPM25(mapSensorData[time]);
+	var hour = time.split(":")[0];
+	UpdateMapWeather(mapWeatherData[hour]);
 	SetPowerGraphTime(time);
 	ChangeImageByTime(time);
 }
@@ -67,10 +71,11 @@ function ChangeDate(date){
 
 	var numPerHour = 60/timeInterval;
 	mapSensorData = [];
+	//pm2.5資料，每10分鐘1筆
 	for(var i=0;i<24*numPerHour;i++){
 		var h = Math.floor(i/numPerHour);
 		var m = 10*(i%numPerHour);
-		mapSensorData[h+":"+m] = [];
+		mapSensorData[h+":"+m] = [];	
 	}
 	//分24次load每小時data
 	function LoadSensorData(hour){
@@ -117,6 +122,32 @@ function ChangeDate(date){
 		}
 		ChangeTime("0:0");
 	});*/
+
+	//風向資料，每小時1筆
+	mapWeatherData = [];
+	for(var i=0;i<24;i++){
+		mapWeatherData[i] = [];
+	}
+	var url = "/weatherData?date="+curYear+"/"+date;
+	$.get(url, function(data){
+		var json = JSON.parse(data);
+		for(var i=0;i<json.length;i++){
+			var d = json[i];
+			var t = d.time.split(":");
+			var h = t[0];
+			
+			var site = weatherSite[d.siteID];
+			var wd = {};
+			wd.siteID = d.siteID;
+			wd.lat = site.lat;
+			wd.lng = site.lng;
+			wd.name = site.name;
+			wd.wDir = d.wDir;
+			wd.wSpeed = d.wSpeed;
+			mapWeatherData[h].push(wd);
+		}
+		UpdateMapWeather(mapWeatherData[0]);
+	});
 }
 
 function ChangeYear(){
@@ -276,6 +307,14 @@ window.addEventListener('load', function() {
 		showYear.val(curYear);
 		ChangeYear();
 		showYear.change(ChangeYear);
+	});
+
+	$.get("/weatherStation", function(data){
+		var json = JSON.parse(data);
+		weatherSite = [];
+		for(var i=0;i<json.length;i++){
+			weatherSite[json[i]._id] = json[i];
+		}
 	});
 
 	$("#dateLabel").change(function(){

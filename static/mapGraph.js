@@ -1,5 +1,6 @@
 var map;
-var circleArray = [];
+var pm25Array = [];
+var weatherArray = [];
 
 function ValueToColor(v){
 	function componentToHex(c) {
@@ -21,7 +22,7 @@ function ValueToColor(v){
 	else return rgb(206, 48, 255);
 }
 
-function UpdateMap(data){
+function UpdateMapPM25(data){
 	if(data.length == 0){
 		$(".map-loading").css("display","block");
 	}
@@ -31,10 +32,9 @@ function UpdateMap(data){
 	var opacity = $("#opacity").val();
 	for(var i=0;i<data.length;i++){
 		var d = data[i];
-		var loc = {};
-		loc.location = new google.maps.LatLng(d.lat, d.lng);
+		var loc = new google.maps.LatLng(d.lat, d.lng);
 
-	    if(circleArray[d.siteID] == null){
+	    if(pm25Array[d.siteID] == null){
 	    	var circle = new google.maps.Circle({
 		      strokeColor: '#000000',
 		      strokeOpacity: 0.0,
@@ -42,15 +42,58 @@ function UpdateMap(data){
 		      fillColor: ValueToColor(d.pm25),
 		      fillOpacity: opacity,
 		      map: map,
-		      center: loc.location,
+		      center: loc,
 		      radius: 2000
 		    });
-	    	circleArray[d.siteID] = circle;
+	    	pm25Array[d.siteID] = circle;
 	    }
 	    else{
-	    	circleArray[d.siteID].setOptions({
-	    		//center: loc.location,
+	    	pm25Array[d.siteID].setOptions({
+	    		//center: loc,
 	    		fillColor: ValueToColor(d.pm25)
+	    	});
+	    }
+	}
+}
+
+function UpdateMapWeather(data){
+	function GenArrow(loc, wDir, wSpeed, scale){
+		var arrow = [];
+		var theta = wDir*Math.PI/180;
+		var mag = wSpeed*scale;
+		//console.log(wDir);
+		//console.log(-Math.cos(theta)+","+-Math.sin(theta));
+
+		var a1 = (wDir+150)*Math.PI/180;
+		var a2 = (wDir+270)*Math.PI/180;
+		var as = 0.005;
+
+		arrow[0] = loc;
+		arrow[1] = {lat: loc.lat()-mag*Math.cos(theta), lng: loc.lng()-mag*Math.sin(theta)};
+		arrow[2] = {lat: arrow[1].lat-as*Math.cos(a1), lng: arrow[1].lng-as*Math.sin(a1)};
+		arrow[3] = {lat: arrow[2].lat-as*Math.cos(a2), lng: arrow[2].lng-as*Math.sin(a2)};
+		arrow[4] = {lat: arrow[1].lat, lng: arrow[1].lng};
+		return arrow;
+	}
+	var arrowScale = 0.01;
+	for(var i=0;i<data.length;i++){
+		var d = data[i];
+		if(d.wSpeed < 0) continue;
+		var loc = new google.maps.LatLng(d.lat, d.lng);
+
+	    if(weatherArray[d.siteID] == null){
+			var arrow = new google.maps.Polyline({
+				path: GenArrow(loc, d.wDir, d.wSpeed, arrowScale),
+				geodesic: true,
+				strokeColor: '#0000FF',
+				strokeWeight: 1,
+				map: map
+			});
+	    	weatherArray[d.siteID] = arrow;
+	    }
+	    else{
+	    	weatherArray[d.siteID].setOptions({
+	    		path: GenArrow(loc, d.wDir, d.wSpeed, arrowScale),
 	    	});
 	    }
 	}
@@ -95,8 +138,8 @@ function InitMap() {
 
 	$("#opacity").change(function(){
 		var opacity = $("#opacity").val();
-		for (var key in circleArray) {
-			circleArray[key].setOptions({
+		for (var key in pm25Array) {
+			pm25Array[key].setOptions({
 	    		fillOpacity: opacity
 	    	});
 		}

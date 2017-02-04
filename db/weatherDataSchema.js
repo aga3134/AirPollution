@@ -5,7 +5,7 @@ var WeatherDataSchema = new mongoose.Schema({
 	_id : String,		//站台id+time
 	siteID: String,		//站台id
 	height: Number,		//海拔高度(單位公尺)
-	wDir  : Number,		//風向，(單位度)
+	wDir  : Number,		//風向，(單位度，0度北風，45度東北風)
 	wSpeed : Number,	//風速，(單位公尺/秒)
 	t : Number,			//溫度，單位攝氏
 	h: String,			//溼度，單位百分率
