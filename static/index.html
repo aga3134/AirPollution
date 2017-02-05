@@ -24,12 +24,56 @@
         <div id="map"></div>
         <div id="mapOverlay" class="map-loading">無資料</div>
         <div>
-          <div class="graph-label">
-            PM2.5空汙動態圖
-            <input type="range" id="opacity" min="0.0" max="1" step="0.1" value="0.4">透明度
-          </div>
-          <hr>
+          <div class="graph-label">PM2.5空汙動態地圖</div>
         </div>
+        <div class="map-control">
+          <ul>
+            <li>
+              <div class="group">
+                空汙透明度: 
+                <input type="range" id="opacity" min="0.0" max="1" step="0.1" value="0.4">
+              </div>
+            </li>
+            <li>
+              <div class="group">
+                風向: <input type="checkbox" id="showWind" checked>
+              </div>
+            </li>
+            <li>
+              <div class="group">
+                電廠: <input type="checkbox" id="showPowerStation" checked>
+              </div>
+            </li>
+            <li>
+              <div class="group">
+                交通: <input type="checkbox" id="showTraffic" checked>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="map-info">
+          <div class="sub-title"><strong>圖示說明:</strong></div>
+          <ul>
+            <li>彩色圓圈: PM2.5資料 顏色依
+              <a href="http://taqm.epa.gov.tw/taqm/tw/fpmi.aspx">環保署細懸浮微粒指標</a>表示:
+              <div class="pm25-index">
+                <div class="index1">0~11</div>
+                <div class="index2">12~23</div>
+                <div class="index3">24~35</div>
+                <div class="index4">36~41</div>
+                <div class="index5">42~47</div>
+                <div class="index6">48~53</div>
+                <div class="index7">54~58</div>
+                <div class="index8">59~64</div>
+                <div class="index9">65~70</div>
+                <div class="index10">>=71</div>
+              </div>
+            </li>
+            <li>藍色箭頭: 角度為風向，長度與風力成正比</li>
+            <li>黑色方框: 火力發電廠位置，大小與發電量成正比</li>
+          </ul>
+        </div>
+        <hr>
 
         <div class="graph">
           <svg id="powerRatio"></svg>
@@ -49,6 +93,7 @@
           </div>
         </div>
       </div>
+
       <hr>
       <div class="ref">
         <div class="sub-title"><strong>資料來源:</strong></div>
@@ -64,6 +109,9 @@
           </li>
           <li>PM2.5亞洲動態圖:
             <a href="http://sprintars.riam.kyushu-u.ac.jp/forecast.html">SPRINTARS</a> (Toshihiko Takemura Kyushu University)
+          </li>
+          <li>交通資料:
+            <a href="http://tisvcloud.freeway.gov.tw/">交通部臺灣區國道高速公路局「交通資料庫」</a>
           </li>
         </ul>
       </div>

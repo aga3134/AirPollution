@@ -15,6 +15,14 @@ html, body {
   height: 100%; margin: 0; padding: 0; 
 }
 
+a{
+  color: $link-fg-color;
+  text-decoration: none;
+  &:hover{
+    color: $link-hover-color;
+  }
+}
+
 ::-webkit-scrollbar {
   @include pc-width{
     width: 10px;
@@ -81,6 +89,30 @@ html, body {
   font-size: 1.5em; 
 }
 
+.map-info{
+  margin: 10px;
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.5em;
+}
+
+.map-control{
+  max-width: 600px;
+  margin: auto;
+  text-align: left;
+  .group{
+    padding: 5px;
+    display: inline-block;
+  }
+  ul{
+    li{
+      display: inline;
+      padding: 5px;
+      margin-right: 20px;
+    }
+  }
+}
+
 .ref{
   margin: 10px;
   width: calc(100% - 30px);
@@ -89,13 +121,6 @@ html, body {
   text-align: left;
   @include pc-width{
     width: calc(50% - 30px);
-  }
-  a{
-    color: $link-fg-color;
-    text-decoration: none;
-    &:hover{
-      color: $link-hover-color;
-    }
   }
 }
 
@@ -130,6 +155,26 @@ html, body {
   padding-top: 150px;
   background-color: rgba(50,50,50,0.8);
   z-index: 2;
+}
+
+.pm25-index{
+  @mixin index() {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+  }
+  .index1{@include index; background-color: rgb(156, 255, 156);}
+  .index2{@include index; background-color: rgb(49, 255, 0);}
+  .index3{@include index; background-color: rgb(49, 207, 0);}
+  .index4{@include index; background-color: rgb(255, 255, 0);}
+  .index5{@include index; background-color: rgb(255, 207, 0);}
+  .index6{@include index; background-color: rgb(255, 154, 0);}
+  .index7{@include index; background-color: rgb(255, 100, 100);}
+  .index8{@include index; background-color: rgb(255, 0, 0);}
+  .index9{@include index; background-color: rgb(153, 0, 0);}
+  .index10{@include index; background-color: rgb(206, 48, 255);}
 }
 
 .fixbar {

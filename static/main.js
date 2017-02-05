@@ -363,4 +363,10 @@ window.addEventListener('load', function() {
 			Play();
 		}
 	});
+
+	$("#showWind").change(ToggleWind);
+
+	$("#showPowerStation").change(TogglePowerStation);
+
+	$("#showTraffic").change(ToggleTraffic);
 });

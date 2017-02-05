@@ -4,6 +4,12 @@ html, body {
   margin: 0;
   padding: 0; }
 
+a {
+  color: #6464c8;
+  text-decoration: none; }
+  a:hover {
+    color: #c89696; }
+
 @media only screen and (min-width: 800px) {
   ::-webkit-scrollbar {
     width: 10px;
@@ -55,6 +61,24 @@ html, body {
 .sub-title {
   font-size: 1.5em; }
 
+.map-info {
+  margin: 10px;
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.5em; }
+
+.map-control {
+  max-width: 600px;
+  margin: auto;
+  text-align: left; }
+  .map-control .group {
+    padding: 5px;
+    display: inline-block; }
+  .map-control ul li {
+    display: inline;
+    padding: 5px;
+    margin-right: 20px; }
+
 .ref {
   margin: 10px;
   width: calc(100% - 30px);
@@ -64,11 +88,6 @@ html, body {
   @media only screen and (min-width: 800px) {
     .ref {
       width: calc(50% - 30px); } }
-  .ref a {
-    color: #6464c8;
-    text-decoration: none; }
-    .ref a:hover {
-      color: #c89696; }
 
 .paper {
   margin: 10px; }
@@ -97,6 +116,86 @@ html, body {
   padding-top: 150px;
   background-color: rgba(50, 50, 50, 0.8);
   z-index: 2; }
+
+.pm25-index .index1 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #9cff9c; }
+
+.pm25-index .index2 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #31ff00; }
+
+.pm25-index .index3 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #31cf00; }
+
+.pm25-index .index4 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: yellow; }
+
+.pm25-index .index5 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #ffcf00; }
+
+.pm25-index .index6 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #ff9a00; }
+
+.pm25-index .index7 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #ff6464; }
+
+.pm25-index .index8 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: red; }
+
+.pm25-index .index9 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #990000; }
+
+.pm25-index .index10 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 60px;
+  text-align: center;
+  background-color: #ce30ff; }
 
 .fixbar {
   z-index: 4;

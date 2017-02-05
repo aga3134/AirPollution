@@ -82,6 +82,9 @@ function UpdateMapWeather(data){
 	//台灣的位置經緯度差1度約差111公里，風速1 m/s = 0.6km/10min
 	//1 m/s風速每10分鐘可將空汙吹動0.0054度 => 箭頭長度約為此風速下30分鐘空汙移動距離
 	var arrowScale = 0.0162;
+
+	var showWind = $("#showWind").is(":checked");
+	var showMap = showWind?map:null;
 	for(var i=0;i<data.length;i++){
 		var d = data[i];
 		if(d.wSpeed < 0) continue;
@@ -93,7 +96,7 @@ function UpdateMapWeather(data){
 				geodesic: true,
 				strokeColor: '#0000FF',
 				strokeWeight: 1,
-				map: map,
+				map: showMap,
 				zIndex: 3
 			});
 	    	weatherArray[d.siteID] = arrow;
@@ -124,6 +127,9 @@ function UpdateMapPowerGen(data, time){
 		var loc = new google.maps.LatLng(d.lat, d.lng);
 		infoWindow.setOptions({content: str, position: loc});
 	}
+
+	var showPowerStation = $("#showPowerStation").is(":checked");
+	var showMap = showPowerStation?map:null;
 	for(var i=0;i<data.length;i++){
 		var d = data[i];
 		if(!d.gen) continue;
@@ -144,7 +150,7 @@ function UpdateMapPowerGen(data, time){
 				strokeWeight: 2,
 				fillOpacity: 0,
 				zIndex: 2,
-				map: map
+				map: showMap
 			});
 			
 			rect.addListener('click', clickFn(data,i,time));
@@ -207,6 +213,27 @@ function InitMap() {
 
 	});
 
+}
+
+function ToggleWind(){
+	var showWind = $("#showWind").is(":checked");
+	var showMap = showWind?map:null;
+	for(var key in weatherArray) {
+		weatherArray[key].setOptions({map: showMap});
+	};
+}
+
+function TogglePowerStation(){
+	var showPowerStation = $("#showPowerStation").is(":checked");
+	var showMap = showPowerStation?map:null;
+	for(var key in powerStationArray) {
+		powerStationArray[key].setOptions({map: showMap});
+	};
+}
+
+function ToggleTraffic(){
+	var showTraffic = $("#showTraffic").is(":checked");
+	var showMap = showTraffic?map:null;
 }
 
 google.maps.event.addDomListener(window, 'load', InitMap);
