@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 now=$(date +"%Y-%m-%d")
-cd ~/AirPollution/
+cd ~/web/AirPollution/
 
 mkdir -p data/graph/$now
 

@@ -3,3 +3,4 @@ static/pm25/
 doc/
 data.zip
 node_modules
+*.txt
