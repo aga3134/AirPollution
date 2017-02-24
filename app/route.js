@@ -12,10 +12,11 @@ var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
 var SensorDataSchema = require('../db/sensorDataSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
+var version = 1.0.0;
 
 module.exports = function(app){
 	app.get("/", function(req, res){
-		res.render("static/index.html");
+		res.render("static/index.html", {version: version});
 	});
 	
 	app.get("/sensorSite", function(req, res){
