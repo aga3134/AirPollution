@@ -50,6 +50,7 @@ function ChangeDate(date){
 	var scrollX = parseInt(selected.css("left")) - $("body").width()*0.5;
 	$("#dayContainer").parent(".h-scroll").animate({scrollLeft: scrollX}, 1000);
 	
+	ClearMap();
 	ShowDate();
 	var d = curYear+"/"+curDate;
 	SetDateLabel(curYear+"/"+curDate);

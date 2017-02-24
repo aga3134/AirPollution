@@ -5,6 +5,27 @@ var powerStationArray = [];
 var infoWindow = new google.maps.InfoWindow();
 var infoIndex = -1;
 
+function ClearMap(){
+	for(var key in pm25Array){
+		pm25Array[key].setOptions({
+    		map: null
+    	});
+	}
+	for(var key in weatherArray){
+		weatherArray[key].setOptions({
+    		map: null
+    	});
+	}
+	for(var key in powerStationArray){
+		powerStationArray[key].setOptions({
+    		map: null
+    	});
+	}
+	pm25Array = [];
+	weatherArray = [];
+	powerStationArray = [];
+}
+
 function ValueToColor(v){
 	function componentToHex(c) {
 	    var hex = c.toString(16);
