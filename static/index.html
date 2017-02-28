@@ -27,29 +27,30 @@
           <div class="graph-label">PM2.5空汙動態地圖</div>
         </div>
         <div class="map-control">
-          <ul>
-            <li>
+            <div>
               <div class="group">
                 空汙透明度: 
                 <input type="range" id="opacity" min="0.0" max="1" step="0.1" value="0.4">
               </div>
-            </li>
-            <li>
+            </div>
+            <div>
+              <div class="group">
+                空汙顯示半徑: 
+                <input type="range" id="pm25Radius" min="0.1" max="5" step="0.1" value="2">
+                <span id="radiusLabel">2.0公里</span>
+              </div>
+            </div>
+            <div>
               <div class="group">
                 風向: <input type="checkbox" id="showWind" checked>
               </div>
-            </li>
-            <li>
               <div class="group">
                 電廠: <input type="checkbox" id="showPowerStation" checked>
               </div>
-            </li>
-            <li>
               <div class="group">
                 交通: <input type="checkbox" id="showTraffic" checked>
               </div>
-            </li>
-          </ul>
+            </div>
         </div>
         <div class="map-info">
           <div class="sub-title"><strong>圖示說明:</strong></div>

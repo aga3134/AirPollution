@@ -54,6 +54,7 @@ function UpdateMapPM25(data){
 		$(".map-loading").css("display","none");
 	}
 	var opacity = $("#opacity").val();
+	var radius = $("#pm25Radius").val();	//單位公里
 	for(var i=0;i<data.length;i++){
 		var d = data[i];
 		var loc = new google.maps.LatLng(d.lat, d.lng);
@@ -67,7 +68,7 @@ function UpdateMapPM25(data){
 		      fillOpacity: opacity,
 		      map: map,
 		      center: loc,
-		      radius: 2000,
+		      radius: radius*1000,	//單位公尺
 		      zIndex: 1
 		    });
 	    	pm25Array[d.siteID] = circle;
@@ -234,6 +235,15 @@ function InitMap() {
 
 	});
 
+	$("#pm25Radius").change(function(){
+		var radius = $("#pm25Radius").val();	//單位公里
+		for (var key in pm25Array) {
+			pm25Array[key].setOptions({
+	    		radius: radius*1000	//單位公尺
+	    	});
+		}
+		$("#radiusLabel").html(radius+"公里");
+	});
 }
 
 function ToggleWind(){
