@@ -9,6 +9,8 @@ var siteData;
 var mapWeatherData;
 var weatherSite;
 var mapPowerGen;
+var roadSegment;
+var mapRoadData;
 
 function ShowDate(date){
   var hoverBlock = $("#hoverBlock");
@@ -38,6 +40,7 @@ function ChangeTime(time){
 	SetPowerGraphTime(time);
 	ChangeImageByTime(time);
 	UpdateMapPowerGen(mapPowerGen,time);
+	UpdateMapTraffic(roadSegment,mapRoadData[time]);
 }
 
 function ChangeDate(date){
@@ -177,6 +180,29 @@ function ChangeDate(date){
 			}
 		}
 		UpdateMapPowerGen(mapPowerGen,"0:0");
+	});
+
+	mapRoadData = [];
+	//交通資料，每10分鐘1筆
+	for(var i=0;i<24*numPerHour;i++){
+		var h = Math.floor(i/numPerHour);
+		var m = 10*(i%numPerHour);
+		mapRoadData[h+":"+m] = [];	
+	}
+	var url = "/roadData?date="+curYear+"/"+date;
+	$.get(url, function(data){
+		var json = JSON.parse(data);
+		for(var i=0;i<json.length;i++){
+			var d = json[i];
+			var t = d.time.split(":");
+			var h = t[0];
+			var m = Math.floor(t[1]/10)*10;
+			var roadData = {};
+			roadData.roadID = d.roadID;
+			roadData.level = d.level;
+			mapRoadData[h+":"+m].push(roadData);
+		}
+		UpdateMapTraffic(roadSegment,mapRoadData["0:0"]);
 	});
 }
 
@@ -344,6 +370,22 @@ window.addEventListener('load', function() {
 		weatherSite = [];
 		for(var i=0;i<json.length;i++){
 			weatherSite[json[i]._id] = json[i];
+		}
+	});
+
+	$.get("/roadSegment", function(data){
+		var json = JSON.parse(data);
+		roadSegment = [];
+		for(var i=0;i<json.length;i++){
+			var coordArr = json[i].path.split(" ");
+			var road = {};
+			var path = [];
+			for(var j=0;j<coordArr.length;j++){
+				var coord = coordArr[j].split(",");
+				path.push({lat: parseFloat(coord[1]), lng: parseFloat(coord[0])});
+			}
+			road.path = path;
+			roadSegment[json[i]._id] = road;
 		}
 	});
 

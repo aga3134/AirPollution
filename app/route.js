@@ -6,12 +6,14 @@ var Sensor10minSum = require('../db/sensor10minSum');
 var SensorDailySum = require('../db/sensorDailySum');
 var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
+var RoadSegment = require('../db/roadSegment');
 
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
 var SensorDataSchema = require('../db/sensorDataSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
+var RoadDataSchema = require('../db/roadDataSchema');
 var version = "1.0.1";
 
 module.exports = function(app){
@@ -189,6 +191,35 @@ module.exports = function(app){
 		var t = date.replace(/\//g,"_");
 		var WeatherData = mongoose.model('WeatherData_'+t, WeatherDataSchema);
 		WeatherData.find(query, { '_id': 0, '__v': 0, 'rain': 0, 'sun': 0}).lean().exec(function(err, data){
+			if(err) console.log(err);
+			if(!data) return;
+			for(var i=0;i<data.length;i++){
+				data[i].time = DateToTimeString(data[i].time);
+			}
+			res.send(JSON.stringify(data));
+		});
+	});
+
+	app.get("/roadSegment", function(req, res){
+		RoadSegment.find({},{'__v': 0},  function(err, roads){
+			if(err) console.log(err);
+			if(!roads) return;
+			res.send(JSON.stringify(roads));
+		});
+	});
+
+	app.get("/roadData", function(req, res){
+		var date = req.query.date;
+		if(!date) return;
+
+		var conditions = [];
+		conditions.push({time: {$gte: new Date(date+" 00:00")}});
+		conditions.push({time: {$lte: new Date(date+" 23:59")}});
+		var query   = {$and: conditions};
+
+		var t = date.replace(/\//g,"_");
+		var RoadData = mongoose.model('RoadData_'+t, RoadDataSchema);
+		RoadData.find(query, { '_id': 0, '__v': 0, 'speed': 0, 'travelTime': 0}).lean().exec(function(err, data){
 			if(err) console.log(err);
 			if(!data) return;
 			for(var i=0;i<data.length;i++){

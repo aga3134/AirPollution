@@ -2,6 +2,7 @@ var map;
 var pm25Array = [];
 var weatherArray = [];
 var powerStationArray = [];
+var roadArray = [];
 var infoWindow = new google.maps.InfoWindow();
 var infoIndex = -1;
 
@@ -26,14 +27,16 @@ function ClearMap(){
 	powerStationArray = [];
 }
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgb(r,g,b){
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 function ValueToColor(v){
-	function componentToHex(c) {
-	    var hex = c.toString(16);
-	    return hex.length == 1 ? "0" + hex : hex;
-	}
-	function rgb(r,g,b){
-		return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-	}
 	if(v <= 11) return rgb(156, 255, 156);
 	else if(v <= 23) return rgb(49, 255, 0);
 	else if(v <= 35) return rgb(49, 207, 0);
@@ -188,6 +191,41 @@ function UpdateMapPowerGen(data, time){
 	}
 }
 
+function UpdateMapTraffic(roadSegment, roadData){
+	var showTraffic = $("#showTraffic").is(":checked");
+	var showMap = showTraffic?map:null;
+
+	var color = [];
+	color.push(rgb(140,195,30));
+	color.push(rgb(255,255,0));
+	color.push(rgb(255,130,0));
+	color.push(rgb(255,0,0));
+
+	for(var i=0;i<roadData.length;i++){
+		var d = roadData[i];
+		var roadID = d.roadID;
+		var road = roadSegment[roadID];
+		if(!road) continue;
+		if(roadArray[roadID] == null){
+			var roadPath = new google.maps.Polyline({
+				path: road.path,
+				strokeColor: color[d.level-1],
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+				map: showMap,
+				zIndex: 4
+			});
+			
+			roadArray[roadID] = roadPath;
+		}
+		else{
+			roadArray[roadID].setOptions({
+	    		strokeColor: color[d.level-1],
+	    	});
+		}
+	}
+}
+
 function InitMap() {
 	var taiwan = new google.maps.LatLng(23.682094,120.7764642);
 
@@ -265,6 +303,9 @@ function TogglePowerStation(){
 function ToggleTraffic(){
 	var showTraffic = $("#showTraffic").is(":checked");
 	var showMap = showTraffic?map:null;
+	for(var key in roadArray) {
+		roadArray[key].setOptions({map: showMap});
+	};
 }
 
 google.maps.event.addDomListener(window, 'load', InitMap);

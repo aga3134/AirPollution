@@ -17,7 +17,7 @@ var registerTask = {};
 //重開server後要加入的task
 registerTask.InitTask = function(){
 	//啟動時更新一次資料
-	//dataToDB.DataFolderToDB();
+	dataToDB.DataFolderToDB();
 	//之後每小時更新資料
 	schedule.scheduleJob('0 0 * * * *', function(){
 		dataToDB.DataFolderToDB();

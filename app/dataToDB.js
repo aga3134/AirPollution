@@ -7,12 +7,14 @@ var Sensor10minSum = require('../db/sensor10minSum');
 var SensorDailySum = require('../db/sensorDailySum');
 var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
+var RoadSegment = require('../db/roadSegment');
 
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
 var SensorDataSchema = require('../db/sensorDataSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
+var RoadDataSchema = require('../db/roadDataSchema');
 
 var dataToDB = {};
 
@@ -273,6 +275,68 @@ dataToDB.WeatherDataToDB = function(data){
 	AddSiteRec(siteArray, 0);
 }
 
+dataToDB.RoadSegmentToDB = function(data){
+	var roadArray = [];
+	var placeArr = data.kml.Document[0].Folder[0].Placemark;
+	if(!placeArr) return;
+
+	for(var i=0;i<placeArr.length;i++){
+		var road = {};
+		road._id = placeArr[i].Snippet[0];
+		road.path = "";
+		var coordArr = placeArr[i].LineString[0].coordinates[0].split(/\s+/);
+
+		for(var j=0;j<coordArr.length;j++){
+			var coord = coordArr[j].split(",");
+			road.path += coord[0]+","+coord[1];
+			if(j < coordArr.length-1) road.path += " ";
+		}
+		roadArray.push(road);
+	}
+
+	//recursive add all roads
+	function AddRoadRec(arr, i){
+		if(i >= arr.length) return;
+		var road = arr[i];
+		RoadSegment.findOneAndUpdate({ '_id': road._id}, {'$setOnInsert': road}, {upsert: true}, function(){
+			AddRoadRec(arr, i+1);
+		});
+	}
+
+	AddRoadRec(roadArray, 0);
+}
+
+dataToDB.RoadDataToDB = function(data){
+	var roadDataArray = [];
+	var infoArr = data.XML_Head.Infos[0].Info;
+	for(var i=0;i<infoArr.length;i++){
+		var info = infoArr[i].$;
+		var d = {};
+		d._id = info.routeid+info.datacollecttime;
+		d.roadID = info.routeid;
+		d.level = info.level;
+		d.speed = info.value;
+		d.travelTime = info.traveltime;
+		d.time = info.datacollecttime;
+
+		roadDataArray.push(d);
+	}
+	//recursive add all road data
+	function AddRoadDataRec(arr, i){
+		if(i >= arr.length) return;
+		var d = arr[i];
+		var tDay = new Date(d.time);
+		var date = tDay.getFullYear()+"_"+(tDay.getMonth()+1)+"_"+tDay.getDate();
+		var RoadData = mongoose.model('RoadData_'+date, RoadDataSchema);
+
+		RoadData.findOneAndUpdate({ '_id': d._id}, {'$setOnInsert': d}, {upsert: true}, function(){
+			AddRoadDataRec(arr, i+1);
+		});
+	}
+
+	AddRoadDataRec(roadDataArray, 0);
+}
+
 dataToDB.DataFolderToDB = function(){
 	function ProcessDir(dir, doneDir, extractDate, action){
 		if (!fs.existsSync(doneDir)){
@@ -364,6 +428,34 @@ dataToDB.DataFolderToDB = function(){
 			parseXML(data, function (err, result) {
 				if(err) return console.error(err);
 				dataToDB.WeatherDataToDB(result);
+			});
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	//road segment data
+	dir = "./data/roadSegment/";
+	doneDir = "./data/done/roadSegment/";
+	ProcessDir(dir, doneDir, false, function(data){
+		try {
+			parseXML(data, function (err, result) {
+				if(err) return console.error(err);
+				dataToDB.RoadSegmentToDB(result);
+			});
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	//road data
+	dir = "./data/roadData/";
+	doneDir = "./data/done/roadData/";
+	ProcessDir(dir, doneDir, false, function(data){
+		try {
+			parseXML(data, function (err, result) {
+				if(err) return console.error(err);
+				dataToDB.RoadDataToDB(result);
 			});
 		} catch (e) {
 			return console.error(e);
