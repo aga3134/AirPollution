@@ -193,6 +193,38 @@ a {
   text-align: center;
   background-color: #ce30ff; }
 
+.traffic-index .level1 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 100px;
+  text-align: center;
+  background-color: #8cc31e; }
+
+.traffic-index .level2 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 100px;
+  text-align: center;
+  background-color: yellow; }
+
+.traffic-index .level3 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 100px;
+  text-align: center;
+  background-color: #ff8200; }
+
+.traffic-index .level4 {
+  border: 1px solid gray;
+  display: inline-block;
+  margin: 3px;
+  width: 100px;
+  text-align: center;
+  background-color: red; }
+
 .fixbar {
   z-index: 4;
   position: fixed;

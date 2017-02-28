@@ -170,6 +170,20 @@ a{
   .index10{@include index; background-color: rgb(206, 48, 255);}
 }
 
+.traffic-index{
+  @mixin level() {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 100px;
+    text-align: center;
+  }
+  .level1{@include level; background-color: rgb(140,195,30);}
+  .level2{@include level; background-color: rgb(255,255,0);}
+  .level3{@include level; background-color: rgb(255,130,0);}
+  .level4{@include level; background-color: rgb(255,0,0);}
+}
+
 .fixbar {
     z-index: 4;
     position: fixed;
