@@ -449,8 +449,8 @@ dataToDB.DataFolderToDB = function(){
 	});
 
 	//road data
-	dir = "./data/roadData/";
-	doneDir = "./data/done/roadData/";
+	dir = "./data/traffic/";
+	doneDir = "./data/done/traffic/";
 	ProcessDir(dir, doneDir, false, function(data){
 		try {
 			parseXML(data, function (err, result) {
