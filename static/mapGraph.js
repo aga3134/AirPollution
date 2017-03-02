@@ -22,9 +22,15 @@ function ClearMap(){
     		map: null
     	});
 	}
+	for(var key in roadArray){
+		roadArray[key].setOptions({
+    		map: null
+    	});
+	}
 	pm25Array = [];
 	weatherArray = [];
 	powerStationArray = [];
+	roadArray = [];
 }
 
 function componentToHex(c) {
