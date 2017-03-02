@@ -199,7 +199,7 @@ a {
   margin: 3px;
   width: 100px;
   text-align: center;
-  background-color: #8cc31e; }
+  background-color: #c8c8c8; }
 
 .traffic-index .level2 {
   border: 1px solid gray;
@@ -207,7 +207,7 @@ a {
   margin: 3px;
   width: 100px;
   text-align: center;
-  background-color: yellow; }
+  background-color: #6464ff; }
 
 .traffic-index .level3 {
   border: 1px solid gray;
@@ -215,7 +215,7 @@ a {
   margin: 3px;
   width: 100px;
   text-align: center;
-  background-color: #ff8200; }
+  background-color: #ff3200; }
 
 .traffic-index .level4 {
   border: 1px solid gray;
@@ -223,7 +223,7 @@ a {
   margin: 3px;
   width: 100px;
   text-align: center;
-  background-color: red; }
+  background-color: #963200; }
 
 .fixbar {
   z-index: 4;

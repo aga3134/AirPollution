@@ -202,10 +202,10 @@ function UpdateMapTraffic(roadSegment, roadData){
 	var showMap = showTraffic?map:null;
 
 	var color = [];
-	color.push(rgb(140,195,30));
-	color.push(rgb(255,255,0));
-	color.push(rgb(255,130,0));
-	color.push(rgb(255,0,0));
+	color.push(rgb(200,200,200));
+	color.push(rgb(100,100,255));
+	color.push(rgb(255,50,0));
+	color.push(rgb(150,50,0));
 
 	for(var i=0;i<roadData.length;i++){
 		var d = roadData[i];

@@ -178,10 +178,10 @@ a{
     width: 100px;
     text-align: center;
   }
-  .level1{@include level; background-color: rgb(140,195,30);}
-  .level2{@include level; background-color: rgb(255,255,0);}
-  .level3{@include level; background-color: rgb(255,130,0);}
-  .level4{@include level; background-color: rgb(255,0,0);}
+  .level1{@include level; background-color: rgb(200,200,200);}
+  .level2{@include level; background-color: rgb(100,100,255);}
+  .level3{@include level; background-color: rgb(255,50,0);}
+  .level4{@include level; background-color: rgb(150,50,0);}
 }
 
 .fixbar {

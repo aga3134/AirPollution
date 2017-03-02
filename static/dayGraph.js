@@ -70,7 +70,7 @@ function DrawDayGraph(sensorData) {
     //html.css("left",(w-1)*cellSize+offsetX);
     html.css("top",m*cellSize+offsetY+2);
     var firstWeekDay = new Date(year,m,1);
-    var coordX = d.getDate()+firstWeekDay.getDay();
+    var coordX = d.getDate()+firstWeekDay.getDay()-1;
     html.css("left",coordX*cellSize+offsetX);
 
     var avg = sensorData[day];
