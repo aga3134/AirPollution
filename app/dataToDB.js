@@ -309,6 +309,7 @@ dataToDB.RoadSegmentToDB = function(data){
 dataToDB.RoadDataToDB = function(data){
 	var roadDataArray = [];
 	var infoArr = data.XML_Head.Infos[0].Info;
+	if(!infoArr) return;
 	for(var i=0;i<infoArr.length;i++){
 		var info = infoArr[i].$;
 		var d = {};
