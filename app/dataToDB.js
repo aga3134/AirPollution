@@ -24,12 +24,15 @@ dataToDB.LatToArea = function(lat){
 	else return "central";
 }
 
-dataToDB.SensorDataToDB = function(data){
+dataToDB.SensorDataToDB = function(data, date, time){
 	if(data.status != "ok") return;
 	var siteArray = [];
 	var dataArray = [];
 	for(var i=0;i<data.devices.length;i++){
 		var device = data.devices[i];
+		if(device.time == ""){
+			device.time = date+" "+time;
+		}
 		var site = {};
 		site._id = device.id;
 		site.name = device.name;
@@ -352,14 +355,17 @@ dataToDB.DataFolderToDB = function(){
 			function Process(arr, i){
 				if(i >= arr.length) return;
 				var file = files[i];
+
 				fs.readFile(dir+file, 'utf8', function (err, data) {
 					if (err) console.log(err);
-					var fileTime = file.split("_")[1];
-					if(fileTime != firstDate) return;	//一次只處理一天的資料，避免out of memory
+					var seg = file.split("_");
+					var fileDate = seg[1];
+					var fileTime = (seg[2].split(".")[0]).replace("-",":")+":00"; 
+					if(fileDate != firstDate) return;	//一次只處理一天的資料，避免out of memory
 					console.log("Processing "+file+"...");
 
 					if(extractDate){
-						action(data, fileTime);
+						action(data, fileDate, fileTime);
 					}
 					else action(data);
 
@@ -376,14 +382,14 @@ dataToDB.DataFolderToDB = function(){
 	//sensor data
 	var dir = "./data/airdata/";
 	var doneDir = "./data/done/airdata/";
-	ProcessDir(dir, doneDir, false, function(data){
+	ProcessDir(dir, doneDir, true, function(data, date, time){
 		var obj;
 		try {
 			obj = JSON.parse(data);
 		} catch (e) {
 			return console.error(e);
 		}
-		dataToDB.SensorDataToDB(obj);
+		dataToDB.SensorDataToDB(obj, date, time);
 	});
 
 	//power data
