@@ -4,13 +4,13 @@ $link-fg-color: rgb(100,100,200);
 $link-hover-color: rgb(200,150,150);
 
 //==============Responsive================
-$pc-media: 800px;
+$pc-media: 1160px;
 @mixin pc-width() {
     @media only screen and (min-width: $pc-media) {
         @content;
     }
 }
-//=============================================
+//===================General======================
 html, body { 
   height: 100%; margin: 0; padding: 0; 
 }
@@ -23,46 +23,9 @@ a{
   }
 }
 
-::-webkit-scrollbar {
-  @include pc-width{
-    width: 10px;
-    height: 10px;
-  }
-}
-
-::-webkit-scrollbar-track {
-  @include pc-width{
-    background-color: rgb(50,50,50);
-  }
-}
-
-::-webkit-scrollbar-track:disabled {
-    display: none;
-}
-
-::-webkit-scrollbar-thumb {
-  @include pc-width{
-    background-color: rgb(100,100,100);
-  }
-}
-
 * {
     box-sizing: border-box;
     font-family: "微軟正黑體", "Microsoft JhengHei";
-}
-
-.logo{
-  position: relative;
-  top: 10px;
-  width: 50px;
-  height: 50px;
-}
-
-.content-container {
-    max-width: 75em;
-    margin: auto;
-    padding: 10px 0px;
-    clear: both;
 }
 
 .center{
@@ -81,33 +44,269 @@ a{
 }
 
 .title{
-  font-size: 2em;
-  padding: 10px;
+  font-size: 1.7em;
+  margin: 10px;
 }
 
 .sub-title{
   font-size: 1.5em; 
 }
 
-.map-info{
-  margin: 10px;
-  vertical-align: top;
-  text-align: left;
-  line-height: 1.5em;
+.h-scroll{
+  margin: 0px 10px;
+  width: calc(100% - 20px);
+  overflow-x: auto;
 }
 
-.map-control{
-  max-width: 600px;
-  margin: auto;
-  text-align: left;
-  .group{
-    padding: 5px;
-    display: inline-block;
+.logo{
+  position: relative;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+.content-container {
+    max-width: 75em;
+    margin: auto;
+    padding: 0px;
+    clear: both;
+}
+
+//===================map related======================
+.map-container{
+  display: inline-block;
+  position: relative;
+  width: 950px;
+  height: 500px; 
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0px;
+  #map { 
+    margin: 0px;
+    width: 100%;
+    height: 100%; 
+  }
+  .map-loading{
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 2em;
+    vertical-align: middle;
+    padding-top: 300px;
+    background-color: rgba(50,50,50,0.8);
+    z-index: 2;
+  }
+
+  .map-control{
+    margin: auto;
+    text-align: left;
+    .group{
+      padding: 5px;
+      display: inline-block;
+    }
+  }
+
+  .map-info{
+    margin: 10px;
+    vertical-align: top;
+    text-align: left;
+    line-height: 1.5em;
+    .pm25-index{
+      @mixin index() {
+        border: 1px solid gray;
+        display: inline-block;
+        margin: 3px;
+        width: 60px;
+        text-align: center;
+      }
+      .index1{@include index; background-color: rgb(156, 255, 156);}
+      .index2{@include index; background-color: rgb(49, 255, 0);}
+      .index3{@include index; background-color: rgb(49, 207, 0);}
+      .index4{@include index; background-color: rgb(255, 255, 0);}
+      .index5{@include index; background-color: rgb(255, 207, 0);}
+      .index6{@include index; background-color: rgb(255, 154, 0);}
+      .index7{@include index; background-color: rgb(255, 100, 100);}
+      .index8{@include index; background-color: rgb(255, 0, 0);}
+      .index9{@include index; background-color: rgb(153, 0, 0);}
+      .index10{@include index; background-color: rgb(206, 48, 255);}
+    }
+
+    .traffic-index{
+      @mixin level() {
+        border: 1px solid gray;
+        display: inline-block;
+        margin: 3px;
+        width: 100px;
+        text-align: center;
+      }
+      .level1{@include level; background-color: rgb(200,200,200);}
+      .level2{@include level; background-color: rgb(100,100,255);}
+      .level3{@include level; background-color: rgb(255,50,0);}
+      .level4{@include level; background-color: rgb(150,50,0);}
+    }
+  }
+
+  @mixin mapIcon() {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 2;
+    &:hover{
+      border: 1px solid rgb(255,255,0);
+    }
+  }
+  #controlIcon{
+    @include mapIcon;
+    bottom: 5px;
+    left: 5px;
+  }
+  #powerIcon{
+    @include mapIcon;
+    bottom: 10px;
+    right: 10px;
+  }
+  #globalIcon{
+    @include mapIcon;
+    top: 10px;
+    left: 10px;
+  }
+
+  @mixin panel(){
+    position: absolute;
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    background-color: rgba(250,250,250,0.8);
+    padding: 10px;
+    overflow: auto;
+  }
+  #controlPanel{
+    @include panel;
+    bottom: 0px;
+    left: 0px;
+    width: 350px;
+    height: 150px;
+  }
+  #powerPanel{
+    @include panel;
+    bottom: 0px;
+    right: 0px;
+    width: 500px;
+    height: 400px;
+  }
+  #globalPanel{
+    @include panel;
+    top: 0px;
+    left: 0px;
+    width: 400px;
+    height: 350px;
   }
 }
 
+//===================day select======================
+.date-menu{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  display: block;
+  @include pc-width{
+    display: none;
+  }
+  cursor: pointer;
+  z-index: 6;
+}
+.sidebar{
+  position: fixed;
+  right: -220px;
+  top: 0px;
+  padding-top: 10px;
+  z-index: 5;
+  @include pc-width{
+    position: relative;
+    right: 0px;
+    top: 0px;
+    z-index: 3;
+  }
+  vertical-align: top;
+  display: inline-block;
+  width: 220px;
+  height: 500px;
+  max-height: calc(100% - 50px);
+  margin: auto;
+  background-color: white;
+  
+  
+  #dayContainer{
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    background-color: rgb(250,250,250);
+    .day-bt{
+      position: absolute;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background-color: rgb(255,200,255);
+      cursor: pointer;
+      &:hover{
+        border: 2px solid black;
+      }
+      &.select{
+        border: 3px solid blue;
+      }
+    }
+
+    .date-label{
+      position: absolute;
+    }
+  }
+}
+
+//===================svg graph related======================
+.graph{
+  margin: 0px;
+  width: calc(100% - 10px);
+  display: inline-block;
+  svg{
+    margin: 0px;
+    width: 100%;
+    height: 350px;
+    font-size: 0.5em;
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .browser text {
+      text-anchor: end;
+    }
+  }
+
+  .graph-label{
+    display: inline-block;
+    text-align: center;
+    margin: 0px 10px 10px 10px;
+  }
+
+  img{
+    max-width: 100%;
+  }
+}
+
+//===================data reference======================
 .ref{
   margin: 10px;
+  padding: 10px;
   width: calc(100% - 30px);
   display: inline-block;
   vertical-align: top;
@@ -118,194 +317,71 @@ a{
 }
 
 .paper{
+  padding: 10px;
   margin: 10px;
   li{
     padding: 5px 0px;
   }
 }
 
-.map-container{
-  position: relative;
-}
-
-#map { 
-  margin: 10px auto;
-  width: 100%;
-  max-width: 1200px;
-  height: 350px; 
-}
-
-.map-loading{
-  display: block;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 350px;
-  color: white;
-  font-size: 2em;
-  vertical-align: middle;
-  padding-top: 150px;
-  background-color: rgba(50,50,50,0.8);
-  z-index: 2;
-}
-
-.pm25-index{
-  @mixin index() {
-    border: 1px solid gray;
-    display: inline-block;
-    margin: 3px;
-    width: 60px;
-    text-align: center;
-  }
-  .index1{@include index; background-color: rgb(156, 255, 156);}
-  .index2{@include index; background-color: rgb(49, 255, 0);}
-  .index3{@include index; background-color: rgb(49, 207, 0);}
-  .index4{@include index; background-color: rgb(255, 255, 0);}
-  .index5{@include index; background-color: rgb(255, 207, 0);}
-  .index6{@include index; background-color: rgb(255, 154, 0);}
-  .index7{@include index; background-color: rgb(255, 100, 100);}
-  .index8{@include index; background-color: rgb(255, 0, 0);}
-  .index9{@include index; background-color: rgb(153, 0, 0);}
-  .index10{@include index; background-color: rgb(206, 48, 255);}
-}
-
-.traffic-index{
-  @mixin level() {
-    border: 1px solid gray;
-    display: inline-block;
-    margin: 3px;
-    width: 100px;
-    text-align: center;
-  }
-  .level1{@include level; background-color: rgb(200,200,200);}
-  .level2{@include level; background-color: rgb(100,100,255);}
-  .level3{@include level; background-color: rgb(255,50,0);}
-  .level4{@include level; background-color: rgb(150,50,0);}
-}
-
-.fixbar {
-    z-index: 4;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    background-color: $fixbar-bg-color;
-    color: $fixbar-fg-color;
-}
-
-svg{
-  margin: 0px;
-  width: 100%;
-  height: 350px;
-  font-size: 0.5em;
-}
-
-.graph{
-  margin: 0px;
-  width: calc(100% - 10px);
-  display: inline-block;
-  @include pc-width{
-    width: calc(50% - 10px);
-  }
-}
-
-img{
-  max-width: 100%;
-}
-
-.graph-label{
-  display: inline-block;
-  text-align: center;
-  margin: 0px 10px 10px 10px;
-}
-
-.fixbar-label{
-  display: inline-block;
-  margin: 20px 5px 0px 5px;
-}
-
-.bt{
-  margin: 0px;
-  padding: 5px;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  &:hover{
-    border: 1px solid rgb(100,100,100);
-  }
-}
-
-.h-scroll{
-  margin: 0px 10px;
-  width: calc(100% - 20px);
-  overflow-x: scroll;
-}
-
-#dayContainer{
-  position: relative;
-  width: 920px;
-  height: 270px;
-  margin: auto;
-}
-
-.day-bt{
-  position: absolute;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-color: rgb(255,200,255);
-  cursor: pointer;
-  &:hover{
-    border: 2px solid black;
-  }
-  &.select{
-    border: 3px solid blue;
-  }
-}
-
-.time-label{
-  position: absolute;
-}
-
-#showTime{
-  position: relative;
-  width: 100%;
-  height: 30px;
-  margin: 10px 0px 10px 0px;
-  font-size: 0.5em;
-}
-
-.time-bt{
-  position: absolute;
-  display: inline-block;
-  width: 8px;
-  height: 20px;
-  background-color: rgb(200,200,255);
-  cursor: pointer;
-  &:hover{
-    background-color: rgb(150,150,200);
-  }
-  &.select{
-    border: 2px solid rgb(50,50,250);
-  }
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.browser text {
-  text-anchor: end;
-}
-
 .footer-padding{
   padding: 10px;
   width: 100%;
-  height: 180px;
+  height: 130px;
   background-color: $fixbar-bg-color;
   color: $fixbar-fg-color;
+}
+
+//===================play control related======================
+.fixbar {
+  z-index: 4;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: $fixbar-bg-color;
+  color: $fixbar-fg-color;
+
+  .fixbar-label{
+    vertical-align: top;
+    display: inline-block;
+    margin: 15px 5px 0px 5px;
+  }
+
+  .bt{
+    margin: 10px 5px 0px 5px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    &:hover{
+      border: 1px solid rgb(100,100,100);
+    }
+  }
+
+  #showTime{
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin: 10px 0px 10px 0px;
+    font-size: 0.5em;
+  }
+
+  .time-label{
+    position: absolute;
+  }
+
+  .time-bt{
+    position: absolute;
+    display: inline-block;
+    width: 8px;
+    height: 20px;
+    background-color: rgb(200,200,255);
+    cursor: pointer;
+    &:hover{
+      background-color: rgb(150,150,200);
+    }
+    &.select{
+      border: 2px solid rgb(50,50,250);
+    }
+  }
 }

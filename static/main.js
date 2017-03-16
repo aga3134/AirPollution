@@ -17,7 +17,7 @@ function ShowDate(date){
   if(!date){
   	date = curDate;
   }
-  var str = "日期: "+date;
+  var str = date;
   $("#showDay").text(str);
 }
 
@@ -50,15 +50,15 @@ function ChangeDate(date){
 	var selected = $("#dayContainer").children(".day-bt[data-date='"+date+"']");
 	$("#selectBlock").css("top",selected.css("top"));
 	$("#selectBlock").css("left",selected.css("left"));
-	var scrollX = parseInt(selected.css("left")) - $("body").width()*0.5;
-	$("#dayContainer").parent(".h-scroll").animate({scrollLeft: scrollX}, 1000);
+	var scrollY = parseInt(selected.css("top")) - $("body").height()*0.5;
+	$("#dayContainer").animate({scrollTop: scrollY}, 1000);
 	
 	ClearMap();
 	ShowDate();
 	var d = curYear+"/"+curDate;
-	SetDateLabel(curYear+"/"+curDate);
+	SetDateLabel(d);
 	SetupImageSrc(d);
-	LoadPowerGraph(d);
+	//LoadPowerGraph(d);
 
 	$.get("/sensor10minSum?date="+curYear+"/"+date, function(data){
 		var json = JSON.parse(data);
@@ -412,4 +412,54 @@ window.addEventListener('load', function() {
 	$("#showPowerStation").change(TogglePowerStation);
 
 	$("#showTraffic").change(ToggleTraffic);
+
+	$("body").animate({scrollTop: 60}, 1000);
+
+	var moveTime = 500;
+	$("#controlIcon").animate({bottom: 5, left: 75}, moveTime);
+	$("#powerIcon").animate({bottom: 125, right: 10}, moveTime);
+	$("#globalIcon").animate({top: 10, left: 130}, moveTime);
+
+	function TogglePanel(panel){
+		var mode = panel.css("display");
+		if(mode == "none"){
+			panel.css("display","block");
+			return true;
+		}
+		else if(mode == "block"){
+			panel.css("display","none");
+			return false;
+		}
+	}
+	$("#controlIcon").click(function(){
+		var open = TogglePanel($("#controlPanel"));
+		if(open) $("#controlIcon").animate({bottom: 5, left: 5}, moveTime);
+		else $("#controlIcon").animate({bottom: 5, left: 75}, moveTime);
+	});
+	$("#powerIcon").click(function(){
+		var open = TogglePanel($("#powerPanel"));
+		if(open){
+			$("#powerIcon").animate({bottom: 10, right: 10}, moveTime);
+			var d = curYear+"/"+curDate;
+			LoadPowerGraph(d);
+		}
+		else $("#powerIcon").animate({bottom: 125, right: 10}, moveTime);
+	});
+	$("#globalIcon").click(function(){
+		var open = TogglePanel($("#globalPanel"));
+		if(open) $("#globalIcon").animate({top: 10, left: 10}, moveTime);
+		else $("#globalIcon").animate({top: 10, left: 130}, moveTime);
+	});
+
+	$("#menuIcon").click(function(){
+		var sidebar = $(".sidebar");
+		if(sidebar.css("right") == "0px") sidebar.animate({right: "-220px"}, moveTime);
+		else if(sidebar.css("right") == "-220px") sidebar.animate({right: "0px"}, moveTime);
+	});
+});
+
+$( window ).resize(function() {
+	var mode = $("#menuIcon").css("display");
+	if(mode == "block") $(".sidebar").css("right","-220px");
+	else if(mode == "none") $(".sidebar").css("right","0px");
 });

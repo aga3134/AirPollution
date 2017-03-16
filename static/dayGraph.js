@@ -44,8 +44,7 @@ function DrawDayGraph(sensorData) {
   var dayContainer = $("#dayContainer");
   dayContainer.html("");
   var w = Math.min($("body").width(), dayContainer.width());
-  var offsetX = (w-53*cellSize)*0.5;
-  if(offsetX < 40) offsetX = 40;
+  var offsetX = cellSize;
   var offsetY = cellSize;
   
   var year = parseInt($("#showYear").val());
@@ -68,10 +67,10 @@ function DrawDayGraph(sensorData) {
 
     //html.css("top",weekDay*cellSize);
     //html.css("left",(w-1)*cellSize+offsetX);
-    html.css("top",m*cellSize+offsetY+2);
+    html.css("top",(w-1)*cellSize+offsetY);
     var firstWeekDay = new Date(year,m,1);
     var coordX = d.getDate()+firstWeekDay.getDay()-1;
-    html.css("left",coordX*cellSize+offsetX);
+    html.css("left",weekDay*cellSize+offsetY);
 
     var avg = sensorData[day];
     if(avg){
@@ -83,13 +82,13 @@ function DrawDayGraph(sensorData) {
     }
     
     //add month border
-    /*var nl = AddDate(d,-7), nr = AddDate(d,7);
-    var nt = AddDate(d,-1), nb = AddDate(d,1);
-    var borderStyle = "2px solid blue";
-    if(nr.getMonth() != m) html.css("border-right",borderStyle);
-    if(nt.getMonth() != m || weekDay == 0) html.css("border-top",borderStyle);
-    if(nl.getMonth() == 11 && m != 11) html.css("border-left",borderStyle);
-    if(weekDay == 6 || (m == 11 && nb.getMonth() != 11)) html.css("border-bottom",borderStyle);*/
+    var nl = AddDate(d,-1), nr = AddDate(d,1);
+    var nt = AddDate(d,-7), nb = AddDate(d,7);
+    var borderStyle = "1px solid blue";
+    if(weekDay == 6 || (nr.getMonth() != m)) html.css("border-right",borderStyle);
+    if(nt.getMonth() != m) html.css("border-top",borderStyle);
+    if(weekDay == 0 || (nl.getMonth() != m && m == 0)) html.css("border-left",borderStyle);
+    if(nb.getMonth() != m && m == 11) html.css("border-bottom",borderStyle);
     dayContainer.append(html);
   }
   //add select block
@@ -101,46 +100,32 @@ function DrawDayGraph(sensorData) {
 
   //add month label
   for(var i=0;i<12;i++){
-    var html = $("<div>"+(i+1)+"月</div>");
-    html.attr("class","time-label");
+    var cm = ["一","二","三","四","五","六","七","八","九","十","十一","十二"];
+    var html = $("<div>"+cm[i]+"月</div>");
+    html.attr("class","date-label");
     //html.css("top",cellSize*7);
     //html.css("left",offsetX+(i)*53*cellSize/12);
-    html.css("top",cellSize*i+offsetY);
+    html.css("top",(i*(53/12)+2)*cellSize+offsetY);
     html.css("left",0);
-    dayContainer.append(html);
-
-    html = $("<div>"+(i+1)+"月</div>");
-    html.attr("class","time-label");
-    html.css("top",cellSize*i+offsetY);
-    html.css("left",(7*6)*cellSize+offsetX);
+    html.css("height","60px");
+    html.css("writing-mode","tb");
     dayContainer.append(html);
   }
   //add weekday label
-  //for(var i=0;i<7;i++){
-  for(var i=0;i<7*6;i++){
-    var wd = "";
-    //switch(i){
-    switch(i%7){
-      case 0: wd = "日"; break;
-      case 1: wd = "一"; break;
-      case 2: wd = "二"; break;
-      case 3: wd = "三"; break;
-      case 4: wd = "四"; break;
-      case 5: wd = "五"; break;
-      case 6: wd = "六"; break;
-    }
-    var html = $("<div>"+wd+"</div>");
-    html.attr("class","time-label");
+  for(var i=0;i<7;i++){
+    var wd = ["日","一","二","三","四","五","六"];
+    var html = $("<div>"+wd[i]+"</div>");
+    html.attr("class","date-label");
     //html.css("top",i*cellSize);
     //html.css("left",offsetX-20);
     html.css("top",0);
     html.css("left",i*cellSize+offsetX);
     dayContainer.append(html);
 
-    /*var html = $("<div>"+wd+"</div>");
-    html.attr("class","time-label");
-    html.css("top",i*cellSize);
-    html.css("left",offsetX+cellSize*53+5);
-    dayContainer.append(html);*/
+    var html = $("<div>"+wd[i]+"</div>");
+    html.attr("class","date-label");
+    html.css("top",54*cellSize);
+    html.css("left",i*cellSize+offsetX);
+    dayContainer.append(html);
   }
 }

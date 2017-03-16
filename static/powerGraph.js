@@ -187,12 +187,14 @@ function SetPowerGraphTime(time){
     DrawPowerInfo("#powerLoad", time, loadInfo);
 }
 
-function LoadPowerGraph(date){
+function LoadPowerGraph(date, time){
   d3.json("/powerRatio?date="+date, function(err, json){
     ratioInfo = DrawStackArea("#powerRatio", json);
+    if(time) DrawPowerInfo("#powerRatio", time, ratioInfo);
   });
 
   d3.json("/powerLoad?date="+date, function(err, json){
     loadInfo = DrawStackArea("#powerLoad", json);
+    if(time) DrawPowerInfo("#powerLoad", time, loadInfo);
   });
 }

@@ -8,6 +8,7 @@
   	"fs-extra":"~0.26.5",
   	"node-schedule":"~1.1.0",
   	"xml2js":"~0.4.17",
-    "lz-string":"~1.4.4"
+    "lz-string":"~1.4.4",
+    "moment-timezone":"~0.5.1"
   }
 }
