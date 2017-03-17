@@ -4,6 +4,7 @@ var weatherArray = [];
 var powerStationArray = [];
 var roadArray = [];
 var infoWindow = new google.maps.InfoWindow();
+var pm25Window = new google.maps.InfoWindow();
 var infoIndex = -1;
 
 function ClearMap(){
@@ -62,6 +63,19 @@ function UpdateMapPM25(data){
 	else{
 		$(".map-loading").css("display","none");
 	}
+
+	function clickFn(d){ 
+		return function() {
+			var str = "<p>"+d.siteName+"測站</p><p>PM2.5數值: "+d.pm25+"</p><p>更新時間: "+d.time;
+			var loc = new google.maps.LatLng(d.lat, d.lng);
+			pm25Window.setOptions({content: str, position: loc});
+			pm25Window.open(map);
+		};
+	}
+	if(pm25Window.getMap()){
+		pm25Window.setOptions({map: null});
+	}
+
 	var opacity = $("#opacity").val();
 	var radius = $("#pm25Radius").val();	//單位公里
 	for(var i=0;i<data.length;i++){
@@ -80,10 +94,14 @@ function UpdateMapPM25(data){
 		      radius: radius*1000,	//單位公尺
 		      zIndex: 1
 		    });
+		    circle.listener = circle.addListener('click', clickFn(d));
 	    	pm25Array[d.siteID] = circle;
 	    }
 	    else{
-	    	pm25Array[d.siteID].setOptions({
+	    	var circle = pm25Array[d.siteID];
+	    	google.maps.event.clearListeners(circle,'click');
+	    	circle.addListener('click', clickFn(d));
+	    	circle.setOptions({
 	    		//center: loc,
 	    		fillColor: ValueToColor(d.pm25)
 	    	});

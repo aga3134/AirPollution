@@ -97,9 +97,11 @@ function ChangeDate(date){
 				var site = siteData[d.siteID];
 				var sensorData = {};
 				sensorData.siteID = d.siteID;
+				sensorData.siteName = site.name;
 				sensorData.lat = site.lat;
 				sensorData.lng = site.lng;
 				sensorData.pm25 = d.pm25;
+				sensorData.time = curYear+"/"+date+" "+d.time;
 				mapSensorData[h+":"+m].push(sensorData);
 			}
 			if(hour == 0) ChangeTime("0:0");
