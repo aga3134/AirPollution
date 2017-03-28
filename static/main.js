@@ -33,6 +33,7 @@ function ChangeTime(time){
 	$("#showTime").parent(".h-scroll").animate({scrollLeft: scrollX}, speed);
 
 	curTime = time;
+
 	$("#timeLabel").text(time);
 	UpdateMapPM25(mapSensorData[time]);
 	var hour = time.split(":")[0];
@@ -414,6 +415,11 @@ window.addEventListener('load', function() {
 	$("#showPowerStation").change(TogglePowerStation);
 
 	$("#showTraffic").change(ToggleTraffic);
+
+	$("#showRelative").change(function(){
+		ToggleRelative();
+		UpdateMapPM25(mapSensorData[curTime]);	
+	});
 
 	$("body").animate({scrollTop: 60}, 1000);
 

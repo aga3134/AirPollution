@@ -4,7 +4,7 @@ $link-fg-color: rgb(100,100,200);
 $link-hover-color: rgb(200,150,150);
 
 //==============Responsive================
-$pc-media: 1160px;
+$pc-media: 1024px;
 @mixin pc-width() {
     @media only screen and (min-width: $pc-media) {
         @content;
@@ -76,7 +76,10 @@ a{
 .map-container{
   display: inline-block;
   position: relative;
-  width: 950px;
+  width: 100%;
+  @include pc-width{
+    width: calc(100% - 230px);
+  }
   height: 500px; 
   max-width: 100%;
   max-height: 100%;

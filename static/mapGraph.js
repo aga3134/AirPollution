@@ -6,6 +6,7 @@ var roadArray = [];
 var infoWindow = new google.maps.InfoWindow();
 var pm25Window = new google.maps.InfoWindow();
 var infoIndex = -1;
+var showRelative;
 
 function ClearMap(){
 	for(var key in pm25Array){
@@ -78,33 +79,53 @@ function UpdateMapPM25(data){
 
 	var opacity = $("#opacity").val();
 	var radius = $("#pm25Radius").val();	//單位公里
+
+	var strokeWeight = showRelative?1:0;
+	var relativeColor = d3.scale.linear().domain([0,15]).range(["#00ff00", "#ff0000"]);
+	var fillColor;
 	for(var i=0;i<data.length;i++){
 		var d = data[i];
 		var loc = new google.maps.LatLng(d.lat, d.lng);
 
 	    if(pm25Array[d.siteID] == null){
+	    	if(showRelative){
+	    		fillColor = relativeColor(0);
+	    	}
+	    	else{
+	    		fillColor = ValueToColor(d.pm25);
+	    	}
+
 	    	var circle = new google.maps.Circle({
-		      strokeColor: '#000000',
-		      strokeOpacity: 0.0,
-		      strokeWeight: 0,
-		      fillColor: ValueToColor(d.pm25),
+		      strokeColor: '#FFFFFF',
+		      strokeOpacity: 0.5,
+		      strokeWeight: strokeWeight,
+		      fillColor: fillColor,
 		      fillOpacity: opacity,
 		      map: map,
 		      center: loc,
 		      radius: radius*1000,	//單位公尺
-		      zIndex: 1
+		      zIndex: 1,
 		    });
+		    circle.pm25 = d.pm25;
 		    circle.listener = circle.addListener('click', clickFn(d));
 	    	pm25Array[d.siteID] = circle;
 	    }
 	    else{
 	    	var circle = pm25Array[d.siteID];
+	    	if(showRelative){
+	    		fillColor = relativeColor(d.pm25 - circle.pm25);
+	    	}
+	    	else{
+	    		fillColor = ValueToColor(d.pm25);
+	    	}
 	    	google.maps.event.clearListeners(circle,'click');
 	    	circle.addListener('click', clickFn(d));
 	    	circle.setOptions({
 	    		//center: loc,
-	    		fillColor: ValueToColor(d.pm25)
+	    		strokeWeight: strokeWeight,
+	    		fillColor: fillColor,
 	    	});
+	    	circle.pm25 = d.pm25;
 	    }
 	}
 }
@@ -201,13 +222,14 @@ function UpdateMapPowerGen(data, time){
 				zIndex: 2,
 				map: showMap
 			});
-			
-			rect.addListener('click', clickFn(data,i,time));
+			rect.listener = rect.addListener('click', clickFn(data,i,time));
 			powerStationArray[d.name] = rect;
 		}
 		else{
-			powerStationArray[d.name].addListener('click', clickFn(data,i,time));
-			powerStationArray[d.name].setOptions({
+			var rect = powerStationArray[d.name];
+	    	google.maps.event.clearListeners(rect,'click');
+	    	rect.addListener('click', clickFn(data,i,time));
+			rect.setOptions({
 	    		path: coord
 	    	});
 		}
@@ -330,6 +352,10 @@ function ToggleTraffic(){
 	for(var key in roadArray) {
 		roadArray[key].setOptions({map: showMap});
 	};
+}
+
+function ToggleRelative(){
+	showRelative = $("#showRelative").is(":checked");
 }
 
 google.maps.event.addDomListener(window, 'load', InitMap);

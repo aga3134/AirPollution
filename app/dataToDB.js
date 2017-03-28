@@ -102,7 +102,7 @@ dataToDB.SensorDataToDB = function(data, date, time){
 	function AddSiteRec(arr, i){
 		if(i >= arr.length) return AddSiteDataRec(dataArray,0);	//add site data after all site added
 		var site = arr[i];
-		SensorSite.findOneAndUpdate({ '_id': site._id}, {'$setOnInsert': site}, {upsert: true}, function(){
+		SensorSite.findOneAndUpdate({ '_id': site._id}, {'$set': { 'lat': site.lat, 'lng': site.lng }, '$setOnInsert': site}, {upsert: true}, function(){
 			AddSiteRec(arr, i+1);
 		});
 	}
