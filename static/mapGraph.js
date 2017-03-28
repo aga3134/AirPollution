@@ -57,8 +57,9 @@ function ValueToColor(v){
 	else return rgb(206, 48, 255);
 }
 
-function UpdateMapPM25(data){
-	if(data.length == 0){
+function UpdateMapPM25(data, preData){
+	var keyLength = Object.keys(data).length;
+	if(keyLength == 0){
 		$(".map-loading").css("display","block");
 	}
 	else{
@@ -83,13 +84,15 @@ function UpdateMapPM25(data){
 	var strokeWeight = showRelative?1:0;
 	var relativeColor = d3.scale.linear().domain([0,15]).range(["#00ff00", "#ff0000"]);
 	var fillColor;
-	for(var i=0;i<data.length;i++){
-		var d = data[i];
+	for (var key in data) {
+		var d = data[key];
+		var preD = preData[key];
 		var loc = new google.maps.LatLng(d.lat, d.lng);
 
 	    if(pm25Array[d.siteID] == null){
 	    	if(showRelative){
-	    		fillColor = relativeColor(0);
+	    		if(preD) fillColor = relativeColor(d.pm25-preD.pm25);
+	    		else fillColor = relativeColor(0);
 	    	}
 	    	else{
 	    		fillColor = ValueToColor(d.pm25);
@@ -106,14 +109,14 @@ function UpdateMapPM25(data){
 		      radius: radius*1000,	//單位公尺
 		      zIndex: 1,
 		    });
-		    circle.pm25 = d.pm25;
 		    circle.listener = circle.addListener('click', clickFn(d));
 	    	pm25Array[d.siteID] = circle;
 	    }
 	    else{
 	    	var circle = pm25Array[d.siteID];
 	    	if(showRelative){
-	    		fillColor = relativeColor(d.pm25 - circle.pm25);
+	    		if(preD) fillColor = relativeColor(d.pm25-preD.pm25);
+	    		else fillColor = relativeColor(0);
 	    	}
 	    	else{
 	    		fillColor = ValueToColor(d.pm25);
@@ -125,7 +128,6 @@ function UpdateMapPM25(data){
 	    		strokeWeight: strokeWeight,
 	    		fillColor: fillColor,
 	    	});
-	    	circle.pm25 = d.pm25;
 	    }
 	}
 }

@@ -1,6 +1,6 @@
 var map;
 var timerID;
-var curYear, curDate, curTime;
+var curYear, curDate, curTime, preTime;
 var maxDate, minDate;
 var timeInterval = 10;
 
@@ -34,8 +34,21 @@ function ChangeTime(time){
 
 	curTime = time;
 
+	var t = time.split(":");
+	var h = parseInt(t[0]);
+	var m = parseInt(t[1]);
+	m -= 10;
+	if(m < 0){
+		m = 50; h -= 1;
+		if(h < 0){
+			h = 0; m = 0;
+		}
+	}
+	preTime = h+":"+m;
+
+
 	$("#timeLabel").text(time);
-	UpdateMapPM25(mapSensorData[time]);
+	UpdateMapPM25(mapSensorData[time], mapSensorData[preTime]);
 	var hour = time.split(":")[0];
 	UpdateMapWeather(mapWeatherData[hour]);
 	SetPowerGraphTime(time);
@@ -103,7 +116,7 @@ function ChangeDate(date){
 				sensorData.lng = site.lng;
 				sensorData.pm25 = d.pm25;
 				sensorData.time = curYear+"/"+date+" "+d.time;
-				mapSensorData[h+":"+m].push(sensorData);
+				mapSensorData[h+":"+m][d.siteID] = sensorData;
 			}
 			if(hour == 0) ChangeTime("0:0");
 			else if(curTime != "0:0") ChangeTime(curTime);
@@ -418,7 +431,7 @@ window.addEventListener('load', function() {
 
 	$("#showRelative").change(function(){
 		ToggleRelative();
-		UpdateMapPM25(mapSensorData[curTime]);	
+		UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
 	});
 
 	$("body").animate({scrollTop: 60}, 1000);
