@@ -9,6 +9,9 @@ var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 
+var moment = require("moment");
+var zoneStr = "Asia/Taipei";
+
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
@@ -159,7 +162,13 @@ dataToDB.PowerGenToDB = function(data){
 	AddStationRec(stationArray, 0);
 }
 
-dataToDB.PowerLoadToDB = function(data, date){
+dataToDB.PowerLoadToDB = function(data, date, time){
+	//loadareas資料在凌晨12點取時會得到前一天的完整資料，把日期調回前一天
+	if(time == "00:00:00"){
+		var yestoday = moment(date).add(-1,"days");
+		date = yestoday.format("YYYY-MM-DD");
+	}
+
 	var loadArr = data.split("\n");
 
 	function AddLoadDataRec(arr, i){
@@ -181,7 +190,13 @@ dataToDB.PowerLoadToDB = function(data, date){
 	AddLoadDataRec(loadArr, 0);
 }
 
-dataToDB.PowerRatioToDB = function(data, date){
+dataToDB.PowerRatioToDB = function(data, date, time){
+	//loadfueltype資料在凌晨12點取時會得到前一天的完整資料，把日期調回前一天
+	if(time == "00:00:00"){
+		var yestoday = moment(date).add(-1,"days");
+		date = yestoday.format("YYYY-MM-DD");
+	}
+	
 	var ratioArr = data.split("\n");
 
 	function AddLoadRatioRec(arr, i){
