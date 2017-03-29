@@ -109,6 +109,7 @@ function ChangeDate(date){
 				var h = t[0];
 				var m = Math.floor(t[1]/10)*10;
 				var site = siteData[d.siteID];
+				if(!site) continue;
 				var sensorData = {};
 				sensorData.siteID = d.siteID;
 				sensorData.siteName = site.name;
