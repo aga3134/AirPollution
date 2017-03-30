@@ -424,9 +424,9 @@ dataToDB.DataFolderToDB = function(){
 
 	dir = "./data/loadareas/";
 	doneDir = "./data/done/loadareas/";
-	ProcessDir(dir, doneDir, true, function(data, date){
+	ProcessDir(dir, doneDir, true, function(data, date, time){
 		try {
-			dataToDB.PowerLoadToDB(data, date);
+			dataToDB.PowerLoadToDB(data, date, time);
 		} catch (e) {
 			return console.error(e);
 		}
@@ -434,9 +434,9 @@ dataToDB.DataFolderToDB = function(){
 
 	dir = "./data/loadfueltype/";
 	doneDir = "./data/done/loadfueltype/";
-	ProcessDir(dir, doneDir, true, function(data, date){
+	ProcessDir(dir, doneDir, true, function(data, date, time){
 		try {
-			dataToDB.PowerRatioToDB(data, date);
+			dataToDB.PowerRatioToDB(data, date, time);
 		} catch (e) {
 			return console.error(e);
 		}
