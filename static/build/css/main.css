@@ -89,6 +89,10 @@ a {
     vertical-align: top;
     text-align: left;
     line-height: 1.5em; }
+    .map-container .map-info .time-block {
+      margin: 0px 5px;
+      padding: 5px 10px;
+      background: linear-gradient(green, yellow, red); }
     .map-container .map-info .pm25-index .index1 {
       border: 1px solid gray;
       display: inline-block;
@@ -349,9 +353,12 @@ a {
 .footer-padding {
   padding: 10px;
   width: 100%;
-  height: 130px;
+  height: 350px;
   background-color: #323232;
   color: white; }
+  .footer-padding img {
+    max-width: 100%;
+    width: 256px; }
 
 .fixbar {
   z-index: 4;

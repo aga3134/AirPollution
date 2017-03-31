@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>紫豹在哪裡</title>
+    <link rel="icon" href="/static/image/purpleLeopard.png?v={{version}}">
+
+    <link rel="canonical" href="" />
+    <meta property="og:url" content="" />
+    
+    <meta name="description" content="還在別人怎麼說你就怎麼信?!「紫豹在哪裡」整合空氣汙染相關的各種數據，以時間、空間的角度做視覺化呈現。汙染的真相自己找，自己的肺泡自己救!"/>
+    <meta property="og:description" content="還在別人怎麼說你就怎麼信?!「紫豹在哪裡」整合空氣汙染相關的各種數據，以時間、空間的角度做視覺化呈現。汙染的真相自己找，自己的肺泡自己救!" />
+
+    <meta property="og:site_name" content="紫豹在哪裡" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="紫豹在哪裡" />
+    <meta property="og:image" content="/static/image/purpleLeopard.png?v={{version}}" />
+
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="static/build/css/main.css?v={{version}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,11 +48,17 @@
               <div class="group">
                 空汙透明度: 
                 <input type="range" id="opacity" min="0.0" max="1" step="0.1" value="0.4">
+                <span id="opLabel">40%</span>
               </div>
               <div class="group">
                 空汙顯示半徑: 
                 <input type="range" id="pm25Radius" min="0.1" max="5" step="0.1" value="2">
                 <span id="radiusLabel">2.0公里</span>
+              </div>
+              <div class="group">
+                相對變化: <input type="checkbox" id="showRelative">
+                靈敏度<input type="range" id="sensitive" min="5" max="25" step="1" value="15">
+                <span id="sensLabel">15</span>
               </div>
               <div class="group">
                 風向: <input type="checkbox" id="showWind" checked>
@@ -47,11 +68,6 @@
               </div>
               <div class="group">
                 交通: <input type="checkbox" id="showTraffic" checked>
-              </div>
-              <div>
-                <div class="group">
-                  相對變化: <input type="checkbox" id="showRelative">
-                </div>
               </div>
           </div>
         </div>
@@ -80,15 +96,19 @@
         </div>
 
         <div>
-          <div class="graph-label">PM2.5空汙動態地圖</div>
+          <div class="graph-label">PM2.5空汙動態地圖 (<span id="timeLabel"></span>)</div>
         </div>
         
         <div class="map-info">
-          <div class="sub-title"><strong>操作說明:</strong></div>
-        </div>
-        <div class="map-info">
           <div class="sub-title"><strong>圖示說明:</strong></div>
           <ul>
+          <li>
+              <a href="https://docs.google.com/presentation/d/1R6mBotesid82MhmGlj3xJmwwZWKB-ZiYYP2ZgUiKGCA/edit?usp=sharing" target="_blank">介面操作</a>
+            </li>
+          <li>日期與時間框
+          <span class="time-block"></span>
+          從上到下分成三個區塊，分別代表北中南部的PM2.5平均數值
+          </li>
             <li>彩色圓圈: PM2.5資料 顏色依
               <a href="http://taqm.epa.gov.tw/taqm/tw/fpmi.aspx">環保署細懸浮微粒指標</a>表示:
               <div class="pm25-index">
@@ -191,10 +211,19 @@
           </li>
         </ul>
       </div>
+      <div class="paper">
+      <div class="sub-title"><strong>關於專案:</strong></div>
+        <ul>
+          <li><a href="https://github.com/aga3134/AirPollution" target="_blank">網站開源程式碼</a></li>
+          <li><a href="https://grants.g0v.tw/projects/5879cd6e55fa75001ef55ef3" target="_blank">g0v 公民科技創新獎助金提案</a></li>
+          <li><a href="" target="_blank">其他專案</a></li>
+        </ul>
+      </div>
       
     </div>
     <div class="footer-padding">
       <div class="center">紫豹在哪裡</div>
+      <div class="center"><img src="static/image/leopard.png"></div>
     </div>
 
 

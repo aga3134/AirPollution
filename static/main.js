@@ -47,7 +47,7 @@ function ChangeTime(time){
 	preTime = h+":"+m;
 
 
-	$("#timeLabel").text(time);
+	$("#timeLabel").text(curDate+" "+time);
 	UpdateMapPM25(mapSensorData[time], mapSensorData[preTime]);
 	var hour = time.split(":")[0];
 	UpdateMapWeather(mapWeatherData[hour]);
@@ -198,6 +198,7 @@ function ChangeDate(date){
 		}
 		UpdateMapPowerGen(mapPowerGen,"0:0");
 	});
+	LoadPowerGraph(d,"0:0");
 
 	mapRoadData = [];
 	//交通資料，每10分鐘1筆
@@ -432,6 +433,11 @@ window.addEventListener('load', function() {
 
 	$("#showRelative").change(function(){
 		ToggleRelative();
+		UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
+	});
+
+	$("#sensitive").change(function(){
+		$("#sensLabel").html($("#sensitive").val());
 		UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
 	});
 

@@ -118,6 +118,11 @@ a{
     vertical-align: top;
     text-align: left;
     line-height: 1.5em;
+    .time-block{
+      margin: 0px 5px;
+      padding: 5px 10px;
+      background: linear-gradient(green,yellow,red);
+    }
     .pm25-index{
       @mixin index() {
         border: 1px solid gray;
@@ -330,9 +335,13 @@ a{
 .footer-padding{
   padding: 10px;
   width: 100%;
-  height: 130px;
+  height: 350px;
   background-color: $fixbar-bg-color;
   color: $fixbar-fg-color;
+  img{
+    max-width: 100%;
+    width: 256px;
+  }
 }
 
 //===================play control related======================

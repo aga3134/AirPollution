@@ -82,7 +82,8 @@ function UpdateMapPM25(data, preData){
 	var radius = $("#pm25Radius").val();	//單位公里
 
 	var strokeWeight = showRelative?1:0;
-	var relativeColor = d3.scale.linear().domain([0,15]).range(["#00ff00", "#ff0000"]);
+	var sensitive = $("#sensitive").val();
+	var relativeColor = d3.scale.linear().domain([0,30-sensitive]).range(["#00ff00", "#ff0000"]);
 	var fillColor;
 	for (var key in data) {
 		var d = data[key];
@@ -313,6 +314,7 @@ function InitMap() {
 
 	$("#opacity").change(function(){
 		var opacity = $("#opacity").val();
+		$("#opLabel").html((opacity*100)+"%");
 		for (var key in pm25Array) {
 			pm25Array[key].setOptions({
 	    		fillOpacity: opacity
