@@ -183,6 +183,37 @@ a{
     top: 10px;
     left: 10px;
   }
+  #commentIcon{
+    @include mapIcon;
+    top: 10px;
+    left: 10px;
+  }
+  .comment-text{
+    width: 200px;
+    height: 100px;
+    padding: 5px;
+    resize: none;
+  }
+  @mixin formBt(){
+    padding: 5px;
+    background-color: rgb(50,50,50);
+    color: rgb(255,255,255);
+    &:hover{
+      background-color: rgb(150,150,150);
+    }
+    cursor: pointer;
+  }
+  .formBt{
+    @include formBt;
+    display: inline-block;
+    padding: 5px 30px;
+    margin: 0px 5px;
+  }
+  .formBt-full{
+    @include formBt;
+    width: 100%;
+    margin: 0px;
+  }
 
   @mixin panel(){
     position: absolute;
@@ -394,6 +425,79 @@ a{
     }
     &.select{
       border: 2px solid rgb(50,50,250);
+    }
+  }
+
+  .login-bt{
+    z-index: 7;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    img{
+      width: 30px;
+      height: 30px;
+      &:hover{
+        border: 1px solid rgb(100,100,100);
+      }
+    }
+  }
+}
+
+//=========comment related===============
+.comment-panel{
+  position: fixed;
+  top: 0px;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: rgba(255,255,255,0.9);
+  color: black;
+  z-index: 6;
+  padding: 10px;
+  overflow-y: auto;
+  .close-bt{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: rgb(200,200,200);
+    padding: 5px 10px;
+    color: white;
+    cursor: pointer;
+    &:hover{
+      background-color: rgb(150,150,150);
+    }
+  }
+  .logout{
+    display: inline-block;
+    background-color: rgb(255,255,255);
+    color: rgb(50,50,50);
+    padding: 10px;
+    border-radius: 3px;
+    border: solid 1px rgb(50,50,200);
+    cursor: pointer;
+    &:hover{
+      border-color: rgb(200,100,50);
+    }
+  }
+  ul{
+    list-style-type: none;
+    padding: 10px 0px;
+    margin: 0px;
+    li{
+      padding: 10px;
+      border-bottom: solid 1px rgb(200,200,200);
+      cursor: pointer;
+      &:hover{
+        background-color: rgb(240,240,240);
+      }
+      a{
+        text-decoration: none;
+      }
+      .single-line{
+        overflow : hidden;
+        text-overflow : ellipsis;
+        white-space : nowrap;
+      }
     }
   }
 }

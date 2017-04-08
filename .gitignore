@@ -3,4 +3,6 @@ static/pm25/
 doc/
 data.zip
 node_modules
+config.js
 *.txt
+*.log

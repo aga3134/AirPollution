@@ -221,6 +221,40 @@ a {
     left: 10px; }
     .map-container #globalIcon:hover {
       border: 1px solid yellow; }
+  .map-container #commentIcon {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 2;
+    top: 10px;
+    left: 10px; }
+    .map-container #commentIcon:hover {
+      border: 1px solid yellow; }
+  .map-container .comment-text {
+    width: 200px;
+    height: 100px;
+    padding: 5px;
+    resize: none; }
+  .map-container .formBt {
+    padding: 5px;
+    background-color: #323232;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 30px;
+    margin: 0px 5px; }
+    .map-container .formBt:hover {
+      background-color: #969696; }
+  .map-container .formBt-full {
+    padding: 5px;
+    background-color: #323232;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    margin: 0px; }
+    .map-container .formBt-full:hover {
+      background-color: #969696; }
   .map-container #controlPanel {
     position: absolute;
     display: none;
@@ -398,3 +432,61 @@ a {
       background-color: #9696c8; }
     .fixbar .time-bt.select {
       border: 2px solid #3232fa; }
+  .fixbar .login-bt {
+    z-index: 7;
+    position: absolute;
+    top: 10px;
+    right: 20px; }
+    .fixbar .login-bt img {
+      width: 30px;
+      height: 30px; }
+      .fixbar .login-bt img:hover {
+        border: 1px solid #646464; }
+
+.comment-panel {
+  position: fixed;
+  top: 0px;
+  right: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+  z-index: 6;
+  padding: 10px;
+  overflow-y: auto; }
+  .comment-panel .close-bt {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: #c8c8c8;
+    padding: 5px 10px;
+    color: white;
+    cursor: pointer; }
+    .comment-panel .close-bt:hover {
+      background-color: #969696; }
+  .comment-panel .logout {
+    display: inline-block;
+    background-color: white;
+    color: #323232;
+    padding: 10px;
+    border-radius: 3px;
+    border: solid 1px #3232c8;
+    cursor: pointer; }
+    .comment-panel .logout:hover {
+      border-color: #c86432; }
+  .comment-panel ul {
+    list-style-type: none;
+    padding: 10px 0px;
+    margin: 0px; }
+    .comment-panel ul li {
+      padding: 10px;
+      border-bottom: solid 1px #c8c8c8;
+      cursor: pointer; }
+      .comment-panel ul li:hover {
+        background-color: #f0f0f0; }
+      .comment-panel ul li a {
+        text-decoration: none; }
+      .comment-panel ul li .single-line {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; }

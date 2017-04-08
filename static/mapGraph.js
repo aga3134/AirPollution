@@ -7,6 +7,11 @@ var infoWindow = new google.maps.InfoWindow();
 var pm25Window = new google.maps.InfoWindow();
 var infoIndex = -1;
 var showRelative;
+var addMarker = false;
+var markerWindow = new google.maps.InfoWindow();
+var showComment;
+var commentArray = [];
+var commentForm = "";
 
 function ClearMap(){
 	for(var key in pm25Array){
@@ -29,10 +34,16 @@ function ClearMap(){
     		map: null
     	});
 	}
+	for(var key in commentArray){
+		commentArray[key].setOptions({
+    		map: null
+    	});
+	}
 	pm25Array = [];
 	weatherArray = [];
 	powerStationArray = [];
 	roadArray = [];
+	commentArray = [];
 }
 
 function componentToHex(c) {
@@ -275,6 +286,157 @@ function UpdateMapTraffic(roadSegment, roadData){
 	}
 }
 
+
+function AddComment(location) {
+	if(addMarker){
+		var time = curYear+"/"+curDate+" "+curTime;
+	    var str = "<p>時間 "+time+"</p>";
+	    var round = 1000;
+	    var lat = Math.floor(location.lat()*round)/round;
+	    var lng = Math.floor(location.lng()*round)/round;
+	    str += "<p>位置: ("+lat+","+lng+")</p>";
+	    str += "<textarea name='comment' class='comment-text' placeholder='輸入註解'></textarea>";
+	    str += "<div class='formBt-full' onclick='SaveComment(this,\""+time+"\","+location.lat()+","+location.lng()+");'>儲存</div>";
+	    
+		markerWindow.setOptions({content: str, position: location});
+		markerWindow.open(map);
+
+	    ToggleAddMarker();
+	}
+}
+
+function MarkerClickFn(data){ 
+	return function() {
+	    var str = "<p>時間 "+data.time+"</p>";
+	    var round = 1000;
+	    var lat = Math.floor(data.position.lat()*round)/round;
+	    var lng = Math.floor(data.position.lng()*round)/round;
+	    str += "<input type='text' name='id' value='"+data.id+"' hidden>";
+	    str += "<p>位置: ("+lat+","+lng+")</p>";
+	    str += "<textarea name='comment' class='comment-text'>"+data.comment+"</textarea>";
+	    str += "<div class='center'><div class='formBt' onclick='EditComment(this);'>儲存</div>";
+	    str += "<div class='formBt' onclick='DeleteComment(\""+data.id+"\");'>刪除</div></div>";
+	    markerWindow.setOptions({content: str, position: data.position});
+	    markerWindow.open(map);
+	};
+}
+
+function AddCommentMarker(id, time, lat, lng, comment){
+	var location = new google.maps.LatLng(lat,lng);
+	var marker = new google.maps.Marker({
+        position: location, 
+        map: map
+    });
+    marker.time = time;
+    marker.id = id;
+    marker.comment = comment;
+    google.maps.event.clearListeners(marker,'click');
+	marker.addListener('click', MarkerClickFn(marker));
+    commentArray[id] = marker;
+}
+
+function ClickMarker(id){
+	var marker = commentArray[id];
+	if(!marker) return;
+	google.maps.event.trigger(marker, 'click');
+}
+
+function EditComment(item){
+	var parent = $(item).parent();
+	var id = parent.siblings("input[name='id']").val();
+	var content = parent.siblings("textarea[name='comment']").val();
+	$.get("/comment-edit?comment="+id+"&content="+content, function(data){
+		if(data == "ok"){
+			//更新marker
+			var marker = commentArray[id];
+			marker.comment = content;
+			google.maps.event.clearListeners(marker,'click');
+			marker.addListener('click', MarkerClickFn(marker));
+			//更新mapCommentData和comment panel
+			var t = marker.time.split(" ")[1];
+			var list = mapCommentData[t];
+			for(var i=0;i<list.length;i++){
+				if(list[i].id == id){
+					list[i].comment = content;
+				}
+			}
+			UpdateComment();
+
+			markerWindow.close();
+		}
+	});
+}
+
+function DeleteComment(id){
+	if(confirm("確定刪除?")){
+		$.get("/comment-delete?comment="+id, function(data){
+			if(data == "ok"){
+				//刪掉map marker
+				commentArray[id].setOptions({map: null});
+				//刪掉comment panel的comment
+				var item = $("#commentList").find("input[value='"+id+"']");
+				console.log(item);
+				var time = item.siblings(".time").html();
+				item.parent().remove();
+				//刪掉mapCommentData的comment
+				var time = time.split(" ")[1];
+				var list = mapCommentData[time];
+				for(var i=0;i<list.length;i++){
+					if(list[i].id == id){
+						list[i].splice(i, 1);
+					}
+				}
+				markerWindow.close();
+			}
+		});
+	}
+}
+
+function SaveComment(item, time, lat, lng){
+    //save to server
+    var form = $("#commentForm");
+    var comment = $(item).siblings("textarea").val();
+	form.children("input[name='time']").val(time);
+	form.children("input[name='lat']").val(lat);
+	form.children("input[name='lng']").val(lng);
+	form.children("textarea[name='comment']").val(comment);
+
+	var data = form.serialize();
+    var formURL = form.attr("action");
+
+    $.ajax({url: formURL,
+		type: 'POST',
+		data:  data,
+		success: function(id){
+			AddCommentMarker(id, time, lat, lng, comment);
+			//新增mapCommentData的comment
+		    var c = {};
+			c.id = id;
+			c.lat = lat;
+			c.lng = lng;
+			c.comment = comment;
+			var t = time.split(" ")[1];
+		    mapCommentData[t].push(c);
+		    UpdateComment();	//更新comment list
+		    markerWindow.close();
+		}        
+	});
+}
+
+function UpdateMapComment(commentData){
+	for(var key in commentArray){
+		commentArray[key].setOptions({
+    		map: null
+    	});
+	}
+	commentArray = [];
+	var time = curYear+"/"+curDate+" "+curTime;
+	for(var i=0;i<commentData.length;i++){
+		var data = commentData[i];
+		AddCommentMarker(data.id, time, data.lat, data.lng, data.comment);
+	}
+}
+
 function InitMap() {
 	var taiwan = new google.maps.LatLng(23.682094,120.7764642);
 
@@ -284,6 +446,10 @@ function InitMap() {
 	  scaleControl: true,
 	  //mapTypeId: google.maps.MapTypeId.SATELLITE
 	  //mapTypeId: google.maps.MapTypeId.TERRAIN
+	});
+
+	google.maps.event.addListener(map, 'click', function(event) {
+	   AddComment(event.latLng);
 	});
 
 	var northY = 24.5, southY = 23.5;
@@ -360,6 +526,51 @@ function ToggleTraffic(){
 
 function ToggleRelative(){
 	showRelative = $("#showRelative").is(":checked");
+}
+
+function ToggleComment(){
+	showComment = $("#showComment").is(":checked");
+	var showMap = showComment?map:null;
+	for(var key in commentArray){
+		commentArray[key].setOptions({map: showMap});
+	}
+}
+
+function ToggleAddMarker(){
+	function SetItemClickable(clickable){
+		for(var key in pm25Array){
+			pm25Array[key].setOptions({
+	    		clickable: clickable
+	    	});
+		}
+		for(var key in weatherArray){
+			weatherArray[key].setOptions({
+	    		clickable: clickable
+	    	});
+		}
+		for(var key in powerStationArray){
+			powerStationArray[key].setOptions({
+	    		clickable: clickable
+	    	});
+		}
+		for(var key in roadArray){
+			roadArray[key].setOptions({
+	    		clickable: clickable
+	    	});
+		}
+	}
+
+	addMarker = !addMarker;
+	if(addMarker){
+		$("#commentIcon").attr("src","/static/image/commentIcon_active.png");
+		map.setOptions({draggableCursor:'crosshair'});
+		SetItemClickable(false);
+	}
+	else{
+		$("#commentIcon").attr("src","/static/image/commentIcon.png");
+		map.setOptions({draggableCursor:'default'});
+		SetItemClickable(true);
+	}
 }
 
 google.maps.event.addDomListener(window, 'load', InitMap);

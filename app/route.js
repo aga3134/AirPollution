@@ -8,17 +8,26 @@ var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 
+var formidable = require('formidable');
+var uuid = require('node-uuid');
+var mysqlDB = require("./mysqlDB");
+var Login = require("./login.js");
+
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
 var SensorDataSchema = require('../db/sensorDataSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
-var version = "1.0.1";
+var version = "1.0.2";
 
-module.exports = function(app){
-	app.get("/", function(req, res){
-		res.render("static/index.html", {version: version});
+module.exports = function(app, passport){
+	mysqlDB.Init();
+	Login.Init(passport);
+
+	app.get("/", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		res.render("static/index.html", {user: user, version: version});
 	});
 	
 	app.get("/sensorSite", function(req, res){
@@ -229,6 +238,92 @@ module.exports = function(app){
 		});
 	});
 
+	//==============================comment related========================
+	app.get("/comment-list", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var date = req.query.date;
+		if(!user) return res.send("please login");
+		if(!date) return res.send("no date");
+
+		query = {};
+		query.userID = user.id;
+		query.time = {$gte: new Date(date+" 00:00"), $lte: new Date(date+" 23:59")};
+
+		mysqlDB.Comment.findAll({where: query}).then(function(comments) {
+    	    res.send(comments);
+    	});
+	});
+
+	app.post("/comment-add", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var form = new formidable.IncomingForm();
+		form.parse(req, function(err, fields, files) {
+			if (err) {
+				console.error(err);
+			}
+			var newComment = {};
+			newComment.id = uuid.v4();
+			newComment.userID = user.id;
+			newComment.time = fields.time;
+			newComment.lat = fields.lat;
+			newComment.lng = fields.lng;
+			newComment.comment = fields.comment;
+			
+        	mysqlDB.Comment.create(newComment).then(function(comment) {
+        	    res.send(comment.id);
+        	});
+
+		});
+	});
+
+	app.get("/comment-edit", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var commentID = req.query.comment;
+		var content = req.query.content;
+		if(!user) return res.send("please login");
+		if(!commentID) return res.send("no commentID");
+
+		mysqlDB.Comment.update({'comment': content},
+			{where: {'id': commentID, 'userID': user.id}}).then(function() {
+    	    res.send("ok");
+    	});
+	});
+
+	app.get("/comment-delete", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var commentID = req.query.comment;
+		if(!user) return res.send("please login");
+		if(!commentID) return res.send("no commentID");
+
+		mysqlDB.Comment.destroy({where: {'id': commentID, 'userID': user.id}}).then(function() {
+    	    res.send("ok");
+    	});
+	});
+
+	//===========================login related======================================
+	function errFunc(err){
+		console.log(err);
+	}
+
+	app.get('/login-by-google', function(req, res){
+		var option = { scope : ['profile', 'email'], "prompt": "select_account" };
+		passport.authenticate('google', option)(req, res, errFunc);	
+	});
+
+    app.get('/auth/google/callback', function(req, res){
+    	passport.authenticate('google', {
+				successRedirect : '/',
+				failureRedirect : '/'
+		})(req, res, errFunc);
+    });
+
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
+
+    //=================utility func==========================
 	function DateToTimeString(date){
 		var str = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 		return str;
@@ -237,4 +332,20 @@ module.exports = function(app){
 	function DateToDateString(date){
 		return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
 	}
+
+	function isLoggedIn(req, res, next) {
+	    if (req.isAuthenticated()) return next();
+	    res.redirect('/?message='+encodeURIComponent('請先登入'));
+	};
+
+	function GetCurUser(req, res, next){
+		var info = req.session.passport.user;
+		mysqlDB.User.findOne({where: {'id': info}}).then(function(user) {
+			if(user){
+				req.userInfo = user;
+				next();			
+			}
+			else next();
+		});
+	};
 }

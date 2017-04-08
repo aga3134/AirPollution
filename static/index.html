@@ -69,6 +69,9 @@
               <div class="group">
                 交通: <input type="checkbox" id="showTraffic" checked>
               </div>
+              <div class="group">
+                註解: <input type="checkbox" id="showComment" checked>
+              </div>
           </div>
         </div>
         
@@ -94,6 +97,10 @@
             </div>
           </div>
         </div>
+        
+        {% if user %}
+          <img id="commentIcon" src="/static/image/commentIcon.png" title="加入註解">
+        {% endif %}
 
         <div>
           <div class="graph-label">PM2.5空汙動態地圖 (<span id="timeLabel"></span>)</div>
@@ -226,7 +233,6 @@
       <div class="center"><img src="static/image/leopard.png"></div>
     </div>
 
-
     <div class="fixbar">
       <div class="center">
         <div class="fixbar-label">
@@ -237,10 +243,32 @@
         <image id="pauseBt" class="bt hide" src="static/image/pauseIcon.png" onclick="Pause();">
         <image id="nextBt" class="bt" src="static/image/nextIcon.png"  onclick="Next();">
       </div>
+      <div class="login-bt">
+      {% if user %}
+        <img src="/static/image/menuIcon.png" title="註解列表" onclick="OpenCommentPanel();">
+      {% else %}
+        <a href="/login-by-google">
+          <img src="/static/image/loginIcon.png" title="登入">
+        </a>
+      {% endif %}
+      </div>
       <div class="h-scroll">
         <div id="showTime"></div>
       </div>
     </div>
+
+    <div class="comment-panel">
+      <a class="logout" href="/logout">登出</a>
+      <div class="close-bt" onclick="CloseCommentPanel();">X</div>
+      <div id="commentList"></div>
+    </div>
+
+    <form id="commentForm" action="/comment-add" method="post" hidden>
+      <input type="text" name="time">
+      <input type="text" name="lat">
+      <input type="text" name="lng">
+      <textarea name="comment"></textarea>
+    </form>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false&key=AIzaSyBUGDJex2sQeScb1Wxcm7oiPGwdmyoLhHM"></script>

@@ -9,6 +9,13 @@
   	"node-schedule":"~1.1.0",
   	"xml2js":"~0.4.17",
     "lz-string":"~1.4.4",
-    "moment-timezone":"~0.5.1"
+    "moment-timezone":"~0.5.1",
+    "formidable":"~1.0.17",
+    "mysql" : "~2.10.0",
+    "sequelize": "3.24.6",
+    "passport" : "~0.1.17",         
+    "passport-google-oauth" : "~0.1.5",
+    "cookie-parser": "~1.0.0",
+    "express-session": "~1.0.0"
   }
 }

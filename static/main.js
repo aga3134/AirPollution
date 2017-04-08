@@ -3,6 +3,7 @@ var timerID;
 var curYear, curDate, curTime, preTime;
 var maxDate, minDate;
 var timeInterval = 10;
+var moveTime = 500;
 
 var mapSensorData;
 var siteData;
@@ -11,6 +12,7 @@ var weatherSite;
 var mapPowerGen;
 var roadSegment;
 var mapRoadData;
+var mapCommentData;
 
 function ShowDate(date){
   var hoverBlock = $("#hoverBlock");
@@ -55,6 +57,7 @@ function ChangeTime(time){
 	ChangeImageByTime(time);
 	UpdateMapPowerGen(mapPowerGen,time);
 	UpdateMapTraffic(roadSegment,mapRoadData[time]);
+	UpdateMapComment(mapCommentData[time]);
 }
 
 function ChangeDate(date){
@@ -222,6 +225,54 @@ function ChangeDate(date){
 		}
 		UpdateMapTraffic(roadSegment,mapRoadData["0:0"]);
 	});
+
+	mapCommentData = [];
+	for(var i=0;i<24*numPerHour;i++){
+		var h = Math.floor(i/numPerHour);
+		var m = 10*(i%numPerHour);
+		mapCommentData[h+":"+m] = [];	
+	}
+	var url = "/comment-list?date="+curYear+"/"+date;
+	$.get(url, function(data){
+		if(data == "please login" || data == "no date") return;
+
+		for(var i=0;i<data.length;i++){
+			var d = data[i];
+			var t = new Date(d.time);
+			var h = t.getHours();
+			var m = Math.floor(t.getMinutes()/10)*10;
+			var comment = {};
+			comment.id = d.id;
+			comment.lat = d.lat;
+			comment.lng = d.lng;
+			comment.comment = d.comment;
+
+			mapCommentData[h+":"+m].push(comment);
+		}
+		
+		UpdateComment();
+	});
+}
+
+function ClickComment(id, time){
+	ChangeTime(time);
+	ClickMarker(id);
+}
+
+function UpdateComment(){
+	var commentList = $("#commentList");
+	commentList.html("");
+	var list = $("<ul></ul>");
+	for(key in mapCommentData){
+		var data = mapCommentData[key];
+		for(var i=0;i<data.length;i++){
+			var str = "<li onclick='ClickComment(\""+data[i].id+"\",\""+key+"\");'><div class='time'>"+curDate+" "+key+"</div>";
+			str += "<div class='single-line'>"+data[i].comment+"</div>";
+			str += "<input type='text' value='"+data[i].id+"' hidden></li>";
+			list.append(str);
+		}
+	}
+	commentList.append(list);
 }
 
 function ChangeYear(){
@@ -349,6 +400,14 @@ function SetDateLabel(date){
 	$("#dateLabel").val(arr[0]+"-"+arr[1]+"-"+arr[2]);
 }
 
+function OpenCommentPanel(){
+	$(".comment-panel").animate({right: 0},moveTime);
+}
+
+function CloseCommentPanel(){
+	$(".comment-panel").animate({right: -300},moveTime);
+}
+
 window.addEventListener('load', function() {
 	var showYear = $("#showYear");
 
@@ -431,6 +490,8 @@ window.addEventListener('load', function() {
 
 	$("#showTraffic").change(ToggleTraffic);
 
+	$("#showComment").change(ToggleComment);
+
 	$("#showRelative").change(function(){
 		ToggleRelative();
 		UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
@@ -443,10 +504,10 @@ window.addEventListener('load', function() {
 
 	$("body").animate({scrollTop: 60}, 1000);
 
-	var moveTime = 500;
 	$("#controlIcon").animate({bottom: 5, left: 75}, moveTime);
 	$("#powerIcon").animate({bottom: 125, right: 10}, moveTime);
 	$("#globalIcon").animate({top: 10, left: 130}, moveTime);
+	$("#commentIcon").animate({top: 10, left: 180}, moveTime);
 
 	function TogglePanel(panel){
 		var mode = panel.css("display");
@@ -477,6 +538,9 @@ window.addEventListener('load', function() {
 		var open = TogglePanel($("#globalPanel"));
 		if(open) $("#globalIcon").animate({top: 10, left: 10}, moveTime);
 		else $("#globalIcon").animate({top: 10, left: 130}, moveTime);
+	});
+	$("#commentIcon").click(function(){
+		ToggleAddMarker();
 	});
 
 	$("#menuIcon").click(function(){
