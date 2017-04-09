@@ -270,7 +270,22 @@ module.exports = function(app, passport){
 			newComment.comment = fields.comment;
 			
         	mysqlDB.Comment.create(newComment).then(function(comment) {
-        	    res.send(comment.id);
+        		//update comment daily num
+        		var date = fields.time.split(" ")[0];
+        		mysqlDB.CommentDailyNum.findOne({where: {userID: user.id, date: new Date(date)}}).then(function(dailyNum){
+        			if(!dailyNum){
+        				var newDaily = {};
+        				newDaily.userID = user.id;
+        				newDaily.date = date;
+        				newDaily.num = 1;
+        				mysqlDB.CommentDailyNum.create(newDaily);
+        				res.send(comment.id);
+        			}
+        			else{
+        				dailyNum.increment("num");
+        				res.send(comment.id);
+        			}
+        		});
         	});
 
 		});
@@ -295,8 +310,39 @@ module.exports = function(app, passport){
 		if(!user) return res.send("please login");
 		if(!commentID) return res.send("no commentID");
 
-		mysqlDB.Comment.destroy({where: {'id': commentID, 'userID': user.id}}).then(function() {
-    	    res.send("ok");
+		mysqlDB.Comment.findOne({where: {'id': commentID, 'userID': user.id}}).then(function(comment){
+			if(comment){
+				//update comment daily num
+				var t = new Date(comment.time);
+				var date = t.getFullYear()+"/"+(t.getMonth()+1)+"/"+t.getDate();
+				mysqlDB.CommentDailyNum.findOne({where: {userID: user.id, date: new Date(date)}}).then(function(dailyNum){
+	    			if(dailyNum){
+	    				if(dailyNum.num == 1){
+	    					mysqlDB.CommentDailyNum.destroy({where: {id: dailyNum.id}});
+	    				}
+	    				else dailyNum.decrement("num");
+	    			}
+	    			mysqlDB.Comment.destroy({where: {'id': commentID, 'userID': user.id}}).then(function() {
+			    	    res.send("ok");
+			    	});
+	    		});
+			}
+			else res.send("not found");
+		});
+	});
+
+	app.get("/comment-daily", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var year = req.query.year;
+		if(!user) return res.send("please login");
+		if(!year) return res.send("no year");
+
+		query = {};
+		query.userID = user.id;
+		query.date = {$gte: new Date(year+"/01/01 00:00"), $lte: new Date(year+"/12/31 23:59")};
+
+		mysqlDB.CommentDailyNum.findAll({where: query, attributes: ["date", "num"]}).then(function(daily) {
+    	    res.send(daily);
     	});
 	});
 

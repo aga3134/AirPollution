@@ -337,6 +337,11 @@ a {
       height: 20px;
       background-color: #ffc8ff;
       cursor: pointer; }
+      .sidebar #dayContainer .day-bt .marker {
+        color: black;
+        position: relative;
+        top: -3px;
+        left: 4px; }
       .sidebar #dayContainer .day-bt:hover {
         border: 2px solid black; }
       .sidebar #dayContainer .day-bt.select {
@@ -426,6 +431,7 @@ a {
     display: inline-block;
     width: 8px;
     height: 20px;
+    color: black;
     background-color: #c8c8ff;
     cursor: pointer; }
     .fixbar .time-bt:hover {

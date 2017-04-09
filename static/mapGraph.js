@@ -372,20 +372,18 @@ function DeleteComment(id){
 		$.get("/comment-delete?comment="+id, function(data){
 			if(data == "ok"){
 				//刪掉map marker
-				commentArray[id].setOptions({map: null});
-				//刪掉comment panel的comment
-				var item = $("#commentList").find("input[value='"+id+"']");
-				console.log(item);
-				var time = item.siblings(".time").html();
-				item.parent().remove();
+				var marker = commentArray[id];
+				marker.setOptions({map: null});
 				//刪掉mapCommentData的comment
-				var time = time.split(" ")[1];
+				var time = marker.time.split(" ")[1];
 				var list = mapCommentData[time];
 				for(var i=0;i<list.length;i++){
 					if(list[i].id == id){
-						list[i].splice(i, 1);
+						list.splice(i, 1);
 					}
 				}
+				UpdateComment();
+				UpdateCommentDaily();
 				markerWindow.close();
 			}
 		});
@@ -418,6 +416,7 @@ function SaveComment(item, time, lat, lng){
 			var t = time.split(" ")[1];
 		    mapCommentData[t].push(c);
 		    UpdateComment();	//更新comment list
+		    UpdateCommentDaily();
 		    markerWindow.close();
 		}        
 	});

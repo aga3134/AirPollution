@@ -293,6 +293,12 @@ a{
       display: inline-block;
       width: 20px;
       height: 20px;
+      .marker{
+        color: rgb(0,0,0);
+        position: relative;
+        top: -3px;
+        left: 4px;
+      }
       background-color: rgb(255,200,255);
       cursor: pointer;
       &:hover{
@@ -418,6 +424,7 @@ a{
     display: inline-block;
     width: 8px;
     height: 20px;
+    color: rgb(0,0,0);
     background-color: rgb(200,200,255);
     cursor: pointer;
     &:hover{

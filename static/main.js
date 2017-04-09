@@ -260,6 +260,9 @@ function ClickComment(id, time){
 }
 
 function UpdateComment(){
+	var showTime = $("#showTime");
+	showTime.children(".time-bt").html("");
+
 	var commentList = $("#commentList");
 	commentList.html("");
 	var list = $("<ul></ul>");
@@ -270,9 +273,28 @@ function UpdateComment(){
 			str += "<div class='single-line'>"+data[i].comment+"</div>";
 			str += "<input type='text' value='"+data[i].id+"' hidden></li>";
 			list.append(str);
+
+			var timeBt = showTime.children(".time-bt[data-time='"+key+"']");
+			timeBt.html("o");
 		}
 	}
+	if(list.html() == ""){
+		list.html("<li>"+curDate+" 無註解</li>");
+	}
 	commentList.append(list);
+}
+
+function UpdateCommentDaily(){
+	$.get("/comment-daily?year="+curYear, function(data){
+		if(data == "please login" || data == "no year") return;
+		var container = $("#dayContainer");
+		container.find(".day-bt").html("");
+		for(var i=0;i<data.length;i++){
+			var date = new Date(data[i].date);
+			var d = (date.getMonth()+1)+"/"+date.getDate();
+			container.find(".day-bt[data-date='"+d+"']").html("<div class='marker'>o</div>");
+		}
+	});
 }
 
 function ChangeYear(){
@@ -287,6 +309,7 @@ function ChangeYear(){
 	showYear.val(d.getFullYear());
 	curYear = d.getFullYear();
 	LoadDayGraph(ChangeDate);
+	UpdateCommentDaily();
 }
 
 function AddTime(t){	//in minutes

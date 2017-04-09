@@ -8,6 +8,7 @@ mysqlDB.Init = function(){
 								 {host: mysql, port: '3306', logging: false});
 	mysqlDB.User = mysqlDB.sequelize.import(__dirname + "./../mysql/user.js");
 	mysqlDB.Comment = mysqlDB.sequelize.import(__dirname + "./../mysql/comment.js");
+	mysqlDB.CommentDailyNum = mysqlDB.sequelize.import(__dirname + "./../mysql/commentDailyNum.js");
 	
 	var syncOp = {};
 	syncOp.force = false;
