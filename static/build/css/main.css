@@ -163,6 +163,30 @@ a {
       width: 60px;
       text-align: center;
       background-color: #ce30ff; }
+    .map-container .map-info table {
+      font-size: 0.5em; }
+      .map-container .map-info table td {
+        padding: 0px 5px; }
+      .map-container .map-info table .index1-2 {
+        background: linear-gradient(90deg, #9cff9c, #31ff00); }
+      .map-container .map-info table .index2-3 {
+        background: linear-gradient(90deg, #31ff00, #31cf00); }
+      .map-container .map-info table .index3-4 {
+        background: linear-gradient(90deg, #31cf00, yellow); }
+      .map-container .map-info table .index4-5 {
+        background: linear-gradient(90deg, yellow, #ffcf00); }
+      .map-container .map-info table .index5-6 {
+        background: linear-gradient(90deg, #ffcf00, #ff9a00); }
+      .map-container .map-info table .index6-7 {
+        background: linear-gradient(90deg, #ff9a00, #ff6464); }
+      .map-container .map-info table .index7-8 {
+        background: linear-gradient(90deg, #ff6464, red); }
+      .map-container .map-info table .index8-9 {
+        background: linear-gradient(90deg, red, #990000); }
+      .map-container .map-info table .index9-10 {
+        background: linear-gradient(90deg, #990000, #ce30ff); }
+      .map-container .map-info table .index10 {
+        background: #ce30ff; }
     .map-container .map-info .traffic-index .level1 {
       border: 1px solid gray;
       display: inline-block;
@@ -447,6 +471,16 @@ a {
       width: 30px;
       height: 30px; }
       .fixbar .login-bt img:hover {
+        border: 1px solid #646464; }
+  .fixbar .top-bt {
+    z-index: 7;
+    position: absolute;
+    top: 10px;
+    left: 10px; }
+    .fixbar .top-bt img {
+      width: 30px;
+      height: 30px; }
+      .fixbar .top-bt img:hover {
         border: 1px solid #646464; }
 
 .comment-panel {

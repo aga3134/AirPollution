@@ -56,7 +56,11 @@ function rgb(r,g,b){
 }
 
 function ValueToColor(v){
-	if(v <= 11) return rgb(156, 255, 156);
+	var color = d3.scale.linear().domain([0,11,23,35,41,47,53,58,64,70,71])
+		.range([rgb(156,255,156), rgb(49, 255, 0), rgb(49, 207, 0), rgb(255, 255, 0), rgb(255, 207, 0), 
+			rgb(255, 154, 0), rgb(255, 100, 100), rgb(255, 0, 0), rgb(153, 0, 0), rgb(206, 48, 255)]);
+	return color(v);
+	/*if(v <= 11) return rgb(156, 255, 156);
 	else if(v <= 23) return rgb(49, 255, 0);
 	else if(v <= 35) return rgb(49, 207, 0);
 	else if(v <= 41) return rgb(255, 255, 0);
@@ -65,7 +69,7 @@ function ValueToColor(v){
 	else if(v <= 58) return rgb(255, 100, 100);
 	else if(v <= 64) return rgb(255, 0, 0);
 	else if(v <= 70) return rgb(153, 0, 0);
-	else return rgb(206, 48, 255);
+	else return rgb(206, 48, 255);*/
 }
 
 function UpdateMapPM25(data, preData){

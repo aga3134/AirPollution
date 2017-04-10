@@ -117,19 +117,33 @@
           從上到下分成三個區塊，分別代表北中南部的PM2.5平均數值
           </li>
             <li>彩色圓圈: PM2.5資料 顏色依
-              <a href="http://taqm.epa.gov.tw/taqm/tw/fpmi.aspx">環保署細懸浮微粒指標</a>表示:
-              <div class="pm25-index">
-                <div class="index1">0~11</div>
-                <div class="index2">12~23</div>
-                <div class="index3">24~35</div>
-                <div class="index4">36~41</div>
-                <div class="index5">42~47</div>
-                <div class="index6">48~53</div>
-                <div class="index7">54~58</div>
-                <div class="index8">59~64</div>
-                <div class="index9">65~70</div>
-                <div class="index10">>=71</div>
-              </div>
+              <a href="http://taqm.epa.gov.tw/taqm/tw/fpmi.aspx">環保署細懸浮微粒指標</a>內插顯示:
+              <table>
+                <tr>
+                  <td class="index1-2">&nbsp;</td>
+                  <td class="index2-3">&nbsp;</td>
+                  <td class="index3-4">&nbsp;</td>
+                  <td class="index4-5">&nbsp;</td>
+                  <td class="index5-6">&nbsp;</td>
+                  <td class="index6-7">&nbsp;</td>
+                  <td class="index7-8">&nbsp;</td>
+                  <td class="index8-9">&nbsp;</td>
+                  <td class="index9-10">&nbsp;</td>
+                  <td class="index10">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td> 0~11 </td>
+                  <td> 12~23 </td>
+                  <td> 24~35 </td>
+                  <td> 36~41 </td>
+                  <td> 42~47 </td>
+                  <td> 48~53 </td>
+                  <td> 54~58 </td>
+                  <td> 59~64 </td>
+                  <td> 65~70 </td>
+                  <td> >=71 </td>
+                </tr>
+              </table>
             </li>
             <li>
               相對變化: 比較所選時間和其十分鐘前的PM2.5數值變化<br>
@@ -242,6 +256,9 @@
         <image id="playBt" class="bt" src="static/image/playIcon.png" onclick="Play();">
         <image id="pauseBt" class="bt hide" src="static/image/pauseIcon.png" onclick="Pause();">
         <image id="nextBt" class="bt" src="static/image/nextIcon.png"  onclick="Next();">
+      </div>
+      <div class="top-bt">
+        <img src="/static/image/topIcon.png" title="回地圖">
       </div>
       <div class="login-bt">
       {% if user %}

@@ -142,6 +142,22 @@ a{
       .index9{@include index; background-color: rgb(153, 0, 0);}
       .index10{@include index; background-color: rgb(206, 48, 255);}
     }
+    table{
+      font-size: 0.5em;
+      td{
+        padding: 0px 5px;
+      }
+      .index1-2{ background: linear-gradient(90deg, rgb(156, 255, 156), rgb(49, 255, 0));}
+      .index2-3{ background: linear-gradient(90deg, rgb(49, 255, 0), rgb(49, 207, 0));}
+      .index3-4{ background: linear-gradient(90deg, rgb(49, 207, 0), rgb(255, 255, 0));}
+      .index4-5{ background: linear-gradient(90deg, rgb(255, 255, 0), rgb(255, 207, 0));}
+      .index5-6{ background: linear-gradient(90deg, rgb(255, 207, 0), rgb(255, 154, 0));}
+      .index6-7{ background: linear-gradient(90deg, rgb(255, 154, 0), rgb(255, 100, 100));}
+      .index7-8{ background: linear-gradient(90deg, rgb(255, 100, 100), rgb(255, 0, 0));}
+      .index8-9{ background: linear-gradient(90deg, rgb(255, 0, 0), rgb(153, 0, 0));}
+      .index9-10{ background: linear-gradient(90deg, rgb(153, 0, 0), rgb(206, 48, 255));}
+      .index10{ background: rgb(206, 48, 255);}
+    }
 
     .traffic-index{
       @mixin level() {
@@ -435,11 +451,9 @@ a{
     }
   }
 
-  .login-bt{
+  @mixin fix-bt(){
     z-index: 7;
     position: absolute;
-    top: 10px;
-    right: 10px;
     img{
       width: 30px;
       height: 30px;
@@ -447,6 +461,18 @@ a{
         border: 1px solid rgb(100,100,100);
       }
     }
+  }
+
+  .login-bt{
+    @include fix-bt;
+    top: 10px;
+    right: 10px;
+  }
+
+  .top-bt{
+    @include fix-bt;
+    top: 10px;
+    left: 10px;
   }
 }
 

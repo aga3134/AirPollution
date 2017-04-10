@@ -526,6 +526,9 @@ window.addEventListener('load', function() {
 	});
 
 	$("body").animate({scrollTop: 60}, 1000);
+	$(".top-bt").click(function(){
+		$("body").animate({scrollTop: 60}, 500);
+	});
 
 	$("#controlIcon").animate({bottom: 5, left: 75}, moveTime);
 	$("#powerIcon").animate({bottom: 125, right: 10}, moveTime);
