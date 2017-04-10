@@ -56,9 +56,9 @@ function rgb(r,g,b){
 }
 
 function ValueToColor(v){
-	var color = d3.scale.linear().domain([0,11,23,35,41,47,53,58,64,70])
+	var color = d3.scale.linear().domain([0,11,23,35,41,47,53,58,64,70, 1000])
 		.range([rgb(156,255,156), rgb(49, 255, 0), rgb(49, 207, 0), rgb(255, 255, 0), rgb(255, 207, 0), 
-			rgb(255, 154, 0), rgb(255, 100, 100), rgb(255, 0, 0), rgb(153, 0, 0), rgb(206, 48, 255)]);
+			rgb(255, 154, 0), rgb(255, 100, 100), rgb(255, 0, 0), rgb(153, 0, 0), rgb(206, 48, 255), rgb(0,0,0)]);
 	return color(v);
 	/*if(v <= 11) return rgb(156, 255, 156);
 	else if(v <= 23) return rgb(49, 255, 0);
