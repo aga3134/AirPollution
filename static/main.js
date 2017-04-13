@@ -308,8 +308,7 @@ function ChangeYear(){
 	curDate = (d.getMonth()+1)+"/"+d.getDate();
 	showYear.val(d.getFullYear());
 	curYear = d.getFullYear();
-	LoadDayGraph(ChangeDate);
-	UpdateCommentDaily();
+	LoadDayGraph();
 }
 
 function AddTime(t){	//in minutes

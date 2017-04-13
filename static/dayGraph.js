@@ -21,7 +21,7 @@ function AddDate(date, value){
   return result;
 }
 
-function LoadDayGraph(callback){
+function LoadDayGraph(){
   var year = parseInt($("#showYear").val());
   $.get("/sensorDailySum?year="+year, function(data){
     var json = JSON.parse(data);
@@ -36,7 +36,8 @@ function LoadDayGraph(callback){
       sensorAvg[dateArr[1]+"/"+dateArr[2]] = d;
     }
     DrawDayGraph(sensorAvg);
-    callback(curDate);
+    ChangeDate(curDate);
+    UpdateCommentDaily();
   });
 }
 
