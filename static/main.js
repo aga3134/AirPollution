@@ -50,14 +50,14 @@ function ChangeTime(time){
 
 
 	$("#timeLabel").text(curDate+" "+time);
-	UpdateMapPM25(mapSensorData[time], mapSensorData[preTime]);
+	if(mapSensorData) UpdateMapPM25(mapSensorData[time], mapSensorData[preTime]);
 	var hour = time.split(":")[0];
-	UpdateMapWeather(mapWeatherData[hour]);
+	if(mapWeatherData) UpdateMapWeather(mapWeatherData[hour]);
 	SetPowerGraphTime(time);
 	ChangeImageByTime(time);
-	UpdateMapPowerGen(mapPowerGen,time);
-	UpdateMapTraffic(roadSegment,mapRoadData[time]);
-	UpdateMapComment(mapCommentData[time]);
+	if(mapPowerGen) UpdateMapPowerGen(mapPowerGen,time);
+	if(roadSegment && mapRoadData) UpdateMapTraffic(roadSegment,mapRoadData[time]);
+	if(mapCommentData) UpdateMapComment(mapCommentData[time]);
 }
 
 function ChangeDate(date){
@@ -122,9 +122,9 @@ function ChangeDate(date){
 				sensorData.time = curYear+"/"+date+" "+d.time;
 				mapSensorData[h+":"+m][d.siteID] = sensorData;
 			}
+			LoadSensorData(hour+1);
 			if(hour == 0) ChangeTime("0:0");
 			else if(curTime != "0:0") ChangeTime(curTime);
-			LoadSensorData(hour+1);
 		});
 	}
 	LoadSensorData(0);
