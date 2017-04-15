@@ -122,9 +122,11 @@ function ChangeDate(date){
 				sensorData.time = curYear+"/"+date+" "+d.time;
 				mapSensorData[h+":"+m][d.siteID] = sensorData;
 			}
-			LoadSensorData(hour+1);
+			
 			if(hour == 0) ChangeTime("0:0");
 			else if(curTime != "0:0") ChangeTime(curTime);
+
+			LoadSensorData(hour+1);
 		});
 	}
 	LoadSensorData(0);
