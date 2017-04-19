@@ -5,7 +5,7 @@ var maxDate, minDate;
 var timeInterval = 10;
 var moveTime = 500;
 
-var mapSensorData;
+//var mapSensorData;
 var siteData;
 var mapWeatherData;
 var weatherSite;
@@ -50,7 +50,8 @@ function ChangeTime(time){
 
 
 	$("#timeLabel").text(curDate+" "+time);
-	if(mapSensorData) UpdateMapPM25(mapSensorData[time], mapSensorData[preTime]);
+	//if(mapSensorData) UpdateMapPM25(mapSensorData[time], mapSensorData[preTime]);
+	UpdateMapSensorGrid();
 	var hour = time.split(":")[0];
 	if(mapWeatherData) UpdateMapWeather(mapWeatherData[hour]);
 	SetPowerGraphTime(time);
@@ -92,8 +93,10 @@ function ChangeDate(date){
 	    AddTimebar(sensorAvg);
 	});
 
+	curTime = preTime = "0:0";
+	UpdateMapSensorGrid();
 	var numPerHour = 60/timeInterval;
-	mapSensorData = [];
+	/*mapSensorData = [];
 	//pm2.5資料，每10分鐘1筆
 	for(var i=0;i<24*numPerHour;i++){
 		var h = Math.floor(i/numPerHour);
@@ -129,7 +132,7 @@ function ChangeDate(date){
 			LoadSensorData(hour+1);
 		});
 	}
-	LoadSensorData(0);
+	LoadSensorData(0);*/
 
 	//load當日sensor data
 	/*var url = "/sensorData?date="+curYear+"/"+date;
@@ -518,12 +521,14 @@ window.addEventListener('load', function() {
 
 	$("#showRelative").change(function(){
 		ToggleRelative();
-		UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
+		UpdateMapSensorGrid();
+		//UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
 	});
 
 	$("#sensitive").change(function(){
 		$("#sensLabel").html($("#sensitive").val());
-		UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
+		UpdateMapSensorGrid();
+		//UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
 	});
 
 	$("body").animate({scrollTop: 60}, 1000);

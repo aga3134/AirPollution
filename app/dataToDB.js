@@ -8,6 +8,7 @@ var SensorDailySum = require('../db/sensorDailySum');
 var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
+var Config = require("../config.js");
 
 var moment = require("moment");
 var zoneStr = "Asia/Taipei";
@@ -15,7 +16,8 @@ var zoneStr = "Asia/Taipei";
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
-var SensorDataSchema = require('../db/sensorDataSchema');
+//var SensorDataSchema = require('../db/sensorDataSchema');
+var SensorGridSchema = require('../db/sensorGridSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
 
@@ -27,6 +29,119 @@ dataToDB.LatToArea = function(lat){
 	else return "central";
 }
 
+
+dataToDB.SensorGridToDB = function(data, date, time){
+	if(data.status != "ok") return;
+	var gridArray = [];
+	var gridPerUnit = Config.gridPerUnit;
+	var levelNum = Config.levelNum;
+	for(var i=0;i<levelNum;i++){
+		gridArray[i] = [];
+	}
+
+	for(var i=0;i<data.devices.length;i++){
+		var device = data.devices[i];
+		if(device.pm25 <= 0 || device.pm25 >= 3000) continue;	//不正常的數值，跳過
+		if(device.lat < 21 || device.lat > 26) continue;		//只保留台灣附近的範圍，其他視為雜訊
+		if(device.lon < 118 || device.lon > 123) continue;
+		if(device.time == ""){
+			device.time = date+" "+time;
+		}
+
+		for(var j=0;j<levelNum;j++){	//計算對每個level貢獻
+			var scale = gridPerUnit/Math.pow(2,j);
+			var gridX = device.lon*scale;
+			var gridY = device.lat*scale;
+			var intX = Math.floor(gridX);
+			var intY = Math.floor(gridY);
+
+			var gridData = {};
+			gridData.level = j;
+			//每十分鐘記一筆資料
+			var time = new Date(device.time);
+			time.setSeconds(0);
+			time.setMinutes(Math.floor(time.getMinutes()/10)*10);
+			gridData.time = time;
+			//四捨五入到最近網格
+			gridData.gridX = Math.floor(intX+0.5);
+			gridData.gridY = Math.floor(intY+0.5);
+
+			//計算貢獻比例，越遠越小
+			var wX = 1-Math.abs(gridX-gridData.gridX);
+			var wY = 1-Math.abs(gridY-gridData.gridY);
+			var weight = wX*wY;
+			gridData.pm25 = device.pm25*weight;
+			gridData.t = device.t*weight;
+			gridData.h = device.h*weight;
+			gridData.weight = weight;
+
+			var key = gridData.time.toString()+gridData.gridX.toString()+gridData.gridY.toString();
+			var arr = gridArray[j];
+			if(arr[key]){
+				arr[key].pm25 += gridData.pm25;
+				arr[key].t += gridData.t;
+				arr[key].h += gridData.h;
+				arr[key].weight += gridData.weight;
+			}
+			else arr[key] = gridData;
+			
+		}
+	}
+	//for(var j=0;j<levelNum;j++){
+	//	console.log(Object.keys(gridArray[j]).length);
+	//}
+
+	//recursive add all grid data
+	function AddGridDataRec(data, level, i){
+		if(level >= levelNum) return;
+		var arr = data[level];
+		var keys = Object.keys(arr);
+		if(i >= keys.length) return AddGridDataRec(data, level+1, 0);
+		var key = keys[i];
+		var d = arr[key];
+		var tDay = new Date(d.time);
+		var date = tDay.getFullYear()+"_"+(tDay.getMonth()+1)+"_"+tDay.getDate();
+		var SensorGrid = mongoose.model('SensorGrid_'+date, SensorGridSchema);
+
+		//沒這筆資料就新增，有的話就加上新的數值
+		var incValue = {"pm25": d.pm25, "t": d.t, "h": d.h, "weight": d.weight};
+		SensorGrid.findOneAndUpdate({ 'level': d.level, "gridX": d.gridX, "gridY": d.gridY, "time": d.time},
+			{'$inc': incValue}, {upsert: true, new: true}, function(err, sum){
+				if(level == 0){
+					//更新data sum
+					var area = dataToDB.LatToArea(d.gridY/gridPerUnit);
+					//每日總結
+					tDay.setSeconds(0);
+					tDay.setMinutes(0);
+					tDay.setHours(0);
+					
+					var incValue = {};
+					incValue[area+"Sum"] = Math.floor(d.pm25/d.weight);
+					incValue[area+"Num"] = 1;
+					SensorDailySum.findOneAndUpdate({ '_id': tDay}, {'$inc': incValue}, 
+						{upsert: true, new: true}, function(err, sum){
+						if(err) console.log(err);
+						
+						//每10分鐘總結
+						var t10min = new Date(d.time);
+						t10min.setSeconds(0);
+						t10min.setMinutes(Math.floor(t10min.getMinutes()/10)*10);	//round to 10min
+
+						Sensor10minSum.findOneAndUpdate({ '_id': t10min}, {'$inc': incValue}, 
+							{upsert: true, new: true}, function(err, sum){
+							if(err) console.log(err);
+							
+							AddGridDataRec(data, level, i+1);
+						});
+					});
+				}
+				else AddGridDataRec(data, level, i+1);
+		});
+	}
+	
+	AddGridDataRec(gridArray, 0, 0);
+}
+/*
 dataToDB.SensorDataToDB = function(data, date, time){
 	if(data.status != "ok") return;
 	var siteArray = [];
@@ -111,7 +226,7 @@ dataToDB.SensorDataToDB = function(data, date, time){
 	}
 
 	AddSiteRec(siteArray, 0);
-};
+};*/
 
 dataToDB.PowerGenToDB = function(data){
 	var time = data.time;
@@ -373,9 +488,11 @@ dataToDB.DataFolderToDB = function(){
 
 				fs.readFile(dir+file, 'utf8', function (err, data) {
 					if (err) console.log(err);
+
 					var seg = file.split("_");
 					var fileDate = seg[1];
-					var fileTime = (seg[2].split(".")[0]).replace("-",":")+":00"; 
+					var fileTime;
+					if(seg[2]) fileTime = (seg[2].split(".")[0]).replace("-",":")+":00"; 
 					if(fileDate != firstDate) return;	//一次只處理一天的資料，避免out of memory
 					console.log("Processing "+file+"...");
 
@@ -404,7 +521,7 @@ dataToDB.DataFolderToDB = function(){
 		} catch (e) {
 			return console.error(e);
 		}
-		dataToDB.SensorDataToDB(obj, date, time);
+		dataToDB.SensorGridToDB(obj, date, time);
 	});
 
 	//power data

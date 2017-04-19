@@ -12,14 +12,16 @@ var formidable = require('formidable');
 var uuid = require('node-uuid');
 var mysqlDB = require("./mysqlDB");
 var Login = require("./login.js");
+var Config = require("../config.js");
 
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
 var PowerGenSchema = require('../db/powerGenSchema');
-var SensorDataSchema = require('../db/sensorDataSchema');
+//var SensorDataSchema = require('../db/sensorDataSchema');
+var SensorGridSchema = require('../db/sensorGridSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
-var version = "1.0.2";
+var version = "1.1.0";
 
 module.exports = function(app, passport){
 	mysqlDB.Init();
@@ -30,7 +32,7 @@ module.exports = function(app, passport){
 		res.render("static/index.html", {user: user, version: version});
 	});
 	
-	app.get("/sensorSite", function(req, res){
+	/*app.get("/sensorSite", function(req, res){
 		SensorSite.find({},{'__v': 0}, function(err, sites){
 			if(err) console.log(err);
 			res.send(JSON.stringify(sites));
@@ -59,6 +61,58 @@ module.exports = function(app, passport){
 				data[i].time = DateToTimeString(data[i].time);
 			}
 			res.send(JSON.stringify(data));
+		});
+	});*/
+
+	app.get("/sensorGrid", function(req, res){
+		var gridPerUnit = Config.gridPerUnit;
+		var levelNum = Config.levelNum;
+		var date = req.query.date;
+		var hour = parseInt(req.query.hour);
+		var level = parseInt(req.query.level);
+		var minLat = parseFloat(req.query.minLat);
+		var maxLat = parseFloat(req.query.maxLat);
+		var minLng = parseFloat(req.query.minLng);
+		var maxLng = parseFloat(req.query.maxLng);
+		if(!date || !req.query.level || level < 0 || level >= levelNum) return;
+
+		var query = {"level": level};
+		var condition = [];
+		if(hour >= 0 && hour < 24){
+			condition.push({'time': {$gte: new Date(date+" "+hour+":00")}});
+			condition.push({'time': {$lte: new Date(date+" "+hour+":59")}});
+		}
+
+		var scale = gridPerUnit/Math.pow(2,level);
+		var interval = 1.0/scale;
+		if(minLat) condition.push({'gridY': {$gte: minLat*scale}});
+		if(maxLat) condition.push({'gridY': {$lte: maxLat*scale}});
+
+		if(minLng) condition.push({'gridX': {$gte: minLng*scale}});
+		if(maxLng) condition.push({'gridX': {$lte: maxLng*scale}});
+
+		if(condition.length > 0){
+			query.$and = condition;
+		}
+
+		//use lean to allow modify of time
+		var t = date.replace(/\//g,"_");
+		var SensorGrid = mongoose.model('SensorGrid_'+t, SensorGridSchema);
+		SensorGrid.find(query, { '_id': 0, '__v': 0, 'h': 0, 't': 0, 'level': 0}).lean().exec(function(err, data){
+			if(err) console.log(err);
+			if(!data) return;
+			
+			var result = {};
+			result.level = level;
+			for(var i=0;i<data.length;i++){
+				data[i].gridX = (data[i].gridX*interval).toFixed(2);
+				data[i].gridY = (data[i].gridY*interval).toFixed(2);
+				data[i].pm25 = Math.floor(data[i].pm25/data[i].weight);
+				data[i].time = DateToTimeString(data[i].time);
+				delete data[i].weight;
+			}
+			result.data = data;
+			res.send(JSON.stringify(result));
 		});
 	});
 

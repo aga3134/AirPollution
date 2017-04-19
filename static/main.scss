@@ -90,7 +90,7 @@ a{
     height: 100%; 
   }
   .map-loading{
-    display: block;
+    display: none;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -245,7 +245,7 @@ a{
     bottom: 0px;
     left: 0px;
     width: 350px;
-    height: 200px;
+    height: 150px;
   }
   #powerPanel{
     @include panel;

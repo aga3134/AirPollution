@@ -1,5 +1,5 @@
 var map;
-var pm25Array = [];
+//var pm25Array = [];
 var weatherArray = [];
 var powerStationArray = [];
 var roadArray = [];
@@ -13,12 +13,16 @@ var showComment;
 var commentArray = [];
 var commentForm = "";
 
+var pm25Grid = [];
+var levelNum = 6;
+var curLevel = 4;
+
 function ClearMap(){
-	for(var key in pm25Array){
+	/*for(var key in pm25Array){
 		pm25Array[key].setOptions({
     		map: null
     	});
-	}
+	}*/
 	for(var key in weatherArray){
 		weatherArray[key].setOptions({
     		map: null
@@ -39,11 +43,25 @@ function ClearMap(){
     		map: null
     	});
 	}
-	pm25Array = [];
+	//pm25Array = [];
 	weatherArray = [];
 	powerStationArray = [];
 	roadArray = [];
 	commentArray = [];
+
+	for(var i=0;i<levelNum;i++){
+		var grid = pm25Grid[i];
+		for(key in grid){
+			var data = grid[key];
+			for(coord in data){
+				if(!data[coord].rect) continue;
+				data[coord].rect.setOptions({
+		    		map: null
+		    	});
+			}
+		}
+		pm25Grid[i] = [];
+	}
 }
 
 function componentToHex(c) {
@@ -59,7 +77,8 @@ function ValueToColor(v){
 	var color = d3.scale.linear().domain([0,11,23,35,41,47,53,58,64,70, 1000])
 		.range([rgb(156,255,156), rgb(49, 255, 0), rgb(49, 207, 0), rgb(255, 255, 0), rgb(255, 207, 0), 
 			rgb(255, 154, 0), rgb(255, 100, 100), rgb(255, 0, 0), rgb(153, 0, 0), rgb(206, 48, 255), rgb(0,0,0)]);
-	return color(v);
+	if(!v) return "#ffffff";
+	else return color(v);
 	/*if(v <= 11) return rgb(156, 255, 156);
 	else if(v <= 23) return rgb(49, 255, 0);
 	else if(v <= 35) return rgb(49, 207, 0);
@@ -72,6 +91,184 @@ function ValueToColor(v){
 	else return rgb(206, 48, 255);*/
 }
 
+function GetLevel(){
+	var zoom = map.getZoom();
+	var level = 11-zoom;
+	if(level > 5) level = 5;
+	if(level < 0) level = 0;
+	return level;
+}
+
+function UpdateGridZoom(){
+	var level = GetLevel();
+	for(var i=0;i<levelNum;i++){
+		var showMap = i==level?map:null;
+		var grid = pm25Grid[i];
+		for(key in grid){
+			var data = grid[key];
+			for(coord in data){
+				if(!data[coord].rect) continue;
+				data[coord].rect.setOptions({
+		    		map: showMap
+		    	});
+			}
+		}
+	}
+	curLevel = level;
+}
+
+function UpdateMapSensorGrid(){
+	//grid structure: level -> tile -> time -> data
+	//zoom: 6->12x6->L5, 7->6x3->L4, 8->3x1.5->L3, 9->1.5x0.75->L2, 10->0.75x0.375->L1, 11->0.375x0.1875->L0
+	//tile size: L0->0.1, L1->0.2, L2->0.4, L3->0.8, L4->1.6, L5->3.2
+
+	function clickFn(d){ 
+		return function() {
+			var str = "<p>("+d.lat.toFixed(2)+","+d.lng.toFixed(2)+")</p><p>PM2.5平均值: "+d.pm25+"</p><p>更新時間: "+d.time;
+			var loc = new google.maps.LatLng(d.lat, d.lng);
+			pm25Window.setOptions({content: str, position: loc});
+			pm25Window.open(map);
+		};
+	}
+	if(pm25Window.getMap()){
+		pm25Window.setOptions({map: null});
+	}
+
+	var bound = map.getBounds();
+	var minLat = bound.getSouthWest().lat();
+	var minLng = bound.getSouthWest().lng();
+	var maxLat = bound.getNorthEast().lat();
+	var maxLng = bound.getNorthEast().lng(); 
+
+	var level = GetLevel();
+	var step = 0.1*Math.pow(2,level);
+	minLat = Math.floor(minLat/step)*step;
+	minLng = Math.floor(minLng/step)*step;
+	maxLat = Math.ceil(maxLat/step)*step;
+	maxLng = Math.ceil(maxLng/step)*step;
+	var grid = pm25Grid[level];
+
+	var opacity = $("#opacity").val();
+	var radius = $("#pm25Radius").val();	//單位公里
+
+	var strokeWeight = showRelative?1:0;
+	var sensitive = $("#sensitive").val();
+	var relativeColor = d3.scale.linear().domain([0,30-sensitive]).range(["#00ff00", "#ff0000"]);
+	var fillColor;
+
+	//update or load data of grids within bounds
+	function UpdateGrid(level, lat, lng){
+		var grid = pm25Grid[level];
+		//truncate到小數後2位，避免誤差造成key不同
+		var key = lat.toFixed(2)+","+lng.toFixed(2);
+		if(grid[key]){	//update grid data in map
+			for (var coord in grid[key]) {
+				var curGrid = grid[key][coord];
+				var cLat = curGrid.loc.lat();
+			    var cLng = curGrid.loc.lng();
+				var d = curGrid.pm25[curTime];
+				var preD = curGrid.pm25[preTime];
+				if(!curGrid.rect) continue;
+				if(showRelative){
+		    		if(preD) fillColor = relativeColor(d-preD);
+		    		else fillColor = relativeColor(0);
+		    	}
+		    	else{
+		    		fillColor = ValueToColor(d);
+		    	}
+		    	google.maps.event.clearListeners(curGrid.rect,'click');
+		    	var op = {lat: cLat, lng: cLng, pm25: d, time: curTime};
+	    		curGrid.rect.addListener('click', clickFn(op));
+		    	curGrid.rect.setOptions({
+		    		strokeWeight: strokeWeight,
+					fillColor: fillColor,
+		    	});
+		    	
+			}
+		}
+		else{	//load
+			var param = "date="+curYear+"/"+curDate;
+			param += "&level="+level;
+			param += "&minLat="+lat;
+			param += "&minLng="+lng;
+			param += "&maxLat="+(lat+step);
+			param += "&maxLng="+(lng+step);
+			$.get("/sensorGrid?"+param, function(result){
+				var data = JSON.parse(result);
+				var grid = pm25Grid[data.level];
+				if(grid[key]) return;	//避免快速zoom或pan造成某些區塊同時load多次
+				grid[key] = [];
+				var json = data.data;
+				for(var i=0;i<json.length;i++){
+					var d = json[i];
+					var t = d.time.split(":");
+					var h = t[0];
+					var m = Math.floor(t[1]/10)*10;
+					var coord = d.gridY+","+d.gridX;
+					if(grid[key][coord]){
+						grid[key][coord].pm25[h+":"+m] = d.pm25;
+					}
+					else{
+						var sensorData = {pm25: []};
+						sensorData.pm25[h+":"+m] = d.pm25;
+						sensorData.loc = new google.maps.LatLng(d.gridY, d.gridX);
+						grid[key][coord] = sensorData;
+					}
+				}
+				//create grid data in map
+				//若get資料回傳前就zoom到別的level，就不顯示在map上
+				var showMap = curLevel==data.level?map:null;
+				for(var coord in grid[key]) {
+					var curGrid = grid[key][coord];
+					var d = curGrid.pm25[curTime];
+					var preD = curGrid.pm25[preTime];
+
+					if(showRelative){
+			    		if(preD) fillColor = relativeColor(d-preD);
+			    		else fillColor = relativeColor(0);
+			    	}
+			    	else{
+			    		fillColor = ValueToColor(d);
+			    	}
+
+			    	var halfSize = 0.01*Math.pow(2,data.level)*0.5;
+			    	var cLat = curGrid.loc.lat();
+			    	var cLng = curGrid.loc.lng();
+			    	var rectCoord = [
+						{lat: cLat-halfSize, lng: cLng-halfSize},
+						{lat: cLat-halfSize, lng: cLng+halfSize},
+						{lat: cLat+halfSize, lng: cLng+halfSize},
+						{lat: cLat+halfSize, lng: cLng-halfSize},
+						{lat: cLat-halfSize, lng: cLng-halfSize}
+			        ];
+
+			        // Construct the polygon.
+			        var rect = new google.maps.Polygon({
+			    		paths: rectCoord,
+			    		strokeColor: '#FFFFFF',
+						strokeOpacity: 0.5,
+						strokeWeight: strokeWeight,
+						fillColor: fillColor,
+						fillOpacity: opacity,
+						map: map,
+						zIndex: 1
+			        });
+			        var op = {lat: cLat, lng: cLng, pm25: d, time: curTime};
+			        rect.listener = rect.addListener('click', clickFn(op));
+			    	curGrid.rect = rect;
+				}
+				
+			});
+		}
+	}
+	for(var lat=minLat; lat<=maxLat; lat+=step){
+		for(var lng=minLng; lng<=maxLng; lng+=step){
+			UpdateGrid(level,lat,lng);
+		}
+	}
+}
+
+/*
 function UpdateMapPM25(data, preData){
 	var keyLength = Object.keys(data).length;
 	if(keyLength == 0){
@@ -146,7 +343,7 @@ function UpdateMapPM25(data, preData){
 	    	});
 	    }
 	}
-}
+}*/
 
 function UpdateMapWeather(data){
 	function GenArrow(loc, wDir, wSpeed, scale){
@@ -455,6 +652,15 @@ function InitMap() {
 	   AddComment(event.latLng);
 	});
 
+	map.addListener('dragend', function() {
+		UpdateMapSensorGrid();
+	});
+
+	map.addListener('zoom_changed', function() {
+		UpdateGridZoom();
+		UpdateMapSensorGrid();
+	});
+
 	var northY = 24.5, southY = 23.5;
 	var westX = 119.5, eastX = 122.5;
 	var northSeg = [
@@ -484,15 +690,26 @@ function InitMap() {
 	$("#opacity").change(function(){
 		var opacity = $("#opacity").val();
 		$("#opLabel").html((opacity*100)+"%");
-		for (var key in pm25Array) {
+		/*for (var key in pm25Array) {
 			pm25Array[key].setOptions({
 	    		fillOpacity: opacity
 	    	});
+		}*/
+		for(var i=0;i<levelNum;i++){
+			var grid = pm25Grid[i];
+			for(key in grid){
+				var data = grid[key];
+				for(coord in data){
+					if(!data[coord].rect) continue;
+					data[coord].rect.setOptions({
+			    		fillOpacity: opacity
+			    	});
+				}
+			}
 		}
-
 	});
 
-	$("#pm25Radius").change(function(){
+	/*$("#pm25Radius").change(function(){
 		var radius = $("#pm25Radius").val();	//單位公里
 		for (var key in pm25Array) {
 			pm25Array[key].setOptions({
@@ -500,7 +717,12 @@ function InitMap() {
 	    	});
 		}
 		$("#radiusLabel").html(radius+"公里");
-	});
+	});*/
+
+	pm25Grid = [];
+	for(var i=0;i<levelNum;i++){
+		pm25Grid[i] = [];
+	}
 }
 
 function ToggleWind(){
@@ -541,11 +763,23 @@ function ToggleComment(){
 
 function ToggleAddMarker(){
 	function SetItemClickable(clickable){
-		for(var key in pm25Array){
+		for(var i=0;i<levelNum;i++){
+			var grid = pm25Grid[i];
+			for(key in grid){
+				var data = grid[key];
+				for(coord in data){
+					if(!data[coord].rect) continue;
+					data[coord].rect.setOptions({
+			    		clickable: clickable
+			    	});
+				}
+			}
+		}
+		/*for(var key in pm25Array){
 			pm25Array[key].setOptions({
 	    		clickable: clickable
 	    	});
-		}
+		}*/
 		for(var key in weatherArray){
 			weatherArray[key].setOptions({
 	    		clickable: clickable
