@@ -124,7 +124,8 @@ function UpdateMapSensorGrid(){
 
 	function clickFn(d){ 
 		return function() {
-			var str = "<p>("+d.lat.toFixed(2)+","+d.lng.toFixed(2)+")</p><p>PM2.5平均值: "+d.pm25+"</p><p>更新時間: "+d.time;
+			var str = "<p>座標: ("+d.lat.toFixed(2)+","+d.lng.toFixed(2)+")</p><p>PM2.5平均值: ";
+			str += d.pm25?d.pm25:"無資料"+"</p>";
 			var loc = new google.maps.LatLng(d.lat, d.lng);
 			pm25Window.setOptions({content: str, position: loc});
 			pm25Window.open(map);
