@@ -522,10 +522,10 @@ dataToDB.DataFolderToDB = function(){
 		var obj;
 		try {
 			obj = JSON.parse(data);
+			dataToDB.SensorGridToDB(obj, date, time);
 		} catch (e) {
 			return console.error(e);
 		}
-		dataToDB.SensorGridToDB(obj, date, time);
 	});
 
 	//power data
@@ -537,10 +537,10 @@ dataToDB.DataFolderToDB = function(){
 			var quote = data.indexOf("\"");
 			data = "{\"time"+data.substr(quote+1,data.length);
 			obj = JSON.parse(data);
+			dataToDB.PowerGenToDB(obj);
 		} catch (e) {
 			return console.error(e);
 		}
-		dataToDB.PowerGenToDB(obj);
 	});
 
 	dir = "./data/loadareas/";
