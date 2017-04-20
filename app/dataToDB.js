@@ -473,6 +473,9 @@ dataToDB.RoadDataToDB = function(data){
 
 dataToDB.DataFolderToDB = function(){
 	function ProcessDir(dir, doneDir, extractDate, action){
+		if (!fs.existsSync(dir)){
+			return;
+		}
 		if (!fs.existsSync(doneDir)){
 			fs.mkdirsSync(doneDir);
 		}
