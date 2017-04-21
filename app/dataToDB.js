@@ -483,7 +483,7 @@ dataToDB.DataFolderToDB = function(){
 		fs.readdir( dir, function( err, files ) {
 			if(err) return console.log(err);
 			var firstDate;
-			if(!files) return;
+			if(!files) return console.log("null files");;
 			if(files.length > 0) firstDate = files[0].split("_")[1];
 
 			function Process(arr, i){
