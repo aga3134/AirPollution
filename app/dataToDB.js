@@ -493,7 +493,11 @@ dataToDB.DataFolderToDB = function(){
 				fs.readFile(dir+file, 'utf8', function (err, data) {
 					if (err){
 						console.log(err);
-						Process(arr, i+1);
+						return Process(arr, i+1);
+					}
+					if(!data){
+						console.log("No data");
+						return Process(arr, i+1);
 					}
 
 					var seg = file.split("_");
