@@ -490,6 +490,11 @@ dataToDB.DataFolderToDB = function(){
 				if(i >= arr.length) return;
 				var file = files[i];
 
+				if(fs.lstatSync(dir+file).isDirectory()){
+					console.log("skip directory: "+dir+file);
+					return Process(arr, i+1);
+				}
+
 				fs.readFile(dir+file, 'utf8', function (err, data) {
 					if (err){
 						console.log(err);
