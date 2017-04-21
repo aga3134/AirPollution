@@ -10,6 +10,7 @@ var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 var Config = require("../config.js");
 
+var async = require("async");
 var moment = require("moment");
 var zoneStr = "Asia/Taipei";
 
@@ -527,95 +528,114 @@ dataToDB.DataFolderToDB = function(){
 				
 		});
 	}
-	//sensor data
-	var dir = "./data/airdata/";
-	var doneDir = "./data/done/airdata/";
-	ProcessDir(dir, doneDir, true, function(data, date, time){
-		var obj;
-		try {
-			obj = JSON.parse(data);
-			dataToDB.SensorGridToDB(obj, date, time);
-		} catch (e) {
-			return console.error(e);
-		}
-	});
 
-	//power data
-	dir = "./data/genary/";
-	doneDir = "./data/done/genary/";
-	ProcessDir(dir, doneDir, false, function(data){
-		var obj;
-		try {
-			var quote = data.indexOf("\"");
-			data = "{\"time"+data.substr(quote+1,data.length);
-			obj = JSON.parse(data);
-			dataToDB.PowerGenToDB(obj);
-		} catch (e) {
-			return console.error(e);
-		}
-	});
-
-	dir = "./data/loadareas/";
-	doneDir = "./data/done/loadareas/";
-	ProcessDir(dir, doneDir, true, function(data, date, time){
-		try {
-			dataToDB.PowerLoadToDB(data, date, time);
-		} catch (e) {
-			return console.error(e);
-		}
-	});
-
-	dir = "./data/loadfueltype/";
-	doneDir = "./data/done/loadfueltype/";
-	ProcessDir(dir, doneDir, true, function(data, date, time){
-		try {
-			dataToDB.PowerRatioToDB(data, date, time);
-		} catch (e) {
-			return console.error(e);
-		}
-	});
-
-	//weather data
-	dir = "./data/weather/";
-	doneDir = "./data/done/weather/";
-	ProcessDir(dir, doneDir, false, function(data){
-		try {
-			parseXML(data, function (err, result) {
-				if(err) return console.error(err);
-				dataToDB.WeatherDataToDB(result);
+	//依序儲存資料進database，降低memory用量
+	async.series([
+	 	//sensor data
+	    function() {
+	    	var dir = "./data/airdata/";
+			var doneDir = "./data/done/airdata/";
+			ProcessDir(dir, doneDir, true, function(data, date, time){
+				var obj;
+				try {
+					obj = JSON.parse(data);
+					dataToDB.SensorGridToDB(obj, date, time);
+				} catch (e) {
+					return console.error(e);
+				}
 			});
-		} catch (e) {
-			return console.error(e);
-		}
+	    },
+	 	//power gen data
+	    function() {
+	    	dir = "./data/genary/";
+			doneDir = "./data/done/genary/";
+			ProcessDir(dir, doneDir, false, function(data){
+				var obj;
+				try {
+					var quote = data.indexOf("\"");
+					data = "{\"time"+data.substr(quote+1,data.length);
+					obj = JSON.parse(data);
+					dataToDB.PowerGenToDB(obj);
+				} catch (e) {
+					return console.error(e);
+				}
+			});
+	    },
+	    //power load data
+	    function(){
+	    	dir = "./data/loadareas/";
+			doneDir = "./data/done/loadareas/";
+			ProcessDir(dir, doneDir, true, function(data, date, time){
+				try {
+					dataToDB.PowerLoadToDB(data, date, time);
+				} catch (e) {
+					return console.error(e);
+				}
+			});
+	    },
+	    //power fuel data
+	    function(){
+	    	dir = "./data/loadfueltype/";
+			doneDir = "./data/done/loadfueltype/";
+			ProcessDir(dir, doneDir, true, function(data, date, time){
+				try {
+					dataToDB.PowerRatioToDB(data, date, time);
+				} catch (e) {
+					return console.error(e);
+				}
+			});
+	    },
+	    //weather data
+	    function(){
+	    	dir = "./data/weather/";
+			doneDir = "./data/done/weather/";
+			ProcessDir(dir, doneDir, false, function(data){
+				try {
+					parseXML(data, function (err, result) {
+						if(err) return console.error(err);
+						dataToDB.WeatherDataToDB(result);
+					});
+				} catch (e) {
+					return console.error(e);
+				}
+			});
+	    },
+	    //road segment data
+	    function(){
+	    	dir = "./data/roadSegment/";
+			doneDir = "./data/done/roadSegment/";
+			ProcessDir(dir, doneDir, false, function(data){
+				try {
+					parseXML(data, function (err, result) {
+						if(err) return console.error(err);
+						dataToDB.RoadSegmentToDB(result);
+					});
+				} catch (e) {
+					return console.error(e);
+				}
+			});
+	    },
+	    //road data
+	    function(){
+	    	dir = "./data/traffic/";
+			doneDir = "./data/done/traffic/";
+			ProcessDir(dir, doneDir, false, function(data){
+				try {
+					parseXML(data, function (err, result) {
+						if(err) return console.error(err);
+						dataToDB.RoadDataToDB(result);
+					});
+				} catch (e) {
+					return console.error(e);
+				}
+			});
+	    }
+	 
+	], function(err, result_arr) {
+	    if (err) console.log(err);
+	    else console.log(result_arr);
 	});
 
-	//road segment data
-	dir = "./data/roadSegment/";
-	doneDir = "./data/done/roadSegment/";
-	ProcessDir(dir, doneDir, false, function(data){
-		try {
-			parseXML(data, function (err, result) {
-				if(err) return console.error(err);
-				dataToDB.RoadSegmentToDB(result);
-			});
-		} catch (e) {
-			return console.error(e);
-		}
-	});
-
-	//road data
-	dir = "./data/traffic/";
-	doneDir = "./data/done/traffic/";
-	ProcessDir(dir, doneDir, false, function(data){
-		try {
-			parseXML(data, function (err, result) {
-				if(err) return console.error(err);
-				dataToDB.RoadDataToDB(result);
-			});
-		} catch (e) {
-			return console.error(e);
-		}
-	});
 }
 
 
