@@ -474,14 +474,14 @@ dataToDB.RoadDataToDB = function(data){
 dataToDB.DataFolderToDB = function(){
 	function ProcessDir(dir, doneDir, extractDate, action){
 		if (!fs.existsSync(dir)){
-			return;
+			return console.log(dir+" not exist");
 		}
 		if (!fs.existsSync(doneDir)){
 			fs.mkdirsSync(doneDir);
 		}
 
 		fs.readdir( dir, function( err, files ) {
-			if(err) console.log(err);
+			if(err) return console.log(err);
 			var firstDate;
 			if(!files) return;
 			if(files.length > 0) firstDate = files[0].split("_")[1];
@@ -491,7 +491,10 @@ dataToDB.DataFolderToDB = function(){
 				var file = files[i];
 
 				fs.readFile(dir+file, 'utf8', function (err, data) {
-					if (err) console.log(err);
+					if (err){
+						console.log(err);
+						Process(arr, i+1);
+					}
 
 					var seg = file.split("_");
 					var fileDate = seg[1];
