@@ -473,7 +473,7 @@ dataToDB.RoadDataToDB = function(data){
 }
 
 dataToDB.DataFolderToDB = function(){
-	function ProcessDir(dir, doneDir, extractDate, action){
+	function ProcessDir(dir, doneDir, extractDate, action, callback){
 		if (!fs.existsSync(dir)){
 			return console.log(dir+" not exist");
 		}
@@ -488,7 +488,7 @@ dataToDB.DataFolderToDB = function(){
 			if(files.length > 0) firstDate = files[0].split("_")[1];
 
 			function Process(arr, i){
-				if(i >= arr.length) return;
+				if(i >= arr.length) return callback();
 				var file = files[i];
 
 				if(fs.lstatSync(dir+file).isDirectory()){
@@ -543,8 +543,7 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    },
 	 	//power gen data
 	    function(callback) {
@@ -560,8 +559,7 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    },
 	    //power load data
 	    function(callback){
@@ -573,8 +571,7 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    },
 	    //power fuel data
 	    function(callback){
@@ -586,8 +583,7 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    },
 	    //weather data
 	    function(callback){
@@ -602,8 +598,7 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    },
 	    //road segment data
 	    function(callback){
@@ -618,8 +613,7 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    },
 	    //road data
 	    function(callback){
@@ -634,13 +628,12 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
-				callback();
-			});
+			}, callback);
 	    }
 	 
 	], function(err, results) {
 	    if (err) console.log(err);
-	    else console.log(results);
+	    if(results) console.log(results);
 	});
 
 }
