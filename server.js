@@ -8,7 +8,14 @@ var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var passport = require("passport");
 
-mongoose.connect("mongodb://localhost/AirPollution");
+mongoose.connect("mongodb://localhost/AirPollution", {
+  server: {
+    socketOptions: {
+      socketTimeoutMS: 0,
+      connectTimeoutMS: 0
+    }
+  }
+});
 mongoose.Promise = global.Promise;
 
 var app = express();
