@@ -532,7 +532,7 @@ dataToDB.DataFolderToDB = function(){
 	//依序儲存資料進database，降低memory用量
 	async.series([
 	 	//sensor data
-	    function() {
+	    function(callback) {
 	    	var dir = "./data/airdata/";
 			var doneDir = "./data/done/airdata/";
 			ProcessDir(dir, doneDir, true, function(data, date, time){
@@ -543,10 +543,11 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    },
 	 	//power gen data
-	    function() {
+	    function(callback) {
 	    	dir = "./data/genary/";
 			doneDir = "./data/done/genary/";
 			ProcessDir(dir, doneDir, false, function(data){
@@ -559,10 +560,11 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    },
 	    //power load data
-	    function(){
+	    function(callback){
 	    	dir = "./data/loadareas/";
 			doneDir = "./data/done/loadareas/";
 			ProcessDir(dir, doneDir, true, function(data, date, time){
@@ -571,10 +573,11 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    },
 	    //power fuel data
-	    function(){
+	    function(callback){
 	    	dir = "./data/loadfueltype/";
 			doneDir = "./data/done/loadfueltype/";
 			ProcessDir(dir, doneDir, true, function(data, date, time){
@@ -583,10 +586,11 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    },
 	    //weather data
-	    function(){
+	    function(callback){
 	    	dir = "./data/weather/";
 			doneDir = "./data/done/weather/";
 			ProcessDir(dir, doneDir, false, function(data){
@@ -598,10 +602,11 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    },
 	    //road segment data
-	    function(){
+	    function(callback){
 	    	dir = "./data/roadSegment/";
 			doneDir = "./data/done/roadSegment/";
 			ProcessDir(dir, doneDir, false, function(data){
@@ -613,10 +618,11 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    },
 	    //road data
-	    function(){
+	    function(callback){
 	    	dir = "./data/traffic/";
 			doneDir = "./data/done/traffic/";
 			ProcessDir(dir, doneDir, false, function(data){
@@ -628,12 +634,13 @@ dataToDB.DataFolderToDB = function(){
 				} catch (e) {
 					return console.error(e);
 				}
+				callback();
 			});
 	    }
 	 
-	], function(err, result_arr) {
+	], function(err, results) {
 	    if (err) console.log(err);
-	    else console.log(result_arr);
+	    else console.log(results);
 	});
 
 }
