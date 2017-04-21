@@ -10,7 +10,6 @@ var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 var Config = require("../config.js");
 
-var async = require("async");
 var moment = require("moment");
 var zoneStr = "Asia/Taipei";
 
@@ -473,7 +472,7 @@ dataToDB.RoadDataToDB = function(data){
 }
 
 dataToDB.DataFolderToDB = function(){
-	function ProcessDir(dir, doneDir, extractDate, action, callback){
+	function ProcessDir(dir, doneDir, extractDate, action){
 		if (!fs.existsSync(dir)){
 			return console.log(dir+" not exist");
 		}
@@ -483,12 +482,18 @@ dataToDB.DataFolderToDB = function(){
 
 		fs.readdir( dir, function( err, files ) {
 			if(err) return console.log(err);
-			var firstDate;
+			var firstDate, firstHour;
 			if(!files) return console.log("null files");;
-			if(files.length > 0) firstDate = files[0].split("_")[1];
+			if(files.length > 0){
+				var seg = files[0].split("_");
+				firstDate = seg[1];
+				if(seg[2]){
+					firstHour = (seg[2].split(".")[0]).split("-")[0]; 
+				}
+			}
 
 			function Process(arr, i){
-				if(i >= arr.length) return callback();
+				if(i >= arr.length) return;
 				var file = files[i];
 
 				if(fs.lstatSync(dir+file).isDirectory()){
@@ -508,9 +513,15 @@ dataToDB.DataFolderToDB = function(){
 
 					var seg = file.split("_");
 					var fileDate = seg[1];
-					var fileTime;
-					if(seg[2]) fileTime = (seg[2].split(".")[0]).replace("-",":")+":00"; 
-					if(fileDate != firstDate) return;	//一次只處理一天的資料，避免out of memory
+					var fileTime, fileHour;
+					if(seg[2]){
+						var t = seg[2].split(".")[0];
+						if(t){
+							fileHour = t.split("-")[0];
+							fileTime = t.replace("-",":")+":00";
+						}
+					}
+					if(!(fileDate == firstDate && fileHour == firstHour)) return;	//一次只處理一小時的資料，避免out of memory
 					console.log("Processing "+file+"...");
 
 					if(extractDate){
@@ -528,114 +539,95 @@ dataToDB.DataFolderToDB = function(){
 				
 		});
 	}
-
-	//依序儲存資料進database，降低memory用量
-	async.series([
-	 	//sensor data
-	    function(callback) {
-	    	var dir = "./data/airdata/";
-			var doneDir = "./data/done/airdata/";
-			ProcessDir(dir, doneDir, true, function(data, date, time){
-				var obj;
-				try {
-					obj = JSON.parse(data);
-					dataToDB.SensorGridToDB(obj, date, time);
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    },
-	 	//power gen data
-	    function(callback) {
-	    	dir = "./data/genary/";
-			doneDir = "./data/done/genary/";
-			ProcessDir(dir, doneDir, false, function(data){
-				var obj;
-				try {
-					var quote = data.indexOf("\"");
-					data = "{\"time"+data.substr(quote+1,data.length);
-					obj = JSON.parse(data);
-					dataToDB.PowerGenToDB(obj);
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    },
-	    //power load data
-	    function(callback){
-	    	dir = "./data/loadareas/";
-			doneDir = "./data/done/loadareas/";
-			ProcessDir(dir, doneDir, true, function(data, date, time){
-				try {
-					dataToDB.PowerLoadToDB(data, date, time);
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    },
-	    //power fuel data
-	    function(callback){
-	    	dir = "./data/loadfueltype/";
-			doneDir = "./data/done/loadfueltype/";
-			ProcessDir(dir, doneDir, true, function(data, date, time){
-				try {
-					dataToDB.PowerRatioToDB(data, date, time);
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    },
-	    //weather data
-	    function(callback){
-	    	dir = "./data/weather/";
-			doneDir = "./data/done/weather/";
-			ProcessDir(dir, doneDir, false, function(data){
-				try {
-					parseXML(data, function (err, result) {
-						if(err) return console.error(err);
-						dataToDB.WeatherDataToDB(result);
-					});
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    },
-	    //road segment data
-	    function(callback){
-	    	dir = "./data/roadSegment/";
-			doneDir = "./data/done/roadSegment/";
-			ProcessDir(dir, doneDir, false, function(data){
-				try {
-					parseXML(data, function (err, result) {
-						if(err) return console.error(err);
-						dataToDB.RoadSegmentToDB(result);
-					});
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    },
-	    //road data
-	    function(callback){
-	    	dir = "./data/traffic/";
-			doneDir = "./data/done/traffic/";
-			ProcessDir(dir, doneDir, false, function(data){
-				try {
-					parseXML(data, function (err, result) {
-						if(err) return console.error(err);
-						dataToDB.RoadDataToDB(result);
-					});
-				} catch (e) {
-					return console.error(e);
-				}
-			}, callback);
-	    }
-	 
-	], function(err, results) {
-	    if (err) console.log(err);
-	    if(results) console.log(results);
+	//sensor data
+	var dir = "./data/airdata/";
+	var doneDir = "./data/done/airdata/";
+	ProcessDir(dir, doneDir, true, function(data, date, time){
+		var obj;
+		try {
+			obj = JSON.parse(data);
+			dataToDB.SensorGridToDB(obj, date, time);
+		} catch (e) {
+			return console.error(e);
+		}
 	});
 
+	//power data
+	dir = "./data/genary/";
+	doneDir = "./data/done/genary/";
+	ProcessDir(dir, doneDir, false, function(data){
+		var obj;
+		try {
+			var quote = data.indexOf("\"");
+			data = "{\"time"+data.substr(quote+1,data.length);
+			obj = JSON.parse(data);
+			dataToDB.PowerGenToDB(obj);
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	dir = "./data/loadareas/";
+	doneDir = "./data/done/loadareas/";
+	ProcessDir(dir, doneDir, true, function(data, date, time){
+		try {
+			dataToDB.PowerLoadToDB(data, date, time);
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	dir = "./data/loadfueltype/";
+	doneDir = "./data/done/loadfueltype/";
+	ProcessDir(dir, doneDir, true, function(data, date, time){
+		try {
+			dataToDB.PowerRatioToDB(data, date, time);
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	//weather data
+	dir = "./data/weather/";
+	doneDir = "./data/done/weather/";
+	ProcessDir(dir, doneDir, false, function(data){
+		try {
+			parseXML(data, function (err, result) {
+				if(err) return console.error(err);
+				dataToDB.WeatherDataToDB(result);
+			});
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	//road segment data
+	dir = "./data/roadSegment/";
+	doneDir = "./data/done/roadSegment/";
+	ProcessDir(dir, doneDir, false, function(data){
+		try {
+			parseXML(data, function (err, result) {
+				if(err) return console.error(err);
+				dataToDB.RoadSegmentToDB(result);
+			});
+		} catch (e) {
+			return console.error(e);
+		}
+	});
+
+	//road data
+	dir = "./data/traffic/";
+	doneDir = "./data/done/traffic/";
+	ProcessDir(dir, doneDir, false, function(data){
+		try {
+			parseXML(data, function (err, result) {
+				if(err) return console.error(err);
+				dataToDB.RoadDataToDB(result);
+			});
+		} catch (e) {
+			return console.error(e);
+		}
+	});
 }
 
 
