@@ -124,8 +124,9 @@ function UpdateMapSensorGrid(){
 
 	function clickFn(d){ 
 		return function() {
-			var str = "<p>座標: ("+d.lat.toFixed(2)+","+d.lng.toFixed(2)+")</p><p>PM2.5平均值: ";
-			str += d.pm25?d.pm25:"無資料"+"</p>";
+			var str = "<p>座標: ("+d.lat.toFixed(2)+","+d.lng.toFixed(2)+")</p>";
+			str += "<p>更新時間: "+d.time+"</p>";
+			str += "<p>PM2.5平均值: "+d.pm25?d.pm25:"無資料"+"</p>";
 			var loc = new google.maps.LatLng(d.lat, d.lng);
 			pm25Window.setOptions({content: str, position: loc});
 			pm25Window.open(map);
@@ -177,14 +178,15 @@ function UpdateMapSensorGrid(){
 		    	else{
 		    		fillColor = ValueToColor(d);
 		    	}
-		    	google.maps.event.clearListeners(curGrid.rect,'click');
-		    	var op = {lat: cLat, lng: cLng, pm25: d, time: curTime};
-	    		curGrid.rect.addListener('click', clickFn(op));
-		    	curGrid.rect.setOptions({
-		    		strokeWeight: strokeWeight,
-					fillColor: fillColor,
-		    	});
-		    	
+		    	if(d){	//有新資料才更新，不然維持舊的
+			    	google.maps.event.clearListeners(curGrid.rect,'click');
+			    	var op = {lat: cLat, lng: cLng, pm25: d, time: curTime};
+		    		curGrid.rect.addListener('click', clickFn(op));
+			    	curGrid.rect.setOptions({
+			    		strokeWeight: strokeWeight,
+						fillColor: fillColor,
+			    	});
+		    	}
 			}
 		}
 		else{	//load

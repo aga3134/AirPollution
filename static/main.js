@@ -27,6 +27,12 @@ function ChangeTime(time){
 	//$("#showTime").children(".time-bt").removeClass("select");
 	//$("#showTime").children(".time-bt[data-time='"+time+"']").addClass("select");
 	var selected = $("#showTime").children(".time-bt[data-time='"+time+"']");
+	console.log(selected.css("background-color"));
+	if(selected.css("background").indexOf("linear-gradient") == -1){	//無資料
+		$("#mapOverlay").css("display","block");
+	}
+	else $("#mapOverlay").css("display","none");
+
 	$("#selectTime").css("top",selected.css("top"));
 	$("#selectTime").css("left",selected.css("left"));
 	var scrollX = parseInt(selected.css("left")) - $("body").width()*0.5;
@@ -581,9 +587,11 @@ window.addEventListener('load', function() {
 		else if(sidebar.css("right") == "-220px") sidebar.animate({right: "0px"}, moveTime);
 	});
 
-	$("#map").click(function(){	//點地圖就自動關sidebar
-		var sidebar = $(".sidebar");
-		sidebar.animate({right: "-220px"}, moveTime);
+	$("#map").click(function(){	//手機版點地圖就自動關sidebar
+		if($("#menuIcon").css("display") == "block"){
+			var sidebar = $(".sidebar"); 
+			sidebar.animate({right: "-220px"}, moveTime);
+		}
 	});
 });
 
