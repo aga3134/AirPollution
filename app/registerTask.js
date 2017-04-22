@@ -18,8 +18,8 @@ var registerTask = {};
 registerTask.InitTask = function(){
 	//啟動時更新一次資料
 	dataToDB.DataFolderToDB();
-	//之後每十分鐘更新資料
-	schedule.scheduleJob('0 */10 * * * *', function(){
+	//之後每15分鐘更新資料
+	schedule.scheduleJob('0 */15 * * * *', function(){
 		dataToDB.DataFolderToDB();
 	});
 };

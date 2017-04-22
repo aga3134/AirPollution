@@ -482,8 +482,8 @@ dataToDB.DataFolderToDB = function(){
 
 		fs.readdir( dir, function( err, files ) {
 			if(err) return console.log(err);
+			if(!files) return console.log("null files");
 			var firstDate, firstHour;
-			if(!files) return console.log("null files");;
 			if(files.length > 0){
 				var seg = files[0].split("_");
 				firstDate = seg[1];
@@ -521,7 +521,8 @@ dataToDB.DataFolderToDB = function(){
 							fileTime = t.replace("-",":")+":00";
 						}
 					}
-					if(!(fileDate == firstDate && fileHour == firstHour)) return;	//一次只處理一小時的資料，避免out of memory
+					//if(!(fileDate == firstDate && fileHour == firstHour)) return;	//一次只處理一小時的資料，避免out of memory
+					if(i>=36) return;	//限制最多一次處理檔案個數，避免out of memory
 					console.log("Processing "+file+"...");
 
 					if(extractDate){
