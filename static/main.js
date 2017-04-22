@@ -27,7 +27,6 @@ function ChangeTime(time){
 	//$("#showTime").children(".time-bt").removeClass("select");
 	//$("#showTime").children(".time-bt[data-time='"+time+"']").addClass("select");
 	var selected = $("#showTime").children(".time-bt[data-time='"+time+"']");
-	console.log(selected.css("background-color"));
 	if(selected.css("background").indexOf("linear-gradient") == -1){	//無資料
 		$("#mapOverlay").css("display","block");
 	}
@@ -101,6 +100,7 @@ function ChangeDate(date){
 
 	curTime = preTime = "0:0";
 	UpdateMapSensorGrid();
+	ChangeTime(curTime);
 	var numPerHour = 60/timeInterval;
 	/*mapSensorData = [];
 	//pm2.5資料，每10分鐘1筆
