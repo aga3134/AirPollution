@@ -592,6 +592,7 @@ window.addEventListener('load', function() {
 			var sidebar = $(".sidebar"); 
 			sidebar.animate({right: "-220px"}, moveTime);
 		}
+		CloseCommentPanel();
 	});
 });
 
