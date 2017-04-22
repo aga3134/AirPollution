@@ -96,11 +96,11 @@ function ChangeDate(date){
 	      sensorAvg[dateArr[0]+":"+dateArr[1]] = d;
 	    }
 	    AddTimebar(sensorAvg);
+	    ChangeTime("0:0");
 	});
 
 	curTime = preTime = "0:0";
 	UpdateMapSensorGrid();
-	ChangeTime(curTime);
 	var numPerHour = 60/timeInterval;
 	/*mapSensorData = [];
 	//pm2.5資料，每10分鐘1筆
