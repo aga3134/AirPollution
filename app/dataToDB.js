@@ -522,7 +522,7 @@ dataToDB.DataFolderToDB = function(){
 						}
 					}
 					//if(!(fileDate == firstDate && fileHour == firstHour)) return;	//一次只處理一小時的資料，避免out of memory
-					if(i>=36) return;	//限制最多一次處理檔案個數，避免out of memory
+					if(i>=12) return;	//限制最多一次處理檔案個數，避免out of memory
 					console.log("Processing "+file+"...");
 
 					if(extractDate){

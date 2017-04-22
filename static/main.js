@@ -580,6 +580,11 @@ window.addEventListener('load', function() {
 		if(sidebar.css("right") == "0px") sidebar.animate({right: "-220px"}, moveTime);
 		else if(sidebar.css("right") == "-220px") sidebar.animate({right: "0px"}, moveTime);
 	});
+
+	$("#map").click(function(){	//點地圖就自動關sidebar
+		var sidebar = $(".sidebar");
+		sidebar.animate({right: "-220px"}, moveTime);
+	});
 });
 
 $( window ).resize(function() {
