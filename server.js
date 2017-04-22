@@ -6,6 +6,7 @@ var registerTask = require("./app/registerTask");
 var Config = require('./config');
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
+var MySQLStore = require('express-mysql-session')(session);
 var passport = require("passport");
 
 mongoose.connect("mongodb://localhost/AirPollution", {
@@ -31,10 +32,26 @@ app.set("view cache", false);
 swig.setDefaults({cache: false});
 
 app.use(cookieParser());
+
+var options = {
+    host: 'localhost',
+    port: 3306,
+    user: Config.mysqlAuth.username,
+    password: Config.mysqlAuth.password,
+    database: Config.mysqlAuth.dbName
+};
+var sessionStore = new MySQLStore(options);
+ 
 app.use(session({
+    secret: Config.sessionConfig.secret,
+    store: sessionStore,
+    resave: true,
+    saveUninitialized: true
+}));
+/*app.use(session({
 	secret: Config.sessionConfig.secret,
 	cookie: { path: '/', httpOnly: true, maxAge: 1000*60*60*24*100}	//session保留100天
-}));
+}));*/
 
 app.use(passport.initialize());
 app.use(passport.session());
