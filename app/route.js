@@ -130,6 +130,13 @@ module.exports = function(app, passport){
 			if(!data) return;
 			for(var i=0;i<data.length;i++){
 				data[i]._id = DateToDateString(data[i]._id);
+				//round data to 2 digit
+				if(data[i].southNum) data[i].southNum = data[i].southNum.toFixed(2);
+				if(data[i].southSum) data[i].southSum = data[i].southSum.toFixed(2);
+				if(data[i].centralNum) data[i].centralNum = data[i].centralNum.toFixed(2);
+				if(data[i].centralSum) data[i].centralSum = data[i].centralSum.toFixed(2);
+				if(data[i].northNum) data[i].northNum = data[i].northNum.toFixed(2);
+				if(data[i].northSum) data[i].northSum = data[i].northSum.toFixed(2);
 			}
 			res.send(JSON.stringify(data));
 		});
@@ -149,6 +156,13 @@ module.exports = function(app, passport){
 			if(!data) return;
 			for(var i=0;i<data.length;i++){
 				data[i]._id = DateToTimeString(data[i]._id);
+				//round data to 2 digit
+				if(data[i].southNum) data[i].southNum = data[i].southNum.toFixed(2);
+				if(data[i].southSum) data[i].southSum = data[i].southSum.toFixed(2);
+				if(data[i].centralNum) data[i].centralNum = data[i].centralNum.toFixed(2);
+				if(data[i].centralSum) data[i].centralSum = data[i].centralSum.toFixed(2);
+				if(data[i].northNum) data[i].northNum = data[i].northNum.toFixed(2);
+				if(data[i].northSum) data[i].northSum = data[i].northSum.toFixed(2);
 			}
 			res.send(JSON.stringify(data));
 		});
