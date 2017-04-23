@@ -9,6 +9,7 @@ var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 var Config = require("../config.js");
+var os = require('os');
 
 var moment = require("moment");
 var zoneStr = "Asia/Taipei";
