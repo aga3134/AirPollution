@@ -116,8 +116,8 @@ dataToDB.SensorGridToDB = function(data, date, time){
 					tDay.setHours(0);
 					
 					var incValue = {};
-					incValue[area+"Sum"] = Math.floor(d.pm25/d.weight);
-					incValue[area+"Num"] = 1;
+					incValue[area+"Sum"] = d.pm25;
+					incValue[area+"Num"] = d.weight;
 					SensorDailySum.findOneAndUpdate({ '_id': tDay}, {'$inc': incValue}, 
 						{upsert: true, new: true}, function(err, sum){
 						if(err) console.log(err);
