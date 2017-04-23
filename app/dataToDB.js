@@ -595,7 +595,7 @@ dataToDB.DataFolderToDB = function(){
 		try {
 			parseXML(data, function (err, result) {
 				if(err) return console.error(err);
-				dataToDB.WeatherDataToDB(result);
+				else dataToDB.WeatherDataToDB(result);
 			});
 		} catch (e) {
 			return console.error(e);
@@ -609,7 +609,7 @@ dataToDB.DataFolderToDB = function(){
 		try {
 			parseXML(data, function (err, result) {
 				if(err) return console.error(err);
-				dataToDB.RoadSegmentToDB(result);
+				else dataToDB.RoadSegmentToDB(result);
 			});
 		} catch (e) {
 			return console.error(e);
@@ -623,7 +623,7 @@ dataToDB.DataFolderToDB = function(){
 		try {
 			parseXML(data, function (err, result) {
 				if(err) return console.error(err);
-				dataToDB.RoadDataToDB(result);
+				else dataToDB.RoadDataToDB(result);
 			});
 		} catch (e) {
 			return console.error(e);

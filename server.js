@@ -8,6 +8,7 @@ var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var MySQLStore = require('express-mysql-session')(session);
 var passport = require("passport");
+var childProcess = require('child_process');
 
 mongoose.connect("mongodb://localhost/AirPollution", {
   server: {
@@ -58,9 +59,23 @@ app.use(passport.session());
 
 route(app, passport);
 registerTask.InitTask();
+/*
+console.log("create a child process to add data to db");
+var cp = childProcess.fork("./updateDB.js");
+cp.on('error', function (err) {
+    console.log("child process error: "+err);
+});
+cp.on('exit', function (code) {
+    console.log("child process exit: "+code);
+});*/
 
-process.on('exit',function(){
-	mongoose.connection.close();
+process.on('error',function(err){
+  console.log("process error: "+err);
+});
+
+process.on('exit',function(code){
+  console.log("process exit: "+code);
+	mongoose.disconnect();
 });
 
 app.listen(app.port, app.host);
