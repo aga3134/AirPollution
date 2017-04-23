@@ -20,8 +20,7 @@ registerTask.InitTask = function(){
 	//dataToDB.DataFolderToDB();
 	//之後每5分鐘更新資料
 	schedule.scheduleJob('0 */5 * * * *', function(){
-		//更新database的動作獨立移到server外面做，這邊不更新了
-		//dataToDB.DataFolderToDB();
+		dataToDB.DataFolderToDB();
 	});
 };
 

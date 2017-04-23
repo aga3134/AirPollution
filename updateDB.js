@@ -32,12 +32,12 @@ function ProcessDirSync(dir, doneDir, extractDate, action){
 	if(!files) return console.log("null files");
 	for(var i=0;i<=12;i++){
 		if(i >= files.length) return;
-		var memUse = (1-os.freemem()/os.totalmem());
-		console.log("memUse: "+Math.floor(memUse*100)+"%");
-		if(memUse > 0.8) return console.log("memory usage > 80%. halt on.");
 		
 		var file = files[i];
 		console.log("Processing "+file+"...");
+		var memUse = (1-os.freemem()/os.totalmem());
+		console.log("memUse: "+Math.floor(memUse*100)+"%");
+		if(memUse > 0.85) return console.log("memory usage > 85%. halt on.");
 
 		if(fs.lstatSync(dir+file).isDirectory()){
 			console.log("skip directory: "+dir+file);

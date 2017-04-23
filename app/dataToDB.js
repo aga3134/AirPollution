@@ -524,6 +524,9 @@ dataToDB.DataFolderToDB = function(){
 					//if(!(fileDate == firstDate && fileHour == firstHour)) return;	//一次只處理一小時的資料，避免out of memory
 					if(i>=12) return;	//限制最多一次處理檔案個數，避免out of memory
 					console.log("Processing "+file+"...");
+					var memUse = (1-os.freemem()/os.totalmem());
+					console.log("memUse: "+Math.floor(memUse*100)+"%");
+					if(memUse > 0.85) return console.log("memory usage > 85%. halt on.");
 
 					if(extractDate){
 						action(data, fileDate, fileTime);
