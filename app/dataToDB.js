@@ -47,6 +47,7 @@ dataToDB.SensorGridToDB = function(data, date, time){
 		if(device.lon < 118 || device.lon > 123) continue;
 		if(device.time == ""){
 			device.time = date+" "+time;
+			console.log("empty time. set time as "+device.time);
 		}
 
 		for(var j=0;j<levelNum;j++){	//計算對每個level貢獻
@@ -59,11 +60,12 @@ dataToDB.SensorGridToDB = function(data, date, time){
 			var gridData = {};
 			gridData.level = j;
 			//每十分鐘記一筆資料
-			var time = new Date(device.time);
-			time.setSeconds(0);
-			time.setMinutes(Math.floor(time.getMinutes()/10)*10);
-			if ( isNaN( time.getTime() ) ) {
+			var t = new Date(device.time);
+			t.setSeconds(0);
+			t.setMinutes(Math.floor(t.getMinutes()/10)*10);
+			if ( isNaN( t.getTime() ) ) {
 				console.log("invalid date: "+device.time);
+				console.log("truncated date: "+t);
 				continue;
 			}
 			gridData.time = time;
