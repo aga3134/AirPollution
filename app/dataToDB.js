@@ -62,6 +62,10 @@ dataToDB.SensorGridToDB = function(data, date, time){
 			var time = new Date(device.time);
 			time.setSeconds(0);
 			time.setMinutes(Math.floor(time.getMinutes()/10)*10);
+			if ( isNaN( time.getTime() ) ) {
+				console.log("invalid date: "+device.time);
+				continue;
+			}
 			gridData.time = time;
 			//四捨五入到最近網格
 			gridData.gridX = Math.floor(intX+0.5);
@@ -509,6 +513,9 @@ dataToDB.DataFolderToDB = function(){
 					}
 					if(!data){
 						console.log("No data");
+						fs.rename( dir+file, doneDir+file, function(err) {
+		                    if(err) console.log(err);
+		                });
 						return Process(arr, i+1);
 					}
 
@@ -527,7 +534,7 @@ dataToDB.DataFolderToDB = function(){
 					console.log("Processing "+file+"...");
 					var memUse = (1-os.freemem()/os.totalmem());
 					console.log("memUse: "+Math.floor(memUse*100)+"%");
-					if(memUse > 0.85) return console.log("memory usage > 85%. halt on.");
+					if(memUse > 0.95) return console.log("memory usage > 95%. halt on.");
 
 					if(extractDate){
 						action(data, fileDate, fileTime);
