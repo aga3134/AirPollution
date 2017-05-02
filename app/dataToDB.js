@@ -47,7 +47,7 @@ dataToDB.SensorGridToDB = function(data, date, time){
 		if(device.lon < 118 || device.lon > 123) continue;
 		if(device.time == ""){
 			device.time = date+" "+time;
-			console.log("empty time. set time as "+device.time);
+			//console.log("empty time. set time as "+device.time);
 		}
 
 		for(var j=0;j<levelNum;j++){	//計算對每個level貢獻
@@ -68,7 +68,7 @@ dataToDB.SensorGridToDB = function(data, date, time){
 				console.log("truncated date: "+t);
 				continue;
 			}
-			gridData.time = time;
+			gridData.time = t;
 			//四捨五入到最近網格
 			gridData.gridX = Math.floor(intX+0.5);
 			gridData.gridY = Math.floor(intY+0.5);
@@ -125,6 +125,10 @@ dataToDB.SensorGridToDB = function(data, date, time){
 					var incValue = {};
 					incValue[area+"Sum"] = d.pm25;
 					incValue[area+"Num"] = d.weight;
+			        if ( isNaN( tDay.getTime() ) ) {
+				        console.log("invalid date: "+d.time);
+				        return AddGridDataRec(data, level, i+1);
+			        }
 					SensorDailySum.findOneAndUpdate({ '_id': tDay}, {'$inc': incValue}, 
 						{upsert: true, new: true}, function(err, sum){
 						if(err) console.log(err);
