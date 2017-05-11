@@ -483,6 +483,8 @@ dataToDB.RoadDataToDB = function(data){
 }
 
 dataToDB.DataFolderToDB = function(){
+	var srcFolder = Config.dataSrcFolder;
+	var dstFolder = Config.dataDoneFolder;
 	function ProcessDir(dir, doneDir, extractDate, action){
 		if (!fs.existsSync(dir)){
 			return console.log(dir+" not exist");
@@ -558,8 +560,8 @@ dataToDB.DataFolderToDB = function(){
 		});
 	}
 	//sensor data
-	var dir = "./data/airdata/";
-	var doneDir = "./data/done/airdata/";
+	var dir = srcFolder+"airdata/";
+	var doneDir = dstFolder+"airdata/";
 	ProcessDir(dir, doneDir, true, function(data, date, time){
 		var obj;
 		try {
@@ -571,8 +573,8 @@ dataToDB.DataFolderToDB = function(){
 	});
 
 	//power data
-	dir = "./data/genary/";
-	doneDir = "./data/done/genary/";
+	dir = srcFolder+"genary/";
+	doneDir = dstFolder+"genary/";
 	ProcessDir(dir, doneDir, false, function(data){
 		var obj;
 		try {
@@ -585,8 +587,8 @@ dataToDB.DataFolderToDB = function(){
 		}
 	});
 
-	dir = "./data/loadareas/";
-	doneDir = "./data/done/loadareas/";
+	dir = srcFolder+"loadareas/";
+	doneDir = dstFolder+"loadareas/";
 	ProcessDir(dir, doneDir, true, function(data, date, time){
 		try {
 			dataToDB.PowerLoadToDB(data, date, time);
@@ -595,8 +597,8 @@ dataToDB.DataFolderToDB = function(){
 		}
 	});
 
-	dir = "./data/loadfueltype/";
-	doneDir = "./data/done/loadfueltype/";
+	dir = srcFolder+"loadfueltype/";
+	doneDir = dstFolder+"loadfueltype/";
 	ProcessDir(dir, doneDir, true, function(data, date, time){
 		try {
 			dataToDB.PowerRatioToDB(data, date, time);
@@ -606,8 +608,8 @@ dataToDB.DataFolderToDB = function(){
 	});
 
 	//weather data
-	dir = "./data/weather/";
-	doneDir = "./data/done/weather/";
+	dir = srcFolder+"weather/";
+	doneDir = dstFolder+"weather/";
 	ProcessDir(dir, doneDir, false, function(data){
 		try {
 			parseXML(data, function (err, result) {
@@ -620,8 +622,8 @@ dataToDB.DataFolderToDB = function(){
 	});
 
 	//road segment data
-	dir = "./data/roadSegment/";
-	doneDir = "./data/done/roadSegment/";
+	dir = srcFolder+"roadSegment/";
+	doneDir = dstFolder+"roadSegment/";
 	ProcessDir(dir, doneDir, false, function(data){
 		try {
 			parseXML(data, function (err, result) {
@@ -634,8 +636,8 @@ dataToDB.DataFolderToDB = function(){
 	});
 
 	//road data
-	dir = "./data/traffic/";
-	doneDir = "./data/done/traffic/";
+	dir = srcFolder+"traffic/";
+	doneDir = dstFolder+"traffic/";
 	ProcessDir(dir, doneDir, false, function(data){
 		try {
 			parseXML(data, function (err, result) {

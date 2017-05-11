@@ -16,6 +16,11 @@ config.sessionConfig = {
 	secret: "YourSessionSecret"
 }
 
+config.dataSrcFolder = "./data/";
+config.dataDoneFolder = "./data/done/";
+config.gridPerUnit = 100;
+config.levelNum = 6;
+
 config.serverPort = 8001;
 
 module.exports = config;
