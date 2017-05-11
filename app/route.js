@@ -9,7 +9,7 @@ var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 
 var formidable = require('formidable');
-var uuid = require('node-uuid');
+var uuid = require('uuid/v4');
 var mysqlDB = require("./mysqlDB");
 var Login = require("./login.js");
 var Config = require("../config.js");
