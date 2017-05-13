@@ -7,8 +7,8 @@
     <link rel="canonical" href="http://pm25.agawork.tw/" />
     <meta property="og:url" content="http://pm25.agawork.tw/" />
     
-    <meta name="description" content="還在別人怎麼說你就怎麼信?!「紫豹在哪裡」整合空氣汙染相關的各種數據，以時間、空間的角度做視覺化呈現。空汙的真相自己找，自己的健康自己救!"/>
-    <meta property="og:description" content="還在別人怎麼說你就怎麼信?!「紫豹在哪裡」整合空氣汙染相關的各種數據，以時間、空間的角度做視覺化呈現。空汙的真相自己找，自己的健康自己救!" />
+    <meta name="description" content="受夠了空汙問題總是雞同鴨講、各說各話?「紫豹在哪裡」整合各種空汙相關數據，以時間、空間的角度做視覺化呈現。在此人人都能以數據為基礎進行討論。空汙的真相自己找，自己的健康自己救!"/>
+    <meta property="og:description" content="受夠了空汙問題總是雞同鴨講、各說各話?「紫豹在哪裡」整合各種空汙相關數據，以時間、空間的角度做視覺化呈現。在此人人都能以數據為基礎進行討論。空汙的真相自己找，自己的健康自己救!" />
 
     <meta property="og:site_name" content="紫豹在哪裡" />
     <meta property="og:locale" content="zh_TW" />
@@ -101,11 +101,20 @@
         {% if user %}
           <img id="commentIcon" src="/static/image/commentIcon.png" title="加入註解">
         {% endif %}
+      </div>
 
-        <div>
-          <div class="graph-label">PM2.5空汙動態地圖 (<span id="timeLabel"></span>)</div>
+      <div class="sidebar">
+        <div class="center">
+          <input type="number" id="showYear" value="2016" min="2016" max="2017">年
+          <div id="showDay" class="inline-block"></div>
         </div>
-        
+        <div id="dayContainer"></div>
+      </div> 
+      <img id="menuIcon" class="date-menu" src="/static/image/dateIcon.png" title="選擇日期">
+
+      <div class="map-label">PM2.5空汙動態地圖 (<span id="timeLabel"></span>)</div>
+
+      <div class="segment">
         <div class="map-info">
           <div class="sub-title"><strong>圖示說明:</strong></div>
           <ul>
@@ -167,81 +176,80 @@
         </div>
       </div>
 
-      <div class="sidebar">
-        <div class="center">
-          <input type="number" id="showYear" value="2016" min="2016" max="2017">年
-          <div id="showDay" class="inline-block"></div>
+      <div class="segment">
+        <div class="ref">
+          <div class="sub-title"><strong>資料來源:</strong></div>
+          <ul>
+            <li>空汙資料:
+              <a href="http://airbox.kcg.gov.tw/">空氣盒子</a>
+            </li>
+            <li>風向資料:
+              <a href="http://opendata.cwb.gov.tw/index">氣象資料開放平台</a> 編號:O-A0001-001
+            </li>
+            <li>電力資料:
+              <a href="http://www.taipower.com.tw/content/new_info/new_info_in.aspx?LinkID=11">台灣電力公司</a>
+            </li>
+            <li>PM2.5亞洲動態圖:
+              <a href="http://sprintars.riam.kyushu-u.ac.jp/forecast.html">SPRINTARS</a> (Toshihiko Takemura Kyushu University)
+            </li>
+            <li>交通資料:
+              <a href="http://tisvcloud.freeway.gov.tw/">交通部臺灣區國道高速公路局「交通資料庫」</a>
+            </li>
+          </ul>
+          <p>感謝以上組織提供開放資料~</p>
         </div>
-        <div id="dayContainer"></div>
-      </div> 
-      <img id="menuIcon" class="date-menu" src="/static/image/dateIcon.png" title="選擇日期">
 
-      <div class="ref">
-        <div class="sub-title"><strong>資料來源:</strong></div>
-        <ul>
-          <li>空汙資料:
-            <a href="http://airbox.kcg.gov.tw/">空氣盒子</a>
-          </li>
-          <li>風向資料:
-            <a href="http://opendata.cwb.gov.tw/index">氣象資料開放平台</a> 編號:O-A0001-001
-          </li>
-          <li>電力資料:
-            <a href="http://www.taipower.com.tw/content/new_info/new_info_in.aspx?LinkID=11">台灣電力公司</a>
-          </li>
-          <li>PM2.5亞洲動態圖:
-            <a href="http://sprintars.riam.kyushu-u.ac.jp/forecast.html">SPRINTARS</a> (Toshihiko Takemura Kyushu University)
-          </li>
-          <li>交通資料:
-            <a href="http://tisvcloud.freeway.gov.tw/">交通部臺灣區國道高速公路局「交通資料庫」</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="ref">
-        <div class="sub-title"><strong>參考文件:</strong></div>
-        <ul>
-          <li>
-            <a href="https://lass.hackpad.com/LASS-Data-Platform-tYTI2roiKW2">LASS hackpad</a>
-          </li>
-          <li>
-            <a href="http://beta.hackfoldr.org/g0vairmap/g0v--TexkKFNmqZP">g0v 零時空汙觀測專案</a>
-          </li>
-          <li>
-            <a href="https://www.taiwanstat.com/statistics/pm2.5_map/">用數據看台灣 pm2.5 2014 年各觀測站資料</a>
-          </li>
-          <li>
-            <a href="http://unfccc.saveoursky.org.tw/2015nir/tw_nir.php">2015 年中華民國國家溫室氣體清冊報告</a>
-          </li>
-          <li>
-            <a href="http://epr.epa.gov.tw/upload/approved/102/1028271776/201411101927374311.pdf">中部空品區細懸浮微粒中部空品區細懸浮微粒暴露評估及成因分析</a>
-          </li>
-          <li>
-            <a href="http://epr.epa.gov.tw/upload/openFull/102/1024993883/201412111811390089.pdf">細懸浮微粒管制策略研擬及減量成效分析</a>
-          </li>
-        </ul>
+        <div class="ref">
+          <div class="sub-title"><strong>參考文件:</strong></div>
+          <ul>
+            <li>
+              <a href="https://lass.hackpad.com/LASS-Data-Platform-tYTI2roiKW2">LASS hackpad</a>
+            </li>
+            <li>
+              <a href="http://beta.hackfoldr.org/g0vairmap/g0v--TexkKFNmqZP">g0v 零時空汙觀測專案</a>
+            </li>
+            <li>
+              <a href="https://www.taiwanstat.com/statistics/pm2.5_map/">用數據看台灣 pm2.5 2014 年各觀測站資料</a>
+            </li>
+            <li>
+              <a href="http://unfccc.saveoursky.org.tw/2015nir/tw_nir.php">2015 年中華民國國家溫室氣體清冊報告</a>
+            </li>
+            <li>
+              <a href="http://epr.epa.gov.tw/upload/approved/102/1028271776/201411101927374311.pdf">中部空品區細懸浮微粒中部空品區細懸浮微粒暴露評估及成因分析</a>
+            </li>
+            <li>
+              <a href="http://epr.epa.gov.tw/upload/openFull/102/1024993883/201412111811390089.pdf">細懸浮微粒管制策略研擬及減量成效分析</a>
+            </li>
+          </ul>
+        </div>
       </div>
       
-      <div class="paper">
-      <div class="sub-title"><strong>參考論文:</strong></div>
-        <ul>
-          <li>
-            Takemura, T., H. Okamoto, Y. Maruyama, A. Numaguti, A. Higurashi, and T. Nakajima, 2000: Global three-dimensional simulation of aerosol optical thickness distribution of various origins. Journal of Geophysical Research, 105, 17853-17873.
-          </li>
-          <li>
-            Takemura, T., T. Nakajima, O. Dubovik, B. N. Holben, and S. Kinne, 2002: Single-scattering albedo and radiative forcing of various aerosol species with a global three-dimensional model. Journal of Climate, 15, 333-352.
-          </li>
-          <li>
-            Takemura, T., T. Nozawa, S. Emori, T. Y. Nakajima, and T. Nakajima, 2005: Simulation of climate response to aerosol direct and indirect effects with aerosol transport-radiation model. Journal of Geophysical Research, 110, D02202, doi:10.1029/2004JD005029.
-          </li>
-        </ul>
+      <div class="segment">
+        <div class="paper">
+        <div class="sub-title"><strong>參考論文:</strong></div>
+          <ul>
+            <li>
+              Takemura, T., H. Okamoto, Y. Maruyama, A. Numaguti, A. Higurashi, and T. Nakajima, 2000: Global three-dimensional simulation of aerosol optical thickness distribution of various origins. Journal of Geophysical Research, 105, 17853-17873.
+            </li>
+            <li>
+              Takemura, T., T. Nakajima, O. Dubovik, B. N. Holben, and S. Kinne, 2002: Single-scattering albedo and radiative forcing of various aerosol species with a global three-dimensional model. Journal of Climate, 15, 333-352.
+            </li>
+            <li>
+              Takemura, T., T. Nozawa, S. Emori, T. Y. Nakajima, and T. Nakajima, 2005: Simulation of climate response to aerosol direct and indirect effects with aerosol transport-radiation model. Journal of Geophysical Research, 110, D02202, doi:10.1029/2004JD005029.
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="paper">
-      <div class="sub-title"><strong>關於專案:</strong></div>
-        <ul>
-          <li><a href="https://github.com/aga3134/AirPollution" target="_blank">網站開源程式碼</a></li>
-          <li><a href="https://grants.g0v.tw/projects/5879cd6e55fa75001ef55ef3" target="_blank">g0v 公民科技創新獎助金提案</a></li>
-          <li><a href="http://agawork.tw" target="_blank">其他專案</a></li>
-        </ul>
+
+      <div class="segment">
+        <div class="paper">
+        <div class="sub-title"><strong>關於專案:</strong></div>
+          <ul>
+            <li><a href="https://github.com/aga3134/AirPollution" target="_blank">網站開源程式碼</a></li>
+            <li><a href="https://grants.g0v.tw/projects/5879cd6e55fa75001ef55ef3" target="_blank">g0v 公民科技創新獎助金提案</a></li>
+            <li><a href="http://agawork.tw" target="_blank">其他專案</a></li>
+          </ul>
+        </div>
       </div>
       
     </div>

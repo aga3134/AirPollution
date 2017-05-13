@@ -31,6 +31,7 @@ a {
   margin: 10px; }
 
 .sub-title {
+  padding: 0px 10px;
   font-size: 1.5em; }
 
 .h-scroll {
@@ -49,6 +50,17 @@ a {
   margin: auto;
   padding: 0px;
   clear: both; }
+
+.segment {
+  margin: 0px;
+  padding: 30px 0px; }
+  @media only screen and (min-width: 1024px) {
+    .segment {
+      margin: 20px 0px; } }
+  .segment:nth-child(even) {
+    background-color: #eeeeee; }
+  .segment:nth-child(odd) {
+    background-color: #dddddd; }
 
 .map-container {
   display: inline-block;
@@ -84,137 +96,6 @@ a {
     .map-container .map-control .group {
       padding: 5px;
       display: inline-block; }
-  .map-container .map-info {
-    margin: 10px;
-    vertical-align: top;
-    text-align: left;
-    line-height: 1.5em; }
-    .map-container .map-info .time-block {
-      margin: 0px 5px;
-      padding: 5px 10px;
-      background: linear-gradient(green, yellow, red); }
-    .map-container .map-info .pm25-index .index1 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #9cff9c; }
-    .map-container .map-info .pm25-index .index2 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #31ff00; }
-    .map-container .map-info .pm25-index .index3 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #31cf00; }
-    .map-container .map-info .pm25-index .index4 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: yellow; }
-    .map-container .map-info .pm25-index .index5 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #ffcf00; }
-    .map-container .map-info .pm25-index .index6 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #ff9a00; }
-    .map-container .map-info .pm25-index .index7 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #ff6464; }
-    .map-container .map-info .pm25-index .index8 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: red; }
-    .map-container .map-info .pm25-index .index9 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #990000; }
-    .map-container .map-info .pm25-index .index10 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 60px;
-      text-align: center;
-      background-color: #ce30ff; }
-    .map-container .map-info table {
-      font-size: 0.5em; }
-      .map-container .map-info table td {
-        padding: 0px 5px; }
-      .map-container .map-info table .index1-2 {
-        background: linear-gradient(90deg, #9cff9c, #31ff00); }
-      .map-container .map-info table .index2-3 {
-        background: linear-gradient(90deg, #31ff00, #31cf00); }
-      .map-container .map-info table .index3-4 {
-        background: linear-gradient(90deg, #31cf00, yellow); }
-      .map-container .map-info table .index4-5 {
-        background: linear-gradient(90deg, yellow, #ffcf00); }
-      .map-container .map-info table .index5-6 {
-        background: linear-gradient(90deg, #ffcf00, #ff9a00); }
-      .map-container .map-info table .index6-7 {
-        background: linear-gradient(90deg, #ff9a00, #ff6464); }
-      .map-container .map-info table .index7-8 {
-        background: linear-gradient(90deg, #ff6464, red); }
-      .map-container .map-info table .index8-9 {
-        background: linear-gradient(90deg, red, #990000); }
-      .map-container .map-info table .index9-10 {
-        background: linear-gradient(90deg, #990000, #ce30ff); }
-      .map-container .map-info table .index10 {
-        background: #ce30ff; }
-    .map-container .map-info .traffic-index .level1 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 100px;
-      text-align: center;
-      background-color: #c8c8c8; }
-    .map-container .map-info .traffic-index .level2 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 100px;
-      text-align: center;
-      background-color: #6464ff; }
-    .map-container .map-info .traffic-index .level3 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 100px;
-      text-align: center;
-      background-color: #ff3200; }
-    .map-container .map-info .traffic-index .level4 {
-      border: 1px solid gray;
-      display: inline-block;
-      margin: 3px;
-      width: 100px;
-      text-align: center;
-      background-color: #963200; }
   .map-container #controlIcon {
     position: absolute;
     width: 30px;
@@ -316,6 +197,142 @@ a {
     width: 400px;
     height: 350px; }
 
+.map-label {
+  text-align: center;
+  padding: 5px 0px 10px 0px; }
+
+.map-info {
+  margin: 10px;
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.5em; }
+  .map-info .time-block {
+    margin: 0px 5px;
+    padding: 5px 10px;
+    background: linear-gradient(green, yellow, red); }
+  .map-info .pm25-index .index1 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #9cff9c; }
+  .map-info .pm25-index .index2 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #31ff00; }
+  .map-info .pm25-index .index3 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #31cf00; }
+  .map-info .pm25-index .index4 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: yellow; }
+  .map-info .pm25-index .index5 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #ffcf00; }
+  .map-info .pm25-index .index6 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #ff9a00; }
+  .map-info .pm25-index .index7 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #ff6464; }
+  .map-info .pm25-index .index8 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: red; }
+  .map-info .pm25-index .index9 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #990000; }
+  .map-info .pm25-index .index10 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 60px;
+    text-align: center;
+    background-color: #ce30ff; }
+  .map-info table {
+    font-size: 0.5em; }
+    .map-info table td {
+      padding: 0px 5px; }
+    .map-info table .index1-2 {
+      background: linear-gradient(90deg, #9cff9c, #31ff00); }
+    .map-info table .index2-3 {
+      background: linear-gradient(90deg, #31ff00, #31cf00); }
+    .map-info table .index3-4 {
+      background: linear-gradient(90deg, #31cf00, yellow); }
+    .map-info table .index4-5 {
+      background: linear-gradient(90deg, yellow, #ffcf00); }
+    .map-info table .index5-6 {
+      background: linear-gradient(90deg, #ffcf00, #ff9a00); }
+    .map-info table .index6-7 {
+      background: linear-gradient(90deg, #ff9a00, #ff6464); }
+    .map-info table .index7-8 {
+      background: linear-gradient(90deg, #ff6464, red); }
+    .map-info table .index8-9 {
+      background: linear-gradient(90deg, red, #990000); }
+    .map-info table .index9-10 {
+      background: linear-gradient(90deg, #990000, #ce30ff); }
+    .map-info table .index10 {
+      background: #ce30ff; }
+  .map-info .traffic-index .level1 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 100px;
+    text-align: center;
+    background-color: #c8c8c8; }
+  .map-info .traffic-index .level2 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 100px;
+    text-align: center;
+    background-color: #6464ff; }
+  .map-info .traffic-index .level3 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 100px;
+    text-align: center;
+    background-color: #ff3200; }
+  .map-info .traffic-index .level4 {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 3px;
+    width: 100px;
+    text-align: center;
+    background-color: #963200; }
+
 .date-menu {
   position: fixed;
   top: 10px;
@@ -406,6 +423,8 @@ a {
   @media only screen and (min-width: 1024px) {
     .ref {
       width: calc(50% - 30px); } }
+  .ref p {
+    margin: 0px 10px; }
 
 .paper {
   padding: 10px;

@@ -5,6 +5,7 @@ var powerStationArray = [];
 var roadArray = [];
 var infoWindow = new google.maps.InfoWindow();
 var pm25Window = new google.maps.InfoWindow();
+var roadWindow = new google.maps.InfoWindow();
 var infoIndex = -1;
 var showRelative;
 var addMarker = false;
@@ -456,6 +457,18 @@ function UpdateMapPowerGen(data, time){
 }
 
 function UpdateMapTraffic(roadSegment, roadData){
+	/*function clickFn(data, segment){ 
+		return function() {
+			var str = "<p>路段編號: "+data.roadID+"</p>";
+			var loc = new google.maps.LatLng(segment.path[0].lat, segment.path[0].lng);
+			roadWindow.setOptions({content: str, position: loc});
+			roadWindow.open(map);
+		};
+	}
+	if(roadWindow.getMap()){
+		roadWindow.setOptions({map: null});
+	}*/
+
 	var showTraffic = $("#showTraffic").is(":checked");
 	var showMap = showTraffic?map:null;
 
@@ -480,12 +493,15 @@ function UpdateMapTraffic(roadSegment, roadData){
 				zIndex: 4
 			});
 			
+			//roadPath.addListener('click', clickFn(d, road));
 			roadArray[roadID] = roadPath;
 		}
 		else{
 			roadArray[roadID].setOptions({
 	    		strokeColor: color[d.level-1],
 	    	});
+	    	//google.maps.event.clearListeners(roadArray[roadID],'click');
+		    //roadArray[roadID].addListener('click', clickFn(d, road));
 		}
 	}
 }

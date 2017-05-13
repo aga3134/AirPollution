@@ -49,6 +49,7 @@ a{
 }
 
 .sub-title{
+  padding: 0px 10px;
   font-size: 1.5em; 
 }
 
@@ -72,6 +73,20 @@ a{
     clear: both;
 }
 
+.segment{
+  margin: 0px;
+  @include pc-width{
+    margin: 20px 0px;
+  }
+  padding: 30px 0px;
+  &:nth-child(even) {
+      background-color: #eeeeee;
+  }
+  &:nth-child(odd) {
+      background-color: #dddddd;
+  }
+}
+
 //===================map related======================
 .map-container{
   display: inline-block;
@@ -89,6 +104,7 @@ a{
     width: 100%;
     height: 100%; 
   }
+
   .map-loading{
     display: none;
     position: absolute;
@@ -110,67 +126,6 @@ a{
     .group{
       padding: 5px;
       display: inline-block;
-    }
-  }
-
-  .map-info{
-    margin: 10px;
-    vertical-align: top;
-    text-align: left;
-    line-height: 1.5em;
-    .time-block{
-      margin: 0px 5px;
-      padding: 5px 10px;
-      background: linear-gradient(green,yellow,red);
-    }
-    .pm25-index{
-      @mixin index() {
-        border: 1px solid gray;
-        display: inline-block;
-        margin: 3px;
-        width: 60px;
-        text-align: center;
-      }
-      .index1{@include index; background-color: rgb(156, 255, 156);}
-      .index2{@include index; background-color: rgb(49, 255, 0);}
-      .index3{@include index; background-color: rgb(49, 207, 0);}
-      .index4{@include index; background-color: rgb(255, 255, 0);}
-      .index5{@include index; background-color: rgb(255, 207, 0);}
-      .index6{@include index; background-color: rgb(255, 154, 0);}
-      .index7{@include index; background-color: rgb(255, 100, 100);}
-      .index8{@include index; background-color: rgb(255, 0, 0);}
-      .index9{@include index; background-color: rgb(153, 0, 0);}
-      .index10{@include index; background-color: rgb(206, 48, 255);}
-    }
-    table{
-      font-size: 0.5em;
-      td{
-        padding: 0px 5px;
-      }
-      .index1-2{ background: linear-gradient(90deg, rgb(156, 255, 156), rgb(49, 255, 0));}
-      .index2-3{ background: linear-gradient(90deg, rgb(49, 255, 0), rgb(49, 207, 0));}
-      .index3-4{ background: linear-gradient(90deg, rgb(49, 207, 0), rgb(255, 255, 0));}
-      .index4-5{ background: linear-gradient(90deg, rgb(255, 255, 0), rgb(255, 207, 0));}
-      .index5-6{ background: linear-gradient(90deg, rgb(255, 207, 0), rgb(255, 154, 0));}
-      .index6-7{ background: linear-gradient(90deg, rgb(255, 154, 0), rgb(255, 100, 100));}
-      .index7-8{ background: linear-gradient(90deg, rgb(255, 100, 100), rgb(255, 0, 0));}
-      .index8-9{ background: linear-gradient(90deg, rgb(255, 0, 0), rgb(153, 0, 0));}
-      .index9-10{ background: linear-gradient(90deg, rgb(153, 0, 0), rgb(206, 48, 255));}
-      .index10{ background: rgb(206, 48, 255);}
-    }
-
-    .traffic-index{
-      @mixin level() {
-        border: 1px solid gray;
-        display: inline-block;
-        margin: 3px;
-        width: 100px;
-        text-align: center;
-      }
-      .level1{@include level; background-color: rgb(200,200,200);}
-      .level2{@include level; background-color: rgb(100,100,255);}
-      .level3{@include level; background-color: rgb(255,50,0);}
-      .level4{@include level; background-color: rgb(150,50,0);}
     }
   }
 
@@ -262,6 +217,73 @@ a{
     height: 350px;
   }
 }
+
+.map-label{
+  text-align: center;
+  padding: 5px 0px 10px 0px;
+}
+
+.map-info{
+  margin: 10px;
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.5em;
+  .time-block{
+    margin: 0px 5px;
+    padding: 5px 10px;
+    background: linear-gradient(green,yellow,red);
+  }
+  .pm25-index{
+    @mixin index() {
+      border: 1px solid gray;
+      display: inline-block;
+      margin: 3px;
+      width: 60px;
+      text-align: center;
+    }
+    .index1{@include index; background-color: rgb(156, 255, 156);}
+    .index2{@include index; background-color: rgb(49, 255, 0);}
+    .index3{@include index; background-color: rgb(49, 207, 0);}
+    .index4{@include index; background-color: rgb(255, 255, 0);}
+    .index5{@include index; background-color: rgb(255, 207, 0);}
+    .index6{@include index; background-color: rgb(255, 154, 0);}
+    .index7{@include index; background-color: rgb(255, 100, 100);}
+    .index8{@include index; background-color: rgb(255, 0, 0);}
+    .index9{@include index; background-color: rgb(153, 0, 0);}
+    .index10{@include index; background-color: rgb(206, 48, 255);}
+  }
+  table{
+    font-size: 0.5em;
+    td{
+      padding: 0px 5px;
+    }
+    .index1-2{ background: linear-gradient(90deg, rgb(156, 255, 156), rgb(49, 255, 0));}
+    .index2-3{ background: linear-gradient(90deg, rgb(49, 255, 0), rgb(49, 207, 0));}
+    .index3-4{ background: linear-gradient(90deg, rgb(49, 207, 0), rgb(255, 255, 0));}
+    .index4-5{ background: linear-gradient(90deg, rgb(255, 255, 0), rgb(255, 207, 0));}
+    .index5-6{ background: linear-gradient(90deg, rgb(255, 207, 0), rgb(255, 154, 0));}
+    .index6-7{ background: linear-gradient(90deg, rgb(255, 154, 0), rgb(255, 100, 100));}
+    .index7-8{ background: linear-gradient(90deg, rgb(255, 100, 100), rgb(255, 0, 0));}
+    .index8-9{ background: linear-gradient(90deg, rgb(255, 0, 0), rgb(153, 0, 0));}
+    .index9-10{ background: linear-gradient(90deg, rgb(153, 0, 0), rgb(206, 48, 255));}
+    .index10{ background: rgb(206, 48, 255);}
+  }
+
+  .traffic-index{
+    @mixin level() {
+      border: 1px solid gray;
+      display: inline-block;
+      margin: 3px;
+      width: 100px;
+      text-align: center;
+    }
+    .level1{@include level; background-color: rgb(200,200,200);}
+    .level2{@include level; background-color: rgb(100,100,255);}
+    .level3{@include level; background-color: rgb(255,50,0);}
+    .level4{@include level; background-color: rgb(150,50,0);}
+  }
+}
+
 
 //===================day select======================
 .date-menu{
@@ -374,6 +396,9 @@ a{
   text-align: left;
   @include pc-width{
     width: calc(50% - 30px);
+  }
+  p{
+    margin: 0px 10px;
   }
 }
 
