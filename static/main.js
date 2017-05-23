@@ -543,7 +543,7 @@ window.addEventListener('load', function() {
 	});
 
 	$("#controlIcon").animate({bottom: 5, left: 75}, moveTime);
-	$("#powerIcon").animate({bottom: 125, right: 10}, moveTime);
+	$("#powerIcon").animate({bottom: 5, left: 130}, moveTime);
 	$("#globalIcon").animate({top: 10, left: 130}, moveTime);
 	$("#commentIcon").animate({top: 10, left: 180}, moveTime);
 
@@ -566,11 +566,11 @@ window.addEventListener('load', function() {
 	$("#powerIcon").click(function(){
 		var open = TogglePanel($("#powerPanel"));
 		if(open){
-			$("#powerIcon").animate({bottom: 10, right: 10}, moveTime);
+			$("#powerIcon").animate({bottom: 5, left: 5}, moveTime);
 			var d = curYear+"/"+curDate;
 			LoadPowerGraph(d);
 		}
-		else $("#powerIcon").animate({bottom: 125, right: 10}, moveTime);
+		else $("#powerIcon").animate({bottom: 5, left: 130}, moveTime);
 	});
 	$("#globalIcon").click(function(){
 		var open = TogglePanel($("#globalPanel"));

@@ -56,7 +56,7 @@
                 <span id="radiusLabel">2.0公里</span>
               </div>-->
               <div class="group">
-                相對變化: <input type="checkbox" id="showRelative">
+                瞬間惡化指示: <input type="checkbox" id="showRelative">
                 靈敏度<input type="range" id="sensitive" min="5" max="25" step="1" value="15">
                 <span id="sensLabel">15</span>
               </div>
@@ -158,9 +158,10 @@
               白色表示當時無資料。
             </li>
             <li>
-              相對變化: 比較所選時間和其十分鐘前的PM2.5數值變化<br>
+              瞬間惡化指示: 跟前一時間點比起來，PM2.5數值惡化程度<br>
+              在地圖上一整片都差不多顏色時，人眼難以看出PM2.5的變化狀況。此時使用瞬間惡化指示，將靈敏度調到適當數值，就能突顯空氣惡化的地方。<br>
               數值<span style="color: green">變小或不變 -> 綠色</span>。
-              <span style="color: red">變大 -> 逐漸變紅</span>，越紅表示數值變化越大<br>
+              <span style="color: red">變大 -> 逐漸變紅</span>，越紅表示數值變化越大
             </li>
             <li>藍色箭頭: 角度為風向，長度與風力成正比</li>
             <li>黑色方框: 火力發電廠位置，大小與發電量成正比</li>

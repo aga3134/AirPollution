@@ -21,7 +21,7 @@ var PowerGenSchema = require('../db/powerGenSchema');
 var SensorGridSchema = require('../db/sensorGridSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
-var version = "1.1.0";
+var version = "1.1.1";
 
 module.exports = function(app, passport){
 	mysqlDB.Init();
