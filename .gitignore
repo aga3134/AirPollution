@@ -1,8 +1,9 @@
 data/
 static/pm25/
 doc/
-data.zip
 node_modules
 config.js
+*.zip
 *.txt
 *.log
+*.sh
