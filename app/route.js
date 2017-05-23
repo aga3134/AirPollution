@@ -330,7 +330,7 @@ module.exports = function(app, passport){
 				console.error(err);
 			}
 			var newComment = {};
-			newComment.id = uuid.v4();
+			newComment.id = uuid();
 			newComment.userID = user.id;
 			newComment.time = fields.time;
 			newComment.lat = fields.lat;
