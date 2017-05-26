@@ -9,6 +9,7 @@ mysqlDB.Init = function(){
 	mysqlDB.User = mysqlDB.sequelize.import(__dirname + "./../mysql/user.js");
 	mysqlDB.Comment = mysqlDB.sequelize.import(__dirname + "./../mysql/comment.js");
 	mysqlDB.CommentDailyNum = mysqlDB.sequelize.import(__dirname + "./../mysql/commentDailyNum.js");
+	mysqlDB.Memo = mysqlDB.sequelize.import(__dirname + "./../mysql/memo.js");
 	
 	var syncOp = {};
 	syncOp.force = false;

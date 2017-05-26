@@ -512,7 +512,7 @@ a{
   color: black;
   z-index: 6;
   padding: 10px;
-  overflow-y: auto;
+  overflow-y: hidden;
   .close-bt{
     position: absolute;
     right: 10px;
@@ -526,10 +526,13 @@ a{
     }
   }
   .logout{
-    display: inline-block;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: none;
     background-color: rgb(255,255,255);
     color: rgb(50,50,50);
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 3px;
     border: solid 1px rgb(50,50,200);
     cursor: pointer;
@@ -537,11 +540,68 @@ a{
       border-color: rgb(200,100,50);
     }
   }
+  .memo-container{
+    height: calc(100% - 150px);
+    overflow-y: auto;
+  }
+  .comment-container{
+    height: calc(100% - 100px);
+    overflow-y: auto;
+  }
+  .tab{
+    display: inline-block;
+    border: 1px solid rgb(200,200,200);
+    color: rgb(200,200,200);
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 10px 0px;
+    cursor: pointer;
+    &:hover{
+      border-color: rgb(200,100,50);
+    }
+    &.active{
+      border-color: rgb(50,50,50);
+      color: rgb(50,50,50);
+    }
+  }
+  .search-input{
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
+  .search-bt{
+    display: inline-block;
+    border: 1px solid rgb(50,50,50);
+    color: rgb(50,50,50);
+    border-radius: 3px;
+    padding: 3px 5px;
+    cursor: pointer;
+  }
+  .memo{
+    width: calc(100% - 10px);
+    position: absolute;
+    bottom: 5px;
+    .memo-input{
+      width: 100%;
+      height: 60px;
+      padding: 10px;
+      resize: none;
+    }
+    .memo-bt{
+      width: 100%;
+      padding: 5px 10px;
+      background-color: rgb(50,50,50);
+      color: rgb(200,200,200);
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+  
   ul{
     list-style-type: none;
     padding: 10px 0px;
     margin: 0px;
     li{
+      position: relative;
       padding: 10px;
       border-bottom: solid 1px rgb(200,200,200);
       cursor: pointer;
@@ -555,6 +615,19 @@ a{
         overflow : hidden;
         text-overflow : ellipsis;
         white-space : nowrap;
+      }
+      .memo-text{
+        padding-bottom: 20px;
+      }
+      .remove-bt{
+        position: absolute;
+        right: 10px;
+        bottom: 0px;
+        padding: 5px 10px;
+        color: red;
+        &:hover{
+          color: black;
+        }
       }
     }
   }

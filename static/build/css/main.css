@@ -512,7 +512,7 @@ a {
   color: black;
   z-index: 6;
   padding: 10px;
-  overflow-y: auto; }
+  overflow-y: hidden; }
   .comment-panel .close-bt {
     position: absolute;
     right: 10px;
@@ -524,20 +524,69 @@ a {
     .comment-panel .close-bt:hover {
       background-color: #969696; }
   .comment-panel .logout {
-    display: inline-block;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: none;
     background-color: white;
     color: #323232;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 3px;
     border: solid 1px #3232c8;
     cursor: pointer; }
     .comment-panel .logout:hover {
       border-color: #c86432; }
+  .comment-panel .memo-container {
+    height: calc(100% - 150px);
+    overflow-y: auto; }
+  .comment-panel .comment-container {
+    height: calc(100% - 100px);
+    overflow-y: auto; }
+  .comment-panel .tab {
+    display: inline-block;
+    border: 1px solid #c8c8c8;
+    color: #c8c8c8;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 10px 0px;
+    cursor: pointer; }
+    .comment-panel .tab:hover {
+      border-color: #c86432; }
+    .comment-panel .tab.active {
+      border-color: #323232;
+      color: #323232; }
+  .comment-panel .search-input {
+    padding: 5px 10px;
+    border-radius: 3px; }
+  .comment-panel .search-bt {
+    display: inline-block;
+    border: 1px solid #323232;
+    color: #323232;
+    border-radius: 3px;
+    padding: 3px 5px;
+    cursor: pointer; }
+  .comment-panel .memo {
+    width: calc(100% - 10px);
+    position: absolute;
+    bottom: 5px; }
+    .comment-panel .memo .memo-input {
+      width: 100%;
+      height: 60px;
+      padding: 10px;
+      resize: none; }
+    .comment-panel .memo .memo-bt {
+      width: 100%;
+      padding: 5px 10px;
+      background-color: #323232;
+      color: #c8c8c8;
+      text-align: center;
+      cursor: pointer; }
   .comment-panel ul {
     list-style-type: none;
     padding: 10px 0px;
     margin: 0px; }
     .comment-panel ul li {
+      position: relative;
       padding: 10px;
       border-bottom: solid 1px #c8c8c8;
       cursor: pointer; }
@@ -549,3 +598,13 @@ a {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap; }
+      .comment-panel ul li .memo-text {
+        padding-bottom: 20px; }
+      .comment-panel ul li .remove-bt {
+        position: absolute;
+        right: 10px;
+        bottom: 0px;
+        padding: 5px 10px;
+        color: red; }
+        .comment-panel ul li .remove-bt:hover {
+          color: black; }

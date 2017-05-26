@@ -21,7 +21,8 @@ var PowerGenSchema = require('../db/powerGenSchema');
 var SensorGridSchema = require('../db/sensorGridSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
-var version = "1.1.1";
+var version = "1.1.2";
+var numPerPage = 10;
 
 module.exports = function(app, passport){
 	mysqlDB.Init();
@@ -310,14 +311,22 @@ module.exports = function(app, passport){
 	app.get("/comment-list", GetCurUser, function(req, res){
 		var user = req.userInfo;
 		var date = req.query.date;
-		if(!user) return res.send("please login");
+		var keyword = req.query.keyword;
 		if(!date) return res.send("no date");
-
+		if(!user) return res.send("please login");
+	
 		query = {};
 		query.userID = user.id;
 		query.time = {$gte: new Date(date+" 00:00"), $lte: new Date(date+" 23:59")};
+		if(keyword){
+			var pattern = '%'+keyword+'%';
+			query.comment = {$like: pattern};
+		}
 
-		mysqlDB.Comment.findAll({where: query}).then(function(comments) {
+		var sort = [];
+		sort.push('time');
+		sort.push("createdAt");
+		mysqlDB.Comment.findAll({where: query, order: sort}).then(function(comments) {
     	    res.send(comments);
     	});
 	});
@@ -413,6 +422,62 @@ module.exports = function(app, passport){
     	    res.send(daily);
     	});
 	});
+
+	//==============================memo related========================
+	app.get("/memo-list", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var keyword = req.query.keyword;
+		var fetchPage = req.query.fetchPage;
+		if(!fetchPage) fetchPage = 0;
+		if(!user) return res.send("please login");
+
+		query = {};
+		query.userID = user.id;
+		if(keyword){
+			var pattern = '%'+keyword+'%';
+			query.memo = {$like: pattern};
+		}
+
+		var sort = [];
+		sort.push(["createdAt","DESC"]);
+		mysqlDB.Memo.findAll({where: query, offset: numPerPage*fetchPage, limit: numPerPage, 
+			order: sort}).then(function(memos) {
+    	    res.send(memos);
+    	});
+	});
+
+	app.post("/memo-add", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		if(!user) return res.send("please login");
+		var form = new formidable.IncomingForm();
+		form.parse(req, function(err, fields, files) {
+			if (err) {
+				console.error(err);
+			}
+			var newMemo = {};
+			newMemo.id = uuid();
+			newMemo.userID = user.id;
+			newMemo.memo = fields.memo;
+			
+        	mysqlDB.Memo.create(newMemo).then(function(memo) {
+        		if(memo) res.send(memo.id);
+        		else res.send("create fail");
+        	});
+		});
+	});
+
+	app.get("/memo-delete", GetCurUser, function(req, res){
+		var user = req.userInfo;
+		var memoID = req.query.memo;
+		if(!user) return res.send("please login");
+		if(!memoID) return res.send("no memoID");
+
+		mysqlDB.Memo.destroy({where: {'id': memoID, 'userID': user.id}}).then(function(count){
+			if(count > 0) res.send("ok");
+			else res.send("not found");
+		});
+	});
+
 
 	//===========================login related======================================
 	function errFunc(err){
