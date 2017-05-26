@@ -674,11 +674,17 @@ window.addEventListener('load', function() {
 			}        
 		});
 	});
+	
+	$(".search-input").on("keypress", function(e){
+		if (e.keyCode == 13) {
+			$(".search-bt").click();
+		}
+	});
 	$(".search-bt").click(function(){
 		var keyword = $(".search-input").val();
 		memoKeyword = keyword;
 		LoadMemo(true, keyword);
-		$(".search-input").val("");
+		//$(".search-input").val("");
 	});
 
 	 $('.memo-container').on('scroll', function() {
