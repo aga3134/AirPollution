@@ -67,13 +67,17 @@
 
 1. 取得pm2.5網格資料
 
-  http://purbao.lass-net.org/sensorGrid?date=2017/5/28&hour=0&level=0
+  http://purbao.lass-net.org/sensorGrid?date=2017/5/28&hour=0&level=0&minLat=23&maxLat=23.5&minLng=120&maxLng=121
 
     date改成你想取得資料的日期(日期前面不要補0)
 
     hour改成你想取得該日第幾個小時的資料，值為0~23
 
     level改成你想取得的網格大小，值為0~5，0網格最小最密，5網格最大最疏
+    
+    minLat, maxLat改成你想取得網格的緯度範圍
+    
+    minLng, maxLng改成你想取得網格的經度範圍
 
     資料為json格式:
 
