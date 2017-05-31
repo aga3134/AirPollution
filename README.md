@@ -63,17 +63,63 @@
 
 5. 確認nginx、mysql、mongodb有啟動，在專案路徑下執行node server.js開啟網站
 
+# 原始資料
+
+請依提供資料的組織規定取得授權。
+
+1. 空汙資料: 空氣盒子
+
+  http://airbox.edimaxcloud.com/devices?token=你的token
+
+  存放至設定的dataSrcFolder底下的airdata資料夾，檔名設為airdata_YYYY-MM-DD_HH-mm.json
+
+2. 風向資料: 氣象資料開放平台 編號:O-A0001-001
+
+  http://opendata.cwb.gov.tw/opendataapi?dataid=O-A0001-001&authorizationkey=你的key
+  
+  存放至設定的dataSrcFolder底下的weather資料夾，檔名設為weather_YYYY-MM-DD_HH-mm.xml
+
+3. 電力資料: 台灣電力公司
+
+  * 用電資料 http://www.taipower.com.tw/loadGraph/loadGraph/data/loadareas.csv
+  
+  存放至設定的dataSrcFolder底下的loadareas資料夾，檔名設為loadareas_YYYY-MM-DD_HH-mm.csv
+  
+  * 各發電類型的發電量 http://stpc00601.taipower.com.tw/loadGraph/loadGraph/data/loadfueltype.csv
+
+  存放至設定的dataSrcFolder底下的loadfueltype資料夾，檔名設為loadfueltype_YYYY-MM-DD_HH-mm.csv
+    
+  * 各電廠發電量 http://www.taipower.com.tw/loadGraph/loadGraph/data/genary.txt
+  
+  存放至設定的dataSrcFolder底下的genary資料夾，檔名設為genary_YYYY-MM-DD_HH-mm.txt
+
+4. PM2.5亞洲動態圖: SPRINTARS (Toshihiko Takemura Kyushu University)
+
+  http://sprintars.riam.kyushu-u.ac.jp/images/pm25_asia_編號.png
+  
+  存放至設定的dataSrcFolder底下的 graph/YYYY-MM-DD/ 資料夾
+
+5. 交通資料: 交通部臺灣區國道高速公路局「交通資料庫」
+
+  http://tisvcloud.freeway.gov.tw/roadlevel_value5.xml.gz
+  
+  解壓縮後存放至設定的dataSrcFolder底下的traffic資料夾，檔名設為traffic_YYYY-MM-DD_HH-mm.xml
+
 # 資料連接API
 
 1. 取得pm2.5網格資料
 
-  http://purbao.lass-net.org/sensorGrid?date=2017/5/28&hour=0&level=0
+  http://purbao.lass-net.org/sensorGrid?date=2017/5/28&hour=0&level=0&minLat=23&maxLat=23.5&minLng=120&maxLng=121
 
     date改成你想取得資料的日期(日期前面不要補0)
 
     hour改成你想取得該日第幾個小時的資料，值為0~23
 
     level改成你想取得的網格大小，值為0~5，0網格最小最密，5網格最大最疏
+
+    minLat, maxLat改成你想取得網格的緯度範圍
+
+    minLng, maxLng改成你想取得網格的經度範圍
 
     資料為json格式:
 
@@ -200,8 +246,8 @@
     date改成你想取得資料的日期(日期前面不要補0)
 
     資料為json格式:
-
-    p: 壓力(單位: 百帕)
+    
+    p: 壓力(單位: 百帕)
 
     h: 溼度，(單位: 百分率)
 
