@@ -7,10 +7,10 @@ var infoWindow = new google.maps.InfoWindow();
 var pm25Window = new google.maps.InfoWindow();
 var roadWindow = new google.maps.InfoWindow();
 var infoIndex = -1;
-var showRelative;
+var showRelative = false;
 var addMarker = false;
 var markerWindow = new google.maps.InfoWindow();
-var showComment;
+var showComment = false;
 var commentArray = [];
 var commentForm = "";
 
