@@ -254,7 +254,7 @@ function UpdateMapSensorGrid(){
 						strokeWeight: strokeWeight,
 						fillColor: fillColor,
 						fillOpacity: opacity,
-						map: map,
+						map: showMap,
 						zIndex: 1
 			        });
 			        var op = {lat: cLat, lng: cLng, pm25: d, time: curTime};
@@ -656,16 +656,34 @@ function UpdateMapComment(commentData){
 	}
 }
 
+function GetUrlLoc() {
+	var loc = {lat: 23.682094, lng: 120.7764642, zoom: 7};
+	var param = decodeURIComponent(window.location.search.substring(1));
+	var arr = param.split('&');
+
+	for(var i=0;i<arr.length;i++){
+		var p = arr[i].split("=");
+		switch(p[0]){
+			case "lat": loc.lat = parseFloat(p[1]); break;
+			case "lng": loc.lng = parseFloat(p[1]); break;
+			case "zoom": loc.zoom = parseInt(p[1]); break;
+		}
+	}
+	return loc;
+}
+
 function InitMap() {
-	var taiwan = new google.maps.LatLng(23.682094,120.7764642);
+	var loc = GetUrlLoc();
+	var taiwan = new google.maps.LatLng(loc.lat,loc.lng);
 
 	map = new google.maps.Map(document.getElementById('map'), {
 	  center: taiwan,
-	  zoom: 7,
+	  zoom: loc.zoom,
 	  scaleControl: true,
 	  //mapTypeId: google.maps.MapTypeId.SATELLITE
 	  //mapTypeId: google.maps.MapTypeId.TERRAIN
 	});
+	curLevel = GetLevel();
 
 	google.maps.event.addListener(map, 'click', function(event) {
 	   AddComment(event.latLng);

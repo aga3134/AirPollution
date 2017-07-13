@@ -481,6 +481,38 @@ function LoadMemo(clear, keyword){
 	});
 }
 
+function CopySpaceTimeUrl(){
+	var center = map.getCenter();
+	var url = "http://purbao.lass-net.org?";
+	url += "year="+curYear;
+	url += "&date="+curDate;
+	url += "&lat="+center.lat();
+	url += "&lng="+center.lng();
+	url += "&zoom="+map.getZoom();
+
+	var aux = document.createElement("input");
+	aux.setAttribute("value", url);
+	document.body.appendChild(aux);
+	aux.select();
+	document.execCommand("copy");
+
+	document.body.removeChild(aux);
+	alert("已複製目前時間地點的網址至剪貼簿");
+}
+
+function GetUrlDate() {
+	var param = decodeURIComponent(window.location.search.substring(1));
+	var arr = param.split('&');
+
+	for(var i=0;i<arr.length;i++){
+		var p = arr[i].split("=");
+		switch(p[0]){
+			case "date": curDate = p[1]; break;
+			case "year": curYear = p[1]; break;
+		}
+	}
+}
+
 window.addEventListener('load', function() {
 	var showYear = $("#showYear");
 
@@ -505,6 +537,8 @@ window.addEventListener('load', function() {
 
 		curYear = maxArr[0];
 		curDate = maxArr[1]+"/"+maxArr[2];
+
+		GetUrlDate();
 
 		$("#dateLabel").attr("min",minDate);
 		$("#dateLabel").attr("max",maxDate);

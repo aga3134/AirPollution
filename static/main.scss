@@ -87,6 +87,17 @@ a{
   }
 }
 
+.text-bt{
+  display: inline-block;
+  background-color: rgb(200,200,200);
+  &:hover{
+    background-color: rgb(150,150,150);
+  }
+  color: rgb(50,50,50);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 //===================map related======================
 .map-container{
   display: inline-block;
