@@ -16,6 +16,17 @@ config.sessionConfig = {
 	secret: "YourSessionSecret"
 }
 
+config.smtpConfig = {
+	host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+        user: 'YourGmail',  //需到 https://www.google.com/settings/security/lesssecureapps 改成less secure
+        pass: 'YourPassword'
+    },
+    dst: "TheEmailDesinationYouWantToSend"
+};
+
 config.dataSrcFolder = "./data/";
 config.dataDoneFolder = "./data/done/";
 config.gridPerUnit = 100;

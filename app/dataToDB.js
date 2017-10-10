@@ -10,9 +10,22 @@ var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
 var Config = require("../config.js");
 var os = require('os');
+var nodemailer = require("nodemailer");
 
 var moment = require("moment");
 var zoneStr = "Asia/Taipei";
+var mailer = nodemailer.createTransport(Config.smtpConfig);
+
+function SendWarningMail(str){
+	var option = {};
+    option.from = Config.smtpConfig.auth.user;
+    option.to = Config.smtpConfig.dst;
+    option.subject = str;
+    option.html = str;
+    mailer.sendMail(option, function(error, response){
+        if(error) console.log(error);
+    });
+}
 
 //一天的data存成一個collection，必免資料太大存取很慢
 var mongoose = require('mongoose');
@@ -566,8 +579,29 @@ dataToDB.DataFolderToDB = function(){
 		var obj;
 		try {
 			obj = JSON.parse(data);
+			if(obj.status != "ok"){
+				SendWarningMail("紫豹在哪裡 - airbox無資料");
+			}
 			dataToDB.SensorGridToDB(obj, date, time);
 		} catch (e) {
+			SendWarningMail("紫豹在哪裡 - airbox資料錯誤");
+			return console.error(e);
+		}
+	});
+
+	//NCNU_airq data
+	var dir = srcFolder+"NCNU_airq/";
+	var doneDir = dstFolder+"NCNU_airq/";
+	ProcessDir(dir, doneDir, true, function(data, date, time){
+		var obj;
+		try {
+			obj = JSON.parse(data);
+			if(obj.status != "ok"){
+				SendWarningMail("紫豹在哪裡 - 暨大無資料");
+			}
+			dataToDB.SensorGridToDB(obj, date, time);
+		} catch (e) {
+			SendWarningMail("紫豹在哪裡 - 暨大資料錯誤");
 			return console.error(e);
 		}
 	});

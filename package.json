@@ -19,6 +19,7 @@
     "passport-google-oauth" : "~0.1.5",
     "cookie-parser": "~1.0.0",
     "express-session": "~1.0.0",
-    "express-mysql-session": "~1.2.0"
+    "express-mysql-session": "~1.2.0",
+    "nodemailer":"~2.4.1"
   }
 }
