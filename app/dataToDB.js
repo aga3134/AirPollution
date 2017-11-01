@@ -302,13 +302,25 @@ dataToDB.PowerGenToDB = function(data){
 }
 
 dataToDB.PowerLoadToDB = function(data, date, time){
-	//loadareas資料在凌晨12點取時會得到前一天的完整資料，把日期調回前一天
-	if(time == "00:00:00"){
+	var loadArr = data.split("\n");
+
+	//資料時間大於處理時間，表示取到前一天資料，把日期調回前一天
+	var maxTime = "";
+	for(var i=0;i<loadArr.length;i++){
+		var t = loadArr[i].split(",");
+		if(t[0] != "") maxTime = t[0];
+	}
+	if(maxTime.indexOf(":") == -1){
+		maxTime += ":00";
+	}
+	var maxDataTime = new Date(date+" "+maxTime);
+	var curTime = new Date(date+" "+time);
+
+	if(maxDataTime > curTime){
+		console.log("maxDataTime > curTime");
 		var yestoday = moment(date).add(-1,"days");
 		date = yestoday.format("YYYY-MM-DD");
 	}
-
-	var loadArr = data.split("\n");
 
 	function AddLoadDataRec(arr, i){
 		if(i >= arr.length) return;
@@ -330,13 +342,21 @@ dataToDB.PowerLoadToDB = function(data, date, time){
 }
 
 dataToDB.PowerRatioToDB = function(data, date, time){
-	//loadfueltype資料在凌晨12點取時會得到前一天的完整資料，把日期調回前一天
-	if(time == "00:00:00"){
+	var ratioArr = data.split("\n");
+	//資料時間大於處理時間，表示取到前一天資料，把日期調回前一天
+	var maxTime = "";
+	for(var i=0;i<ratioArr.length;i++){
+		t = ratioArr[i].split(",");
+		if(t[0] != "") maxTime = t[0];
+	}
+	var maxDataTime = new Date(date+" "+maxTime);
+	var curTime = new Date(date+" "+time);
+
+	if(maxDataTime > curTime){
+		console.log("maxDataTime > curTime");
 		var yestoday = moment(date).add(-1,"days");
 		date = yestoday.format("YYYY-MM-DD");
 	}
-	
-	var ratioArr = data.split("\n");
 
 	function AddLoadRatioRec(arr, i){
 		if(i >= arr.length) return;

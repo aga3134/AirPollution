@@ -8,7 +8,7 @@ var memoFetchPage = 0;
 var memoKeyword = "";
 
 //var mapSensorData;
-var siteData;
+//var siteData;
 var mapWeatherData;
 var weatherSite;
 var mapPowerGen;
@@ -516,13 +516,13 @@ function GetUrlDate() {
 window.addEventListener('load', function() {
 	var showYear = $("#showYear");
 
-	$.get("/sensorSite", function(data){
+	/*$.get("/sensorSite", function(data){
 		var json = JSON.parse(data);
 		siteData = [];
 		for(var i=0;i<json.length;i++){
 			siteData[json[i]._id] = json[i];
 		}
-	});
+	});*/
 
 	$.get("/extremeDate", function(data){
 		var json = JSON.parse(data);
