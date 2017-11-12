@@ -623,6 +623,7 @@ window.addEventListener('load', function() {
 			    $('html, body').animate({
 			        scrollTop: anchor.offset().top
 			    }, 500);
+			    return false;
 			}
 			return true;
 		}
