@@ -611,9 +611,22 @@ window.addEventListener('load', function() {
 		//UpdateMapPM25(mapSensorData[curTime], mapSensorData[preTime]);	
 	});
 
-	$("body").animate({scrollTop: 60}, 1000);
-	$(".top-bt").click(function(){
-		$("body").animate({scrollTop: 60}, 500);
+	$('a').click(function(){
+		var href = $.attr(this, 'href');
+		if(href){
+			var index= href.indexOf("#");
+			var anchor = $('[name="' + href.substr(index+1) + '"]');
+			if(anchor.length == 0){
+				anchor = $('a[id="' + href.substr(index+1) + '"]');
+			}
+			if(anchor.length > 0){
+			    $('html, body').animate({
+			        scrollTop: anchor.offset().top
+			    }, 500);
+			}
+			return true;
+		}
+	    return false;
 	});
 
 	$("#controlIcon").animate({bottom: 5, left: 75}, moveTime);

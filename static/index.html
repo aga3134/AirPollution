@@ -51,12 +51,8 @@
 
   </head>
   <body>
-    <div class="content-container">
-      <div class="title center">
-        <image class="logo" src="/static/image/purpleLeopard.png?v={{version}}">
-        紫豹在哪裡
-      </div>
-
+    <div class="map-box">
+      <a name="top"></a>
       <div class="center map-container">
         <div id="map"></div>
         <div id="mapOverlay" class="map-loading">無資料</div>
@@ -130,25 +126,33 @@
         <div id="dayContainer"></div>
       </div> 
       <img id="menuIcon" class="date-menu" src="/static/image/dateIcon.png" title="選擇日期">
+    </div>
 
-      <div class="map-label">
-        PM2.5空汙動態地圖 (<span id="timeLabel"></span>)
-        <div class="text-bt" onclick="CopySpaceTimeUrl();">複製網址</div>
-      </div>
+    <div class="map-label">
+        <image class="logo" src="/static/image/purpleLeopard.png?v={{version}}">
+        <b>紫豹在哪裡</b> (<span id="timeLabel"></span>)
+      <div class="text-bt" onclick="CopySpaceTimeUrl();">複製網址</div>
+    </div>
 
+    <div class="content-container">
       <div class="segment">
         <div class="map-info">
           <div class="sub-title"><strong>圖示說明:</strong></div>
           <ul>
           <li>
               介面操作<a href="https://docs.google.com/presentation/d/1R6mBotesid82MhmGlj3xJmwwZWKB-ZiYYP2ZgUiKGCA/edit?usp=sharing" target="_blank"> 說明</a>
-            </li>
+          </li>
+          <li>
+              2017 LASS年會短講
+              <a href="https://www.youtube.com/watch?v=XDXAyZhQ9do" target="_blank">錄影</a>
+              <a href="https://docs.google.com/presentation/d/17d_l0R2q03712SDd8CCWDOqNF7-2oJBlvWoYvV8a-U8/edit?usp=sharing" target="_blank">投影片</a>
+          </li>
           <li>日期與時間框
           <span class="time-block"></span>
           從上到下分成三個區塊，分別代表北中南部的PM2.5平均數值
           </li>
             <li>彩色網格: 格內測站平均PM2.5資料 顏色依
-              <a href="http://taqm.epa.gov.tw/taqm/tw/fpmi.htm" target="_blank">環保署細懸浮微粒指標</a>內插顯示:
+              <a href="http://www.ntepb.gov.tw/sub/content/index.aspx?Parser=1,17,511,494,496" target="_blank">環保署細懸浮微粒指標</a>內插顯示:
               <div style="overflow-x:auto;">
                 <table>
                   <tr>
@@ -177,7 +181,7 @@
                   </tr>
                 </table>
               </div>
-              白色表示當時無資料。
+              白色表示當時無資料。 (單位：微克/立方公尺)
             </li>
             <li>
               瞬間惡化指示: 跟前一時間點比起來，PM2.5數值惡化程度<br>
@@ -278,6 +282,7 @@
       </div>
       
     </div>
+
     <div class="footer-padding">
       <div class="center">紫豹在哪裡</div>
       <div class="center"><img src="/static/image/leopard.png"></div>
@@ -294,7 +299,9 @@
         <image id="nextBt" class="bt" src="static/image/nextIcon.png"  onclick="Next();">
       </div>
       <div class="top-bt">
-        <img src="/static/image/topIcon.png" title="回地圖">
+        <a href="#top">
+          <img src="/static/image/topIcon.png" title="回地圖">
+        </a>
       </div>
       <div class="login-bt">
       {% if user %}

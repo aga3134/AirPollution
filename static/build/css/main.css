@@ -53,7 +53,7 @@ a {
 
 .segment {
   margin: 0px;
-  padding: 30px 0px; }
+  padding: 10px 0px; }
   @media only screen and (min-width: 1024px) {
     .segment {
       margin: 20px 0px; } }
@@ -71,19 +71,25 @@ a {
   .text-bt:hover {
     background-color: #969696; }
 
+.map-box {
+  max-width: 75em;
+  height: calc(100% - 105px);
+  margin: auto;
+  padding: 0px;
+  clear: both; }
+
 .map-container {
   display: inline-block;
   position: relative;
   width: 100%;
-  height: 500px;
   max-width: 100%;
-  max-height: 100%;
+  height: 100%;
   padding: 0px; }
   @media only screen and (min-width: 1024px) {
     .map-container {
       width: calc(100% - 230px); } }
   .map-container #map {
-    margin: 0px;
+    margin-top: 5px;
     width: 100%;
     height: 100%; }
   .map-container .map-loading {
@@ -208,13 +214,13 @@ a {
 
 .map-label {
   text-align: center;
-  padding: 5px 0px 10px 0px; }
+  padding: 5px 0px 5px 0px; }
 
 .map-info {
   margin: 10px;
   vertical-align: top;
   text-align: left;
-  line-height: 1.5em; }
+  line-height: 1.8em; }
   .map-info .time-block {
     margin: 0px 5px;
     padding: 5px 10px;
@@ -364,8 +370,7 @@ a {
   vertical-align: top;
   display: inline-block;
   width: 220px;
-  height: 500px;
-  max-height: calc(100% - 50px);
+  height: 100%;
   margin: auto;
   background-color: white; }
   @media only screen and (min-width: 1024px) {
@@ -457,6 +462,7 @@ a {
   bottom: 0px;
   left: 0px;
   width: 100%;
+  height: 95px;
   background-color: #323232;
   color: white; }
   .fixbar .fixbar-label {
