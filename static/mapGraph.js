@@ -75,9 +75,27 @@ function rgb(r,g,b){
 }
 
 function ValueToColor(v){
-	var color = d3.scale.linear().domain([0,11,23,35,41,47,53,58,64,70, 1000])
-		.range([rgb(156,255,156), rgb(49, 255, 0), rgb(49, 207, 0), rgb(255, 255, 0), rgb(255, 207, 0), 
-			rgb(255, 154, 0), rgb(255, 100, 100), rgb(255, 0, 0), rgb(153, 0, 0), rgb(206, 48, 255), rgb(0,0,0)]);
+	var colorIndex = $("#colorIndex").val();
+	var color;
+	switch(colorIndex){
+		case "PM25":
+			color = d3.scale.linear().domain([0,11,23,35,41,47,53,58,64,70, 1000])
+				.range([rgb(156,255,156), rgb(49, 255, 0), rgb(49, 207, 0), rgb(255, 255, 0), rgb(255, 207, 0), 
+				rgb(255, 154, 0), rgb(255, 100, 100), rgb(255, 0, 0), rgb(153, 0, 0), rgb(206, 48, 255), rgb(0,0,0)]);
+			break;
+		case "NASA_PM25":
+			color = d3.scale.linear().domain([0,3,5,8,10,13,15,18,20,35,50,65,80,90,100])
+				.range([rgb(0,0,250), rgb(0, 39, 253), rgb(0, 128, 254), rgb(0, 189, 243), rgb(1, 254, 236), 
+				rgb(94, 255, 146), rgb(134, 253, 125), rgb(226, 254, 30), rgb(251, 255, 0), rgb(254, 148, 0),
+				rgb(252,25,0), rgb(186,0,0),rgb(186,0,152),rgb(220,15,215),rgb(255,0,255)]);
+			break;
+		case "AQI":
+			color = d3.scale.linear().domain([0,15,35,54,150,250,350,500])
+				.range(["#00e800","#00e800", "#ffff00", "#ff7e00", "#ff0000", "#8f3f97", 
+				"#7e0023", "#7e0023"]);
+			break;
+	}
+	
 	if(!v) return "#ffffff";
 	else return color(v);
 	/*if(v <= 11) return rgb(156, 255, 156);
@@ -138,6 +156,7 @@ function UpdateMapSensorGrid(){
 	}
 
 	var bound = map.getBounds();
+	if(!bound) return;
 	var minLat = bound.getSouthWest().lat();
 	var minLng = bound.getSouthWest().lng();
 	var maxLat = bound.getNorthEast().lat();
@@ -743,6 +762,22 @@ function InitMap() {
 			    	});
 				}
 			}
+		}
+	});
+
+	$("#colorIndex").change(function() {
+		UpdateMapSensorGrid();
+		var colorIndex = $("#colorIndex").val();
+		switch(colorIndex){
+			case "PM25":
+				$("#colorIndexName").text("顏色:細懸浮微粒指標");
+				break;
+			case "NASA_PM25":
+				$("#colorIndexName").text("顏色:NASA PM2.5");
+				break;
+			case "AQI":
+				$("#colorIndexName").text("顏色:AQI指標");
+				break;
 		}
 	});
 

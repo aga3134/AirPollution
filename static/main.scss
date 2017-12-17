@@ -98,6 +98,10 @@ a{
   cursor: pointer;
 }
 
+.warning{
+  color: red;
+}
+
 //===================map related======================
 .map-box {
     max-width: 75em;
@@ -203,6 +207,14 @@ a{
     width: 100%;
     margin: 0px;
   }
+  #colorIndexName{
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    border: 1px solid red;
+    background-color: rgba(255,255,255,0.5);
+    padding: 5px;
+  }
 
   @mixin panel(){
     position: absolute;
@@ -218,7 +230,7 @@ a{
     bottom: 0px;
     left: 0px;
     width: 380px;
-    height: 160px;
+    height: 200px;
   }
   #powerPanel{
     @include panel;
@@ -270,21 +282,52 @@ a{
     .index9{@include index; background-color: rgb(153, 0, 0);}
     .index10{@include index; background-color: rgb(206, 48, 255);}
   }
+  .remark{
+    padding: 10px;
+    border: 1px solid black;
+  }
   table{
     font-size: 0.5em;
     td{
       padding: 0px 5px;
     }
-    .index1-2{ background: linear-gradient(90deg, rgb(156, 255, 156), rgb(49, 255, 0));}
-    .index2-3{ background: linear-gradient(90deg, rgb(49, 255, 0), rgb(49, 207, 0));}
-    .index3-4{ background: linear-gradient(90deg, rgb(49, 207, 0), rgb(255, 255, 0));}
-    .index4-5{ background: linear-gradient(90deg, rgb(255, 255, 0), rgb(255, 207, 0));}
-    .index5-6{ background: linear-gradient(90deg, rgb(255, 207, 0), rgb(255, 154, 0));}
-    .index6-7{ background: linear-gradient(90deg, rgb(255, 154, 0), rgb(255, 100, 100));}
-    .index7-8{ background: linear-gradient(90deg, rgb(255, 100, 100), rgb(255, 0, 0));}
-    .index8-9{ background: linear-gradient(90deg, rgb(255, 0, 0), rgb(153, 0, 0));}
-    .index9-10{ background: linear-gradient(90deg, rgb(153, 0, 0), rgb(206, 48, 255));}
-    .index10{ background: rgb(206, 48, 255);}
+    //細懸浮微粒指標
+    .pm25-1-2{ background: linear-gradient(90deg, rgb(156, 255, 156), rgb(49, 255, 0));}
+    .pm25-2-3{ background: linear-gradient(90deg, rgb(49, 255, 0), rgb(49, 207, 0));}
+    .pm25-3-4{ background: linear-gradient(90deg, rgb(49, 207, 0), rgb(255, 255, 0));}
+    .pm25-4-5{ background: linear-gradient(90deg, rgb(255, 255, 0), rgb(255, 207, 0));}
+    .pm25-5-6{ background: linear-gradient(90deg, rgb(255, 207, 0), rgb(255, 154, 0));}
+    .pm25-6-7{ background: linear-gradient(90deg, rgb(255, 154, 0), rgb(255, 100, 100));}
+    .pm25-7-8{ background: linear-gradient(90deg, rgb(255, 100, 100), rgb(255, 0, 0));}
+    .pm25-8-9{ background: linear-gradient(90deg, rgb(255, 0, 0), rgb(153, 0, 0));}
+    .pm25-9-10{ background: linear-gradient(90deg, rgb(153, 0, 0), rgb(206, 48, 255));}
+    .pm25-10{ background: rgb(206, 48, 255);}
+
+    //NASA PM2.5
+    .nasa-1-2{ background: linear-gradient(90deg, rgb(0,0,250), rgb(0, 39, 253));}
+    .nasa-2-3{ background: linear-gradient(90deg, rgb(0, 39, 253), rgb(0, 128, 254));}
+    .nasa-3-4{ background: linear-gradient(90deg, rgb(0, 128, 254), rgb(0, 189, 243));}
+    .nasa-4-5{ background: linear-gradient(90deg, rgb(0, 189, 243), rgb(1, 254, 236));}
+    .nasa-5-6{ background: linear-gradient(90deg, rgb(1, 254, 236), rgb(94, 255, 146));}
+    .nasa-6-7{ background: linear-gradient(90deg, rgb(94, 255, 146), rgb(134, 253, 125));}
+    .nasa-7-8{ background: linear-gradient(90deg, rgb(134, 253, 125), rgb(226, 254, 30));}
+    .nasa-8-9{ background: linear-gradient(90deg, rgb(226, 254, 30), rgb(251, 255, 0));}
+    .nasa-9-10{ background: linear-gradient(90deg, rgb(251, 255, 0), rgb(254, 148, 0));}
+    .nasa-10-11{ background: linear-gradient(90deg, rgb(254, 148, 0), rgb(252,25,0));}
+    .nasa-11-12{ background: linear-gradient(90deg, rgb(252,25,0), rgb(186,0,0));}
+    .nasa-12-13{ background: linear-gradient(90deg, rgb(186,0,0), rgb(186,0,152));}
+    .nasa-13-14{ background: linear-gradient(90deg, rgb(186,0,152), rgb(220,15,215));}
+    .nasa-14-15{ background: linear-gradient(90deg, rgb(220,15,215), rgb(255,0,255));}
+    .nasa-15{ background: rgb(255,0,255);}
+
+    //AQI指標
+    .aqi-1-2{ background: #00e800;}
+    .aqi-2-3{ background: linear-gradient(90deg, #00e800, #ffff00);}
+    .aqi-3-4{ background: linear-gradient(90deg, #ffff00, #ff7e00);}
+    .aqi-4-5{ background: linear-gradient(90deg, #ff7e00, #ff0000);}
+    .aqi-5-6{ background: linear-gradient(90deg, #ff0000, #8f3f97);}
+    .aqi-6-7{ background: linear-gradient(90deg, #8f3f97, #7e0023);}
+    .aqi-7{ background: #7e0023;}
   }
 
   .traffic-index{

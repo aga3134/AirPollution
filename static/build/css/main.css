@@ -71,6 +71,9 @@ a {
   .text-bt:hover {
     background-color: #969696; }
 
+.warning {
+  color: red; }
+
 .map-box {
   max-width: 75em;
   height: calc(100% - 105px);
@@ -175,6 +178,13 @@ a {
     margin: 0px; }
     .map-container .formBt-full:hover {
       background-color: #969696; }
+  .map-container #colorIndexName {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    border: 1px solid red;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px; }
   .map-container #controlPanel {
     position: absolute;
     display: none;
@@ -186,7 +196,7 @@ a {
     bottom: 0px;
     left: 0px;
     width: 380px;
-    height: 160px; }
+    height: 200px; }
   .map-container #powerPanel {
     position: absolute;
     display: none;
@@ -295,30 +305,77 @@ a {
     width: 60px;
     text-align: center;
     background-color: #ce30ff; }
+  .map-info .remark {
+    padding: 10px;
+    border: 1px solid black; }
   .map-info table {
     font-size: 0.5em; }
     .map-info table td {
       padding: 0px 5px; }
-    .map-info table .index1-2 {
+    .map-info table .pm25-1-2 {
       background: linear-gradient(90deg, #9cff9c, #31ff00); }
-    .map-info table .index2-3 {
+    .map-info table .pm25-2-3 {
       background: linear-gradient(90deg, #31ff00, #31cf00); }
-    .map-info table .index3-4 {
+    .map-info table .pm25-3-4 {
       background: linear-gradient(90deg, #31cf00, yellow); }
-    .map-info table .index4-5 {
+    .map-info table .pm25-4-5 {
       background: linear-gradient(90deg, yellow, #ffcf00); }
-    .map-info table .index5-6 {
+    .map-info table .pm25-5-6 {
       background: linear-gradient(90deg, #ffcf00, #ff9a00); }
-    .map-info table .index6-7 {
+    .map-info table .pm25-6-7 {
       background: linear-gradient(90deg, #ff9a00, #ff6464); }
-    .map-info table .index7-8 {
+    .map-info table .pm25-7-8 {
       background: linear-gradient(90deg, #ff6464, red); }
-    .map-info table .index8-9 {
+    .map-info table .pm25-8-9 {
       background: linear-gradient(90deg, red, #990000); }
-    .map-info table .index9-10 {
+    .map-info table .pm25-9-10 {
       background: linear-gradient(90deg, #990000, #ce30ff); }
-    .map-info table .index10 {
+    .map-info table .pm25-10 {
       background: #ce30ff; }
+    .map-info table .nasa-1-2 {
+      background: linear-gradient(90deg, #0000fa, #0027fd); }
+    .map-info table .nasa-2-3 {
+      background: linear-gradient(90deg, #0027fd, #0080fe); }
+    .map-info table .nasa-3-4 {
+      background: linear-gradient(90deg, #0080fe, #00bdf3); }
+    .map-info table .nasa-4-5 {
+      background: linear-gradient(90deg, #00bdf3, #01feec); }
+    .map-info table .nasa-5-6 {
+      background: linear-gradient(90deg, #01feec, #5eff92); }
+    .map-info table .nasa-6-7 {
+      background: linear-gradient(90deg, #5eff92, #86fd7d); }
+    .map-info table .nasa-7-8 {
+      background: linear-gradient(90deg, #86fd7d, #e2fe1e); }
+    .map-info table .nasa-8-9 {
+      background: linear-gradient(90deg, #e2fe1e, #fbff00); }
+    .map-info table .nasa-9-10 {
+      background: linear-gradient(90deg, #fbff00, #fe9400); }
+    .map-info table .nasa-10-11 {
+      background: linear-gradient(90deg, #fe9400, #fc1900); }
+    .map-info table .nasa-11-12 {
+      background: linear-gradient(90deg, #fc1900, #ba0000); }
+    .map-info table .nasa-12-13 {
+      background: linear-gradient(90deg, #ba0000, #ba0098); }
+    .map-info table .nasa-13-14 {
+      background: linear-gradient(90deg, #ba0098, #dc0fd7); }
+    .map-info table .nasa-14-15 {
+      background: linear-gradient(90deg, #dc0fd7, magenta); }
+    .map-info table .nasa-15 {
+      background: magenta; }
+    .map-info table .aqi-1-2 {
+      background: #00e800; }
+    .map-info table .aqi-2-3 {
+      background: linear-gradient(90deg, #00e800, #ffff00); }
+    .map-info table .aqi-3-4 {
+      background: linear-gradient(90deg, #ffff00, #ff7e00); }
+    .map-info table .aqi-4-5 {
+      background: linear-gradient(90deg, #ff7e00, #ff0000); }
+    .map-info table .aqi-5-6 {
+      background: linear-gradient(90deg, #ff0000, #8f3f97); }
+    .map-info table .aqi-6-7 {
+      background: linear-gradient(90deg, #8f3f97, #7e0023); }
+    .map-info table .aqi-7 {
+      background: #7e0023; }
   .map-info .traffic-index .level1 {
     border: 1px solid gray;
     display: inline-block;
