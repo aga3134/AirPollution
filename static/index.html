@@ -56,7 +56,7 @@
       <div class="center map-container">
         <div id="map"></div>
         <div id="mapOverlay" class="map-loading">無資料</div>
-        <div id="colorIndexName"><a href="#colorIndex">顏色:細懸浮微粒指標</a></div>
+        <div id="colorIndexName"><a href="#pm25Index">顏色:細懸浮微粒指標</a></div>
 
         <img id="controlIcon" src="/static/image/settingIcon.png" title="控制面板">
         <div id="controlPanel">
@@ -154,7 +154,7 @@
           <span class="time-block"></span>
           從上到下分成三個區塊，分別代表北中南部的PM2.5平均數值
           </li>
-            <a name="colorIndex"></a>
+            <a name="pm25Index"></a>
             <li>彩色網格: 格內PM2.5測站平均數值(單位:μg/m<sup>3</sup>) <br>
               顏色預設依
               <a href="http://www.ntepb.gov.tw/sub/content/index.aspx?Parser=1,17,511,494,496" target="_blank">環保署細懸浮微粒指標</a>內插顯示,白色表示當時無資料。<br>
@@ -190,6 +190,7 @@
               環保署雖於2017年8月1日<a href="https://udn.com/news/story/7314/2615146" target="_blank">停止使用細懸浮微粒指標</a>，但新版的AQI指標除了PM2.5資料外，還同時參考PM10、SOx、NOx、O3等不同汙染物的數值。本站使用的資料僅有PM2.5數值，直接套用AQI容易產生誤導，所以預設還是繼續沿用之前的細懸浮微粒指標。(同空氣盒子的app <a href="https://play.google.com/store/apps/details?id=com.edimax.airbox&hl=zh_TW" target="_blank">EdiGreen</a>)</div>
               若想以其他標準顯示，可從地圖的控制面板切換不同顯示標準。目前提供<br>
               <ul>
+                <a name="nasaIndex"></a>
                 <li>NASA PM2.5<br>
                   NASA PM2.5是NASA在<a href="https://www.nasa.gov/topics/earth/features/health-sapping.html" target="_blank">衛星遙測PM2.5</a>時使用的顏色分級，也是目前<a href="https://airbox.edimaxcloud.com/" target="_blank">空氣盒子網頁版</a>的顯式方式
                   <div style="overflow-x:auto;">
@@ -231,6 +232,7 @@
                     </table>
                   </div>
                 </li>
+                <a name="aqiIndex"></a>
                 <li>AQI指標<br>
                   AQI指標是環保署新定義的<a href="https://taqm.epa.gov.tw/taqm/tw/b0201.aspx" target="_blank">空汙指標</a>，但如前面所說，AQI指標除了PM2.5資料外，還同時參考PM10、SOx、NOx、O3等不同汙染物的數值。本站取用的是<span class="warning">指標內針對PM2.5濃度的顏色分級，並非對應到AQI數值</span>，使用時請小心。
                   <div style="overflow-x:auto;">

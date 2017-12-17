@@ -770,13 +770,13 @@ function InitMap() {
 		var colorIndex = $("#colorIndex").val();
 		switch(colorIndex){
 			case "PM25":
-				$("#colorIndexName").text("顏色:細懸浮微粒指標");
+				$("#colorIndexName").children("a").text("顏色:細懸浮微粒指標");
 				break;
 			case "NASA_PM25":
-				$("#colorIndexName").text("顏色:NASA PM2.5");
+				$("#colorIndexName").children("a").text("顏色:NASA PM2.5");
 				break;
 			case "AQI":
-				$("#colorIndexName").text("顏色:AQI指標");
+				$("#colorIndexName").children("a").text("顏色:AQI指標");
 				break;
 		}
 	});
