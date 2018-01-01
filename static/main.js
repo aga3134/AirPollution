@@ -29,7 +29,8 @@ function ChangeTime(time){
 	//$("#showTime").children(".time-bt").removeClass("select");
 	//$("#showTime").children(".time-bt[data-time='"+time+"']").addClass("select");
 	var selected = $("#showTime").children(".time-bt[data-time='"+time+"']");
-	if(selected.css("background").indexOf("linear-gradient") == -1){	//無資料
+
+	if(selected.attr("style").indexOf("linear-gradient") == -1){	//無資料
 		$("#mapOverlay").css("display","block");
 	}
 	else $("#mapOverlay").css("display","none");
@@ -743,7 +744,7 @@ window.addEventListener('load', function() {
 });
 
 $( window ).resize(function() {
-	var mode = $("#menuIcon").css("display");
-	if(mode == "block") $(".sidebar").css("right","-220px");
-	else if(mode == "none") $(".sidebar").css("right","0px");
+	//var mode = $("#menuIcon").css("display");
+	//if(mode == "block") $(".sidebar").css("right","-220px");
+	//else if(mode == "none") $(".sidebar").css("right","0px");
 });
