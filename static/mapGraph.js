@@ -645,6 +645,9 @@ function SaveComment(item, time, lat, lng){
 		type: 'POST',
 		data:  data,
 		success: function(id){
+			if(id == "please login"){
+				return;
+			}
 			AddCommentMarker(id, time, lat, lng, comment);
 			//新增mapCommentData的comment
 		    var c = {};

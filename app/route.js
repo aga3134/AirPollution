@@ -333,6 +333,8 @@ module.exports = function(app, passport){
 
 	app.post("/comment-add", GetCurUser, function(req, res){
 		var user = req.userInfo;
+		if(!user) return res.send("please login");
+		
 		var form = new formidable.IncomingForm();
 		form.parse(req, function(err, fields, files) {
 			if (err) {
