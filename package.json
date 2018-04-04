@@ -9,7 +9,7 @@
     "formidable": "~1.0.17",
     "fs-extra": "~0.26.5",
     "lz-string": "~1.4.4",
-    "moment": "^2.19.4",
+    "moment": "latest",
     "moment-timezone": "~0.5.1",
     "mongoose": "~4.7.4",
     "mysql": "~2.10.0",
