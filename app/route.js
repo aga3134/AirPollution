@@ -127,7 +127,7 @@ module.exports = function(app, passport){
 		conditions.push({'_id': {$lte: new Date(year+"/12/31")}});
 		var query   = {$and: conditions};
 
-		var countryCode = "";
+		var countryCode = "s";
 		switch(req.query.country){
 			case "Taiwan": countryCode = "s"; break;
 			case "Korea": countryCode = "_krs"; break;
@@ -160,7 +160,7 @@ module.exports = function(app, passport){
 		conditions.push({'_id': {$lte: new Date(date+" 23:59:59")}});
 		var query   = {$and: conditions};
 
-		var countryCode = "";
+		var countryCode = "s";
 		switch(req.query.country){
 			case "Taiwan": countryCode = "s"; break;
 			case "Korea": countryCode = "_krs"; break;
@@ -186,7 +186,7 @@ module.exports = function(app, passport){
 	app.get("/extremeDate", function(req, res){
 		var extreme = {};
 
-		var countryCode = "";
+		var countryCode = "s";
 		switch(req.query.country){
 			case "Taiwan": countryCode = "s"; break;
 			case "Korea": countryCode = "_krs"; break;
