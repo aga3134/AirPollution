@@ -23,7 +23,11 @@ function AddDate(date, value){
 
 function LoadDayGraph(){
   var year = parseInt($("#showYear").val());
-  $.get("/sensorDailySum?year="+year, function(data){
+
+  var country = GetUrlParameter().country;
+  var countryStr = country?"&country="+country:"";
+
+  $.get("/sensorDailySum?year="+year+countryStr, function(data){
     var json = JSON.parse(data);
     var sensorAvg = [];
     for(var i=0;i<json.length;i++){

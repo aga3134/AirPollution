@@ -86,7 +86,10 @@ function ChangeDate(date){
 	SetupImageSrc(d);
 	//LoadPowerGraph(d);
 
-	$.get("/sensor10minSum?date="+curYear+"/"+date, function(data){
+	var country = GetUrlParameter().country;
+	var countryStr = country?"&country="+country:"";
+
+	$.get("/sensor10minSum?date="+curYear+"/"+date+countryStr, function(data){
 		var json = JSON.parse(data);
 	    var sensorAvg = [];
 	    for(var i=0;i<json.length;i++){
@@ -491,6 +494,10 @@ function CopySpaceTimeUrl(){
 	url += "&lng="+center.lng();
 	url += "&zoom="+map.getZoom();
 
+	var country = GetUrlParameter().country;
+  	var countryStr = country?"&country="+country:"";
+  	url += countryStr;
+
 	var aux = document.createElement("input");
 	aux.setAttribute("value", url);
 	document.body.appendChild(aux);
@@ -499,6 +506,11 @@ function CopySpaceTimeUrl(){
 
 	document.body.removeChild(aux);
 	alert("已複製目前時間地點的網址至剪貼簿");
+}
+
+function UpdateCountry(){
+	var country = $("#selectCountry").val();
+	window.location.href = "/?country="+country;
 }
 
 function GetUrlDate() {
@@ -516,6 +528,12 @@ function GetUrlDate() {
 
 window.addEventListener('load', function() {
 	var showYear = $("#showYear");
+
+	var country = GetUrlParameter().country;
+	var countryArr = ["Taiwan","Korea"];
+	if(countryArr.includes(country)){
+		$("#selectCountry").val(country);
+	}
 
 	/*$.get("/sensorSite", function(data){
 		var json = JSON.parse(data);

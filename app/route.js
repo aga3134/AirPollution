@@ -2,8 +2,6 @@
 var PowerLoad = require('../db/powerLoad');
 var PowerRatio = require('../db/powerRatio');
 var PowerStation = require('../db/powerStation');
-var Sensor10minSum = require('../db/sensor10minSum');
-var SensorDailySum = require('../db/sensorDailySum');
 var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
@@ -21,7 +19,9 @@ var PowerGenSchema = require('../db/powerGenSchema');
 var SensorGridSchema = require('../db/sensorGridSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
-var version = "1.1.5";
+var Sensor10minSumSchema = require('../db/sensor10minSumSchema');
+var SensorDailySumSchema = require('../db/sensorDailySumSchema');
+var version = "1.2.0";
 var numPerPage = 10;
 
 module.exports = function(app, passport){
@@ -126,6 +126,13 @@ module.exports = function(app, passport){
 		conditions.push({'_id': {$gte: new Date(year+"/1/1")}});
 		conditions.push({'_id': {$lte: new Date(year+"/12/31")}});
 		var query   = {$and: conditions};
+
+		var countryCode = "";
+		switch(req.query.country){
+			case "Taiwan": countryCode = ""; break;
+			case "Korea": countryCode = "_kr"; break;
+		}
+		var SensorDailySum = mongoose.model('SensorDailySum'+countryCode, SensorDailySumSchema);
 		SensorDailySum.find(query, {'__v': 0}).lean().exec(function(err, data){
 			if(err) console.log(err);
 			if(!data) return;
@@ -152,6 +159,13 @@ module.exports = function(app, passport){
 		conditions.push({'_id': {$gte: new Date(date+" 0:0:0")}});
 		conditions.push({'_id': {$lte: new Date(date+" 23:59:59")}});
 		var query   = {$and: conditions};
+
+		var countryCode = "";
+		switch(req.query.country){
+			case "Taiwan": countryCode = ""; break;
+			case "Korea": countryCode = "_kr"; break;
+		}
+		var Sensor10minSum = mongoose.model('Sensor10minSum'+countryCode, Sensor10minSumSchema);
 		Sensor10minSum.find(query, {'__v': 0}).lean().exec(function(err, data){
 			if(err) console.log(err);
 			if(!data) return;
@@ -171,6 +185,13 @@ module.exports = function(app, passport){
 
 	app.get("/extremeDate", function(req, res){
 		var extreme = {};
+
+		var countryCode = "";
+		switch(req.query.country){
+			case "Taiwan": countryCode = ""; break;
+			case "Korea": countryCode = "_kr"; break;
+		}
+		var SensorDailySum = mongoose.model('SensorDailySum'+countryCode, SensorDailySumSchema);
 		SensorDailySum.findOne({}).sort({_id: -1}).exec(function(err, maxDate) {
 			if(err) console.log(err);
 			if(!maxDate) return;

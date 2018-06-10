@@ -679,7 +679,12 @@ function UpdateMapComment(commentData){
 }
 
 function GetUrlLoc() {
+	var country = GetUrlParameter().country;
+
 	var loc = {lat: 23.682094, lng: 120.7764642, zoom: 7};
+	if(country == "Korea"){
+		loc = {lat: 36, lng: 127.5, zoom: 7};
+	}
 	var param = decodeURIComponent(window.location.search.substring(1));
 	var arr = param.split('&');
 
@@ -720,8 +725,12 @@ function InitMap() {
 		UpdateMapSensorGrid();
 	});
 
+	//tw
 	var northY = 24.5, southY = 23.5;
 	var westX = 119.5, eastX = 122.5;
+	//kr
+	//var northY = 37, southY = 35.5;
+	//var westX = 124, eastX = 131;
 	var northSeg = [
 		{lat: northY, lng: westX},
 		{lat: northY, lng: eastX}];

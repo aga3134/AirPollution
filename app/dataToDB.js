@@ -3,8 +3,6 @@ var parseXML = require('xml2js').parseString;
 var PowerLoad = require('../db/powerLoad');
 var PowerRatio = require('../db/powerRatio');
 var PowerStation = require('../db/powerStation');
-var Sensor10minSum = require('../db/sensor10minSum');
-var SensorDailySum = require('../db/sensorDailySum');
 var SensorSite = require('../db/sensorSite');
 var WeatherStation = require('../db/weatherStation');
 var RoadSegment = require('../db/roadSegment');
@@ -34,13 +32,39 @@ var PowerGenSchema = require('../db/powerGenSchema');
 var SensorGridSchema = require('../db/sensorGridSchema');
 var WeatherDataSchema = require('../db/weatherDataSchema');
 var RoadDataSchema = require('../db/roadDataSchema');
+var Sensor10minSumSchema = require('../db/sensor10minSumSchema');
+var SensorDailySumSchema = require('../db/sensorDailySumSchema');
 
 var dataToDB = {};
 
-dataToDB.LatToArea = function(lat){
-	if(lat < 23.5) return "south";
-	else if(lat > 24.5) return "north";
-	else return "central";
+dataToDB.CheckCountryBound = function(country,d){
+	var gridPerUnit = Config.gridPerUnit;
+	var lat = d.gridY/gridPerUnit;
+	var lng = d.gridX/gridPerUnit;
+	switch(country){
+		case "Taiwan":
+			return lat >= 21 && lat <= 26 && lng >= 118 && lng <= 123;
+			break;
+		case "Korea":
+			return lat >= 33 && lat <= 39 && lng >= 124 && lng <= 131;
+			break;
+	}
+}
+
+dataToDB.LatToArea = function(country, lat){
+	switch(country){
+		case "Taiwan":
+			if(lat < 23.5) return "south";
+			else if(lat > 24.5) return "north";
+			else return "central";
+			break;
+		case "Korea":
+			if(lat < 35.5) return "south";
+			else if(lat > 37) return "north";
+			else return "central";
+			break;
+	}
+	
 }
 
 
@@ -56,8 +80,8 @@ dataToDB.SensorGridToDB = function(data, date, time){
 	for(var i=0;i<data.devices.length;i++){
 		var device = data.devices[i];
 		if(device.pm25 <= 0 || device.pm25 >= 3000) continue;	//不正常的數值，跳過
-		if(device.lat < 21 || device.lat > 26) continue;		//只保留台灣附近的範圍，其他視為雜訊
-		if(device.lon < 118 || device.lon > 123) continue;
+		//if(device.lat < 21 || device.lat > 26) continue;		//只保留台灣附近的範圍，其他視為雜訊
+		//if(device.lon < 118 || device.lon > 123) continue;
 		if(device.time == ""){
 			device.time = date+" "+time;
 			//console.log("empty time. set time as "+device.time);
@@ -128,36 +152,57 @@ dataToDB.SensorGridToDB = function(data, date, time){
 		SensorGrid.findOneAndUpdate({ 'level': d.level, "gridX": d.gridX, "gridY": d.gridY, "time": d.time},
 			{'$inc': incValue}, {upsert: true, new: true}, function(err, sum){
 				if(level == 0){
-					//更新data sum
-					var area = dataToDB.LatToArea(d.gridY/gridPerUnit);
-					//每日總結
-					tDay.setSeconds(0);
-					tDay.setMinutes(0);
-					tDay.setHours(0);
-					
-					var incValue = {};
-					incValue[area+"Sum"] = d.pm25;
-					incValue[area+"Num"] = d.weight;
-			        if ( isNaN( tDay.getTime() ) ) {
-				        console.log("invalid date: "+d.time);
-				        return AddGridDataRec(data, level, i+1);
-			        }
-					SensorDailySum.findOneAndUpdate({ '_id': tDay}, {'$inc': incValue}, 
-						{upsert: true, new: true}, function(err, sum){
-						if(err) console.log(err);
-						
-						//每10分鐘總結
-						var t10min = new Date(d.time);
-						t10min.setSeconds(0);
-						t10min.setMinutes(Math.floor(t10min.getMinutes()/10)*10);	//round to 10min
+					function UpdateCountrySummary(countryArr,j){
+						if(j>=countryArr.length) return AddGridDataRec(data, level, i+1);
 
-						Sensor10minSum.findOneAndUpdate({ '_id': t10min}, {'$inc': incValue}, 
+						var country = countryArr[j];
+						if(!dataToDB.CheckCountryBound(country,d)){
+							return UpdateCountrySummary(countryArr,j+1);
+						}
+
+						var countryCode = "";
+						switch(countryArr[j]){
+							case "Taiwan": countryCode = ""; break;
+							case "Korea": countryCode = "_kr"; break;
+						}
+
+						//更新data sum
+						var area = dataToDB.LatToArea(country, d.gridY/gridPerUnit);
+						//每日總結
+						tDay.setSeconds(0);
+						tDay.setMinutes(0);
+						tDay.setHours(0);
+						
+						var incValue = {};
+						incValue[area+"Sum"] = d.pm25;
+						incValue[area+"Num"] = d.weight;
+				        if ( isNaN( tDay.getTime() ) ) {
+					        console.log("invalid date: "+d.time);
+					        return UpdateCountrySummary(countryArr,j+1);
+				        }
+
+				        var SensorDailySum = mongoose.model('SensorDailySum'+countryCode, SensorDailySumSchema);
+						SensorDailySum.findOneAndUpdate({ '_id': tDay}, {'$inc': incValue}, 
 							{upsert: true, new: true}, function(err, sum){
 							if(err) console.log(err);
 							
-							AddGridDataRec(data, level, i+1);
+							//每10分鐘總結
+							var t10min = new Date(d.time);
+							t10min.setSeconds(0);
+							t10min.setMinutes(Math.floor(t10min.getMinutes()/10)*10);	//round to 10min
+
+							var Sensor10minSum = mongoose.model('Sensor10minSum'+countryCode, Sensor10minSumSchema);
+							Sensor10minSum.findOneAndUpdate({ '_id': t10min}, {'$inc': incValue}, 
+								{upsert: true, new: true}, function(err, sum){
+								if(err) console.log(err);
+								
+								UpdateCountrySummary(countryArr,j+1);
+							});
 						});
-					});
+					}
+					var countryArr = ["Taiwan","Korea"];
+					UpdateCountrySummary(countryArr, 0);
+					
 				}
 				else AddGridDataRec(data, level, i+1);
 		});
