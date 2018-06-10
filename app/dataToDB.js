@@ -162,8 +162,8 @@ dataToDB.SensorGridToDB = function(data, date, time){
 
 						var countryCode = "";
 						switch(countryArr[j]){
-							case "Taiwan": countryCode = ""; break;
-							case "Korea": countryCode = "_kr"; break;
+							case "Taiwan": countryCode = "s"; break;
+							case "Korea": countryCode = "_krs"; break;
 						}
 
 						//更新data sum

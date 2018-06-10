@@ -129,8 +129,8 @@ module.exports = function(app, passport){
 
 		var countryCode = "";
 		switch(req.query.country){
-			case "Taiwan": countryCode = ""; break;
-			case "Korea": countryCode = "_kr"; break;
+			case "Taiwan": countryCode = "s"; break;
+			case "Korea": countryCode = "_krs"; break;
 		}
 		var SensorDailySum = mongoose.model('SensorDailySum'+countryCode, SensorDailySumSchema);
 		SensorDailySum.find(query, {'__v': 0}).lean().exec(function(err, data){
@@ -162,8 +162,8 @@ module.exports = function(app, passport){
 
 		var countryCode = "";
 		switch(req.query.country){
-			case "Taiwan": countryCode = ""; break;
-			case "Korea": countryCode = "_kr"; break;
+			case "Taiwan": countryCode = "s"; break;
+			case "Korea": countryCode = "_krs"; break;
 		}
 		var Sensor10minSum = mongoose.model('Sensor10minSum'+countryCode, Sensor10minSumSchema);
 		Sensor10minSum.find(query, {'__v': 0}).lean().exec(function(err, data){
@@ -188,8 +188,8 @@ module.exports = function(app, passport){
 
 		var countryCode = "";
 		switch(req.query.country){
-			case "Taiwan": countryCode = ""; break;
-			case "Korea": countryCode = "_kr"; break;
+			case "Taiwan": countryCode = "s"; break;
+			case "Korea": countryCode = "_krs"; break;
 		}
 		var SensorDailySum = mongoose.model('SensorDailySum'+countryCode, SensorDailySumSchema);
 		SensorDailySum.findOne({}).sort({_id: -1}).exec(function(err, maxDate) {
