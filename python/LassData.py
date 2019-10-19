@@ -103,11 +103,14 @@ class LassData:
     def UpdateCountrySummary(self, d):
         countryArr = ["Taiwan", "Korea"]
         for country in countryArr:
+            if not self.CheckCountryBound(country,d):
+                continue
             countryCode = ""
             if country == "Taiwan":
                 countryCode = "s"
             elif country == "Korea":
                 countryCode = "_krs"
+                print(d)
 
             inc = {}
             area = self.LatToArea(country, d["gridY"]/self.gridPerUnit);
@@ -141,4 +144,4 @@ class LassData:
             elif lat > 37:
                 return "north"
             else:
-                return "centeral"
+                return "central"
