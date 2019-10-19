@@ -40,7 +40,7 @@ class LassData:
             data = json.loads(unzip_data)["feeds"]
             #compute grid data
             for d in data:
-                #去除數值異常
+                #drop abnormal value
                 if(d["s_d0"] <= 0) or (d["s_d0"] >= 3000):
                     continue;
                 for level in range(0,self.levelNum):
@@ -52,17 +52,14 @@ class LassData:
                     gridData = {}
                     gridData["level"] = level
 
-                    #每十分鐘記一筆資料
                     try:
                         t = datetime.datetime.strptime(d["timestamp"], '%Y-%m-%dT%H:%M:%SZ')
                         t = t.replace(tzinfo=pytz.utc).astimezone(taiwan)
                         m = t.minute - t.minute%10
                         t = t.replace(minute=m,second=0)
                         gridData["time"] = t
-                        #四捨五入到最近網格
                         gridData["gridX"] = math.floor(intX+0.5)
                         gridData["gridY"] = math.floor(intY+0.5)
-                        #計算貢獻比例，越遠越小
                         wX = 1-abs(gridX-gridData["gridX"])
                         wY = 1-abs(gridY-gridData["gridY"])
                         weight = wX*wY
