@@ -36,7 +36,7 @@ class LassData:
         r = requests.get("https://pm25.lass-net.org/data/last-all-airbox.json.gz")
         r.encoding = "utf-8"
         if r.status_code == requests.codes.all_okay:
-            unzip_data = decompress(r.content)
+            unzip_data = decompress(r.content).decode('utf-8')
             data = json.loads(unzip_data)["feeds"]
             #compute grid data
             for d in data:

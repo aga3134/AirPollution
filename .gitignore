@@ -1,6 +1,7 @@
 data/
 static/pm25/
 doc/
+python/__pycache__/
 node_modules
 config.js
 *.zip
