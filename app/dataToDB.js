@@ -210,7 +210,7 @@ dataToDB.SensorGridToDB = function(data, date, time){
 	
 	AddGridDataRec(gridArray, 0, 0);
 }
-/*
+
 dataToDB.SensorDataToDB = function(data, date, time){
 	if(data.status != "ok") return;
 	var siteArray = [];
@@ -295,7 +295,7 @@ dataToDB.SensorDataToDB = function(data, date, time){
 	}
 
 	AddSiteRec(siteArray, 0);
-};*/
+};
 
 dataToDB.PowerGenToDB = function(data){
 	var time = data.time;
