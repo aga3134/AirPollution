@@ -17,7 +17,7 @@
     "nodemailer": "~2.4.1",
     "passport": "~0.1.17",
     "passport-google-oauth": "~0.1.5",
-    "sequelize": "3.24.6",
+    "sequelize": "5.21.2",
     "swig": "~1.4.2",
     "uuid": "~3.0.1",
     "xml2js": "~0.4.17"
