@@ -6,6 +6,7 @@ import re
 import sys
 import traceback
 from gzip import decompress
+import pymongo
 
 import pytz
 taiwan = pytz.timezone('Asia/Taipei')
@@ -80,27 +81,36 @@ class LassData:
                     except ValueError:
                         continue
             #save to db
+            opData = {}
+            countryData = {}
             for level in range(0,self.levelNum):
                 arr = gridArr[level]
                 for key in arr:
                     d = arr[key]
                     day = str(d["time"].year)+"_"+str(d["time"].month)+"_"+str(d["time"].day)
+                    table = "sensorgrid_"+day
+                    if table not in opData:
+                        opData[table] = []
+
                     dataKey = {"level": d["level"], "time": d["time"], "gridX":d["gridX"], "gridY": d["gridY"]}
-                    
-                    query = self.db["sensorgrid_"+day].find_one(dataKey)
-                    if query is None:
-                        self.db["sensorgrid_"+day].insert_one(d)
-                    else:
-                        d["pm25"] += query["pm25"]
-                        d["t"] += query["t"]
-                        d["h"] += query["h"]
-                        d["weight"] += query["weight"]
-                        self.db["sensorgrid_"+day].update(dataKey,d)
+                    inc = {"weight":d["weight"],"t":d["t"],"h":d["h"],"pm25":d["pm25"]}
+                    opData[table].append(pymongo.UpdateOne(dataKey, {"$inc": inc}, upsert=True))
 
                     if level == 0:
-                        self.UpdateCountrySummary(d)
+                        countryData = self.UpdateCountrySummary(countryData,d)
 
-    def UpdateCountrySummary(self, d):
+            for table in opData:
+                self.db[table].create_index([("level",1),("time",1),("gridX",1),("gridY",1)])
+                if len(opData[table]) > 0:
+                    self.db[table].bulk_write(opData[table],ordered=False)
+            
+            for table in countryData:
+                if len(countryData[table]) > 0:
+                    self.db[table].bulk_write(countryData[table],ordered=False)
+
+
+
+    def UpdateCountrySummary(self,countryData,d):
         countryArr = ["Taiwan", "Korea"]
         for country in countryArr:
             if not self.CheckCountryBound(country,d):
@@ -110,7 +120,6 @@ class LassData:
                 countryCode = "s"
             elif country == "Korea":
                 countryCode = "_krs"
-                print(d)
 
             inc = {}
             area = self.LatToArea(country, d["gridY"]/self.gridPerUnit);
@@ -118,8 +127,17 @@ class LassData:
             inc[area+"Num"] = d["weight"]
             tday = d["time"].replace(hour=0,minute=0,second=0)
             t10min = d["time"].replace(minute=(d["time"].minute-d["time"].minute%10),second=0)
-            self.db["sensordailysum"+countryCode].update({"_id":tday},{"$inc":inc},upsert=True)
-            self.db["sensor10minsum"+countryCode].update({"_id":t10min},{"$inc":inc},upsert=True)
+            
+            tableDaily = "sensordailysum"+countryCode
+            if tableDaily not in countryData:
+                countryData[tableDaily] = []
+            countryData[tableDaily].append(pymongo.UpdateOne({"_id":tday}, {"$inc": inc}, upsert=True))
+            
+            table10min = "sensor10minsum"+countryCode
+            if table10min not in countryData:
+                countryData[table10min] = []
+            countryData[table10min].append(pymongo.UpdateOne({"_id":t10min}, {"$inc": inc}, upsert=True))
+        return countryData
 
     def CheckCountryBound(self,country,d):
         lat = d["gridY"]/self.gridPerUnit
