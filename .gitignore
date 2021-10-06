@@ -8,3 +8,4 @@ config.js
 *.txt
 *.log
 *.sh
+*.pyc

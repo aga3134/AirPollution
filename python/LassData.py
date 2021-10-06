@@ -34,7 +34,7 @@ class LassData:
         for i in range(0,self.levelNum):
             gridArr.append({})
 
-        r = requests.get("https://pm25.lass-net.org/data/last-all-airbox.json.gz")
+        r = requests.get("https://pm25.lass-net.org/data/last-all-airbox.json.gz",verify=False)
         r.encoding = "utf-8"
         if r.status_code == requests.codes.all_okay:
             unzip_data = decompress(r.content).decode('utf-8')
