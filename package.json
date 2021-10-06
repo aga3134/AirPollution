@@ -12,7 +12,7 @@
     "moment": "latest",
     "moment-timezone": "~0.5.1",
     "mongoose": "~4.7.4",
-    "mysql": "~2.10.0",
+    "mysql": "~2.14.0",
     "node-schedule": "~1.1.0",
     "nodemailer": "~2.4.1",
     "passport": "~0.1.17",
