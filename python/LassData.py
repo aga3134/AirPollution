@@ -163,3 +163,95 @@ class LassData:
                 return "north"
             else:
                 return "central"
+
+    def CollectDataHistory(self):
+        print("Collect Lass airbox 7 days history")
+        
+        gridArr = []
+        for i in range(0,self.levelNum):
+            gridArr.append({})
+
+        r = requests.get("https://pm25.lass-net.org/data/last-all-airbox.json.gz",verify=False)
+        r.encoding = "utf-8"
+        if r.status_code == requests.codes.all_okay:
+            unzip_data = decompress(r.content).decode('utf-8')
+            data = json.loads(unzip_data)["feeds"]
+
+            #compute grid data
+            for site in data:
+                #read 7 days history
+                print("collect history for device "+site["device_id"])
+                r = requests.get("https://pm25.lass-net.org/data/history.php?device_id="+site["device_id"],verify=False)
+                r.encoding = "utf-8"
+                siteData = r.json()["feeds"][0]["AirBox"]
+                for sd in siteData:
+                    for key in sd:
+                        d = sd[key]
+                    
+                        #drop abnormal value
+                        if(d["s_d0"] <= 0) or (d["s_d0"] >= 3000):
+                            continue;
+                        for level in range(0,self.levelNum):
+                            scale = self.gridPerUnit/math.pow(2,level)
+                            gridX = d["gps_lon"]*scale
+                            gridY = d["gps_lat"]*scale
+                            intX = math.floor(gridX)
+                            intY = math.floor(gridY)
+                            gridData = {}
+                            gridData["level"] = level
+
+                            try:
+                                t = datetime.datetime.strptime(d["timestamp"], '%Y-%m-%dT%H:%M:%SZ')
+                                t = t.replace(tzinfo=pytz.utc).astimezone(taiwan)
+                                m = t.minute - t.minute%10
+                                t = t.replace(minute=m,second=0)
+                                gridData["time"] = t
+                                gridData["gridX"] = math.floor(intX+0.5)
+                                gridData["gridY"] = math.floor(intY+0.5)
+                                wX = 1-abs(gridX-gridData["gridX"])
+                                wY = 1-abs(gridY-gridData["gridY"])
+                                weight = wX*wY
+                                gridData["pm25"] = d["s_d0"]*weight
+                                gridData["t"] = d["s_t0"]*weight
+                                gridData["h"] = d["s_h0"]*weight
+                                gridData["weight"] = weight
+
+                                key = gridData["time"].isoformat()+str(gridData["gridX"])+str(gridData["gridY"])
+                                arr = gridArr[level]
+                                if key in arr:
+                                    arr[key]["pm25"] += gridData["pm25"]
+                                    arr[key]["t"] += gridData["t"]
+                                    arr[key]["h"] += gridData["h"]
+                                    arr[key]["weight"] += gridData["weight"]
+                                else:
+                                    arr[key] = gridData
+                            except ValueError:
+                                continue
+                    #save to db
+                    opData = {}
+                    countryData = {}
+                    for level in range(0,self.levelNum):
+                        arr = gridArr[level]
+                        for key in arr:
+                            d = arr[key]
+                            day = str(d["time"].year)+"_"+str(d["time"].month)+"_"+str(d["time"].day)
+                            table = "sensorgrid_"+day
+                            if table not in opData:
+                                opData[table] = []
+
+                            dataKey = {"level": d["level"], "time": d["time"], "gridX":d["gridX"], "gridY": d["gridY"]}
+                            inc = {"weight":d["weight"],"t":d["t"],"h":d["h"],"pm25":d["pm25"]}
+                            opData[table].append(pymongo.UpdateOne(dataKey, {"$inc": inc}, upsert=True))
+
+                            if level == 0:
+                                countryData = self.UpdateCountrySummary(countryData,d)
+
+                    for table in opData:
+                        self.db[table].create_index([("level",1),("time",1),("gridX",1),("gridY",1)])
+                        if len(opData[table]) > 0:
+                            self.db[table].bulk_write(opData[table],ordered=False)
+            
+                    for table in countryData:
+                        if len(countryData[table]) > 0:
+                            self.db[table].bulk_write(countryData[table],ordered=False)
+

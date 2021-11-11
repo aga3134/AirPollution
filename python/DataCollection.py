@@ -15,3 +15,6 @@ if __name__ == "__main__":
         
     if "collect10min" in args:
         lass.CollectData10min()
+    
+    if "history" in args:
+        lass.CollectDataHistory()
