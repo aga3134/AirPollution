@@ -298,7 +298,7 @@ dataToDB.SensorDataToDB = function(data, date, time){
 };
 
 dataToDB.PowerGenToDB = function(data){
-	var time = data.time;
+	var time = data[""];
 
 	var stationArray = [];
 	var dataArray = [];
@@ -307,16 +307,16 @@ dataToDB.PowerGenToDB = function(data){
 		if(device[1] == "小計") continue;
 		var station = {};
 		station.type = device[0].split("'")[1];
-		station.name = device[1];
+		station.name = device[2];
 		station._id = station.type+station.name;
-		station.capacity = device[2];
+		station.capacity = device[3];
 		stationArray.push(station);
 
 		var stationData = {};
 		stationData._id = station._id+time;
 		stationData.stationID = station._id;
-		stationData.powerGen = device[3];
-		stationData.remark = device[5];
+		stationData.powerGen = device[4];
+		stationData.remark = device[1];
 		stationData.time = time;
 		dataArray.push(stationData);
 	}
@@ -677,8 +677,8 @@ dataToDB.DataFolderToDB = function(){
 	ProcessDir(dir, doneDir, false, function(data){
 		var obj;
 		try {
-			var quote = data.indexOf("\"");
-			data = "{\"time"+data.substr(quote+1,data.length);
+			//var quote = data.indexOf("\"");
+			//data = "{\"time"+data.substr(quote+1,data.length);
 			obj = JSON.parse(data);
 			dataToDB.PowerGenToDB(obj);
 		} catch (e) {
