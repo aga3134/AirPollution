@@ -10,7 +10,7 @@
     "fs-extra": "~0.26.5",
     "lz-string": "~1.4.4",
     "moment": "latest",
-    "moment-timezone": "~0.5.1",
+    "moment-timezone": "~0.5.35",
     "mongoose": "~4.7.4",
     "mysql": "~2.10.0",
     "node-schedule": "~1.1.0",
