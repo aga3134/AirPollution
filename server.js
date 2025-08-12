@@ -48,7 +48,11 @@ app.use(session({
     store: sessionStore,
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: {
+      sameSite: 'strict',
+      httpOnly: true,
+      secure: true
+    }
 }));
 /*app.use(session({
 	secret: Config.sessionConfig.secret,

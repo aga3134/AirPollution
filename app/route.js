@@ -75,6 +75,10 @@ module.exports = function(app, passport){
 		var maxLng = parseFloat(req.query.maxLng);
 		if(!date || !req.query.level || level < 0 || level >= levelNum) return;
 
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return; 
+
 		var query = {"level": level};
 		var condition = [];
 		if(hour >= 0 && hour < 24){
@@ -152,6 +156,10 @@ module.exports = function(app, passport){
 		var date = req.query.date;
 		if(!date) return;
 
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return;
+
 		//get data within the day
 		var conditions = [];
 		conditions.push({'_id': {$gte: new Date(date+" 0:0:0")}});
@@ -215,6 +223,10 @@ module.exports = function(app, passport){
 		var date = req.query.date;
 		if(!date) return;
 
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return;
+
 		var conditions = [];
 		conditions.push({time: {$gte: new Date(date+" 00:00")}});
 		conditions.push({time: {$lte: new Date(date+" 23:59")}});
@@ -236,6 +248,10 @@ module.exports = function(app, passport){
 		var date = req.query.date;
 		if(!date) return;
 
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return;
+
 		var conditions = [];
 		conditions.push({_id: {$gte: new Date(date+" 00:00")}});
 		conditions.push({_id: {$lte: new Date(date+" 23:59")}});
@@ -253,6 +269,10 @@ module.exports = function(app, passport){
 	app.get("/powerRatio", function(req, res){
 		var date = req.query.date;
 		if(!date) return;
+
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return;
 
 		var conditions = [];
 		conditions.push({_id: {$gte: new Date(date+" 00:00")}});
@@ -279,6 +299,10 @@ module.exports = function(app, passport){
 	app.get("/weatherData", function(req, res){
 		var date = req.query.date;
 		if(!date) return;
+
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return;
 
 		var conditions = [];
 		conditions.push({time: {$gte: new Date(date+" 00:00")}});
@@ -308,6 +332,10 @@ module.exports = function(app, passport){
 	app.get("/roadData", function(req, res){
 		var date = req.query.date;
 		if(!date) return;
+
+                //validate date
+                var t = new Date(date);
+                if(isNaN(t.getTime())) return;
 
 		var conditions = [];
 		conditions.push({time: {$gte: new Date(date+" 00:00")}});
