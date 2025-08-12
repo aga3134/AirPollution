@@ -76,7 +76,7 @@ module.exports = function(app, passport){
 		if(!date || !req.query.level || level < 0 || level >= levelNum) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return; 
 
 		var query = {"level": level};
@@ -157,7 +157,7 @@ module.exports = function(app, passport){
 		if(!date) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return;
 
 		//get data within the day
@@ -224,7 +224,7 @@ module.exports = function(app, passport){
 		if(!date) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return;
 
 		var conditions = [];
@@ -249,7 +249,7 @@ module.exports = function(app, passport){
 		if(!date) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return;
 
 		var conditions = [];
@@ -271,7 +271,7 @@ module.exports = function(app, passport){
 		if(!date) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return;
 
 		var conditions = [];
@@ -301,7 +301,7 @@ module.exports = function(app, passport){
 		if(!date) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return;
 
 		var conditions = [];
@@ -334,7 +334,7 @@ module.exports = function(app, passport){
 		if(!date) return;
 
                 //validate date
-                var t = new Date(date);
+                var t = new Date(date+" 00:00");
                 if(isNaN(t.getTime())) return;
 
 		var conditions = [];
