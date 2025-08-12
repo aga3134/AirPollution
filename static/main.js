@@ -4,8 +4,6 @@ var curYear, curDate, curTime, preTime;
 var maxDate, minDate;
 var timeInterval = 10;
 var moveTime = 500;
-var memoFetchPage = 0;
-var memoKeyword = "";
 
 //var mapSensorData;
 //var siteData;
@@ -439,51 +437,6 @@ function SetDateLabel(date){
 	$("#dateLabel").val(arr[0]+"-"+arr[1]+"-"+arr[2]);
 }
 
-function OpenCommentPanel(){
-	$(".comment-panel").animate({right: 0},moveTime);
-}
-
-function CloseCommentPanel(){
-	$(".comment-panel").animate({right: -300},moveTime);
-}
-
-function DeleteMemo(item){
-	if(confirm("確定刪除備忘?")){
-		var id = $(item).siblings(".memo-id").html();
-		$.get("/memo-delete?memo="+id, function(data){
-			if(data == "ok"){
-				LoadMemo(true);
-			}
-		});
-	}
-}
-
-function AddMemo(id, memo){
-	var memoList = $("#memoList").children("ul");
-	var str = "<li>";
-	str += "<div class='memo-text'>"+memo+"</div>";
-	str += "<div class='memo-id hide'>"+id+"</div>";
-	str += "<div class='remove-bt' onclick='DeleteMemo(this);'>X</div>";
-	str += "</li>";
-	$(str).hide().appendTo(memoList).fadeIn("fast");
-}
-
-function LoadMemo(clear, keyword){
-	var memoList = $("#memoList");
-	if(clear){
-		memoList.html("<ul></ul>");
-		memoFetchPage = 0;
-	}
-	else memoFetchPage++;
-
-	var url = "/memo-list?fetchPage="+memoFetchPage;
-	if(keyword) url += "&keyword="+keyword;
-	$.get(url, function(data){
-		for(var i=0;i<data.length;i++){
-			AddMemo(data[i].id, data[i].memo);
-		}
-	});
-}
 
 function CopySpaceTimeUrl(){
 	var center = map.getCenter();
@@ -702,63 +655,7 @@ window.addEventListener('load', function() {
 		CloseCommentPanel();
 	});
 
-	$("#memoTab").click(function(){
-		if($("#memoTab").hasClass("active")) return;
 
-		$("#commentTab").removeClass("active");
-		$("#memoTab").addClass("active");
-		$(".memo-container").removeClass("hide");
-		$(".comment-container").addClass("hide");
-		$(".memo").removeClass("hide");
-		$(".logout").css("display","none");
-	});
-
-	$("#commentTab").click(function(){
-		if($("#commentTab").hasClass("active")) return;
-		
-		$("#commentTab").addClass("active");
-		$("#memoTab").removeClass("active");
-		$(".memo-container").addClass("hide");
-		$(".comment-container").removeClass("hide");
-		$(".memo").addClass("hide");
-		$(".logout").css("display","inline-block");
-	});
-
-	LoadMemo(true);
-	$(".memo-bt").click(function(){
-		var form = $("#memoForm");
-		var memo = form.find(".memo-input");
-		if(memo.val() == "") return alert("備忘不能空白");
-		var data = form.serialize();
-	    var formURL = form.attr("action");
-
-	    $.ajax({url: formURL,
-			type: 'POST',
-			data:  data,
-			success: function(id){
-				LoadMemo(true);
-				memo.val("");
-			}        
-		});
-	});
-	
-	$(".search-input").on("keypress", function(e){
-		if (e.keyCode == 13) {
-			$(".search-bt").click();
-		}
-	});
-	$(".search-bt").click(function(){
-		var keyword = $(".search-input").val();
-		memoKeyword = keyword;
-		LoadMemo(true, keyword);
-		//$(".search-input").val("");
-	});
-
-	 $('.memo-container').on('scroll', function() {
-        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-            LoadMemo(false, memoKeyword);
-        }
-    });
 });
 
 $( window ).resize(function() {

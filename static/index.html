@@ -379,52 +379,10 @@
           <img src="/static/image/topIcon.png" title="回地圖">
         </a>
       </div>
-      <div class="login-bt">
-      {% if user %}
-        <img src="/static/image/menuIcon.png" title="註解列表" onclick="OpenCommentPanel();">
-      {% else %}
-        <a href="/login-by-google">
-          <img src="/static/image/loginIcon.png" title="登入">
-        </a>
-      {% endif %}
-      </div>
       <div class="h-scroll">
         <div id="showTime"></div>
       </div>
     </div>
-
-    <div class="comment-panel">
-      <div class="close-bt" onclick="CloseCommentPanel();">X</div>
-      <div>
-        <div class="tab active" id="memoTab">備忘</div>
-        <div class="tab" id="commentTab">註解</div>
-      </div>
-      
-      <div class="memo-container">
-        <div class="search-bar">
-          <input class="search-input" type="text" placeholder="搜尋...">
-          <div class="search-bt">搜尋</div>
-        </div>
-        <div id="memoList"></div>
-      </div>
-      <div class="comment-container hide">
-        <div id="commentList"></div>
-      </div>
-      <a class="logout" href="/logout">登出</a>
-      <div class="memo">
-        <form id="memoForm" action="/memo-add" method="post">
-          <textarea class="memo-input" placeholder="輸入備忘..." name="memo"></textarea>
-          <div class="memo-bt">送出</div>
-        </form>
-      </div>
-    </div>
-
-    <form id="commentForm" action="/comment-add" method="post" hidden>
-      <input type="text" name="time">
-      <input type="text" name="lat">
-      <input type="text" name="lng">
-      <textarea name="comment"></textarea>
-    </form>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.9/d3.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false&key=AIzaSyBUGDJex2sQeScb1Wxcm7oiPGwdmyoLhHM"></script>
